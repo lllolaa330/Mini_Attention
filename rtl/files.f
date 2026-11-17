@@ -1,0 +1,17 @@
++incdir+third_party/HardFloat-1/source
++incdir+third_party/HardFloat-1/source/8086-SSE
+third_party/HardFloat-1/source/HardFloat_primitives.v
+third_party/HardFloat-1/source/HardFloat_rawFN.v
+third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v
+third_party/HardFloat-1/source/isSigNaNRecFN.v
+third_party/HardFloat-1/source/fNToRecFN.v
+third_party/HardFloat-1/source/recFNToFN.v
+third_party/HardFloat-1/source/mulAddRecFN.v
+third_party/HardFloat-1/source/addRecFN.v
+third_party/HardFloat-1/source/mulRecFN.v
+third_party/HardFloat-1/source/divSqrtRecFN_small.v
+rtl/fp16_ops.sv
+rtl/fp16_pe.sv
+rtl/systolic_array.sv
+rtl/softmax_fp16.sv
+rtl/attention_fp16.sv

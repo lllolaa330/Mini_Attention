@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "runs": {
+    "release_iverilog_seed20261117": {
+      "numerical_sources_verified": 624,
+      "changed_recording_scripts": [
+        "scripts/run.py",
+        "scripts/run_arithmetic.py",
+        "scripts/run_array.py"
+      ],
+      "unused_exploratory_files_excluded": 169,
+      "frames": 94,
+      "outputs": 24064
+    },
+    "final_verilator_seed20261117": {
+      "numerical_sources_verified": 624,
+      "changed_recording_scripts": [
+        "scripts/run.py"
+      ],
+      "unused_exploratory_files_excluded": 0,
+      "frames": 94,
+      "outputs": 24064
+    }
+  },
+  "scope": "Source identity and archived dual-simulator outputs; no simulation rerun",
+  "identical_between_simulators": [
+    "input.hex",
+    "expected.hex",
+    "actual.txt",
+    "per_frame.csv"
+  ]
+}

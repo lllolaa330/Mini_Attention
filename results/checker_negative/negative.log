@@ -1,0 +1,4 @@
+COMMAND: ['/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/release_verilator_seed20261117/obj_tb_attention/tb_attention', '+INPUT=input.hex', '+EXPECTED=expected.hex', '+OUTPUT=actual.txt', '+STALLS=0']
+[47375000] %Fatal: tb_attention.sv:121: Assertion failed in tb_attention.receive_frame: BIT MISMATCH run=0 case=0 row=0 col=0 got=0000 expected=0001 state=7
+%Error: tb/tb_attention.sv:121: Verilog $stop
+Aborting...

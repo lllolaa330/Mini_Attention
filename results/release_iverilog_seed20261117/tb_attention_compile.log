@@ -1,0 +1,42 @@
+COMMAND: ['iverilog', '-g2012', '-Wall', '-s', 'tb_attention', '-Ptb_attention.CASES=81', '-o', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/release_iverilog_seed20261117/tb_attention.vvp', '-f', 'rtl/files.f', 'tb/tb_attention.sv']
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module addRecFN declared here: third_party/HardFloat-1/source/addRecFN.v:204
+       :   -- module addRecFNToRaw declared here: third_party/HardFloat-1/source/addRecFN.v:43
+       :   -- module compressBy2 declared here: third_party/HardFloat-1/source/HardFloat_primitives.v:139
+       :   -- module compressBy4 declared here: third_party/HardFloat-1/source/HardFloat_primitives.v:158
+       :   -- module countLeadingZeros declared here: third_party/HardFloat-1/source/HardFloat_primitives.v:111
+       :   -- module divSqrtRecFNToRaw_small declared here: third_party/HardFloat-1/source/divSqrtRecFN_small.v:46
+       :   -- module divSqrtRecFN_small declared here: third_party/HardFloat-1/source/divSqrtRecFN_small.v:276
+       :   -- module fNToRecFN declared here: third_party/HardFloat-1/source/fNToRecFN.v:40
+       :   -- module fp16_addsub declared here: rtl/fp16_ops.sv:19
+       :   -- module fp16_div declared here: rtl/fp16_ops.sv:49
+       :   -- module fp16_fma declared here: rtl/fp16_ops.sv:4
+       :   -- module fp16_mul declared here: rtl/fp16_ops.sv:34
+       :   -- module fp16_pe declared here: rtl/fp16_pe.sv:4
+       :   -- module iNFromException declared here: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:43
+       :   -- module isSigNaNRecFN declared here: third_party/HardFloat-1/source/isSigNaNRecFN.v:40
+       :   -- module lowMaskHiLo declared here: third_party/HardFloat-1/source/HardFloat_primitives.v:57
+       :   -- module lowMaskLoHi declared here: third_party/HardFloat-1/source/HardFloat_primitives.v:84
+       :   -- module mulAddRecFN declared here: third_party/HardFloat-1/source/mulAddRecFN.v:430
+       :   -- module mulAddRecFNToRaw declared here: third_party/HardFloat-1/source/mulAddRecFN.v:367
+       :   -- module mulAddRecFNToRaw_postMul declared here: third_party/HardFloat-1/source/mulAddRecFN.v:215
+       :   -- module mulAddRecFNToRaw_preMul declared here: third_party/HardFloat-1/source/mulAddRecFN.v:43
+       :   -- module mulRecFN declared here: third_party/HardFloat-1/source/mulRecFN.v:194
+       :   -- module mulRecFNToFullRaw declared here: third_party/HardFloat-1/source/mulRecFN.v:43
+       :   -- module mulRecFNToRaw declared here: third_party/HardFloat-1/source/mulRecFN.v:118
+       :   -- module propagateFloatNaN_add declared here: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:58
+       :   -- module propagateFloatNaN_divSqrt declared here: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:139
+       :   -- module propagateFloatNaN_mul declared here: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:83
+       :   -- module propagateFloatNaN_mulAdd declared here: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:107
+       :   -- module recFNToFN declared here: third_party/HardFloat-1/source/recFNToFN.v:40
+       :   -- module recFNToRawFN declared here: third_party/HardFloat-1/source/HardFloat_rawFN.v:43
+       :   -- module reverse declared here: third_party/HardFloat-1/source/HardFloat_primitives.v:40
+       :   -- module roundAnyRawFNToRecFN declared here: third_party/HardFloat-1/source/HardFloat_rawFN.v:73
+       :   -- module roundRawFNToRecFN declared here: third_party/HardFloat-1/source/HardFloat_rawFN.v:323
+       :   -- module systolic_array declared here: rtl/systolic_array.sv:6
+rtl/attention_fp16.sv:55: warning: @* is sensitive to all 256 words in array 'q_mem'.
+rtl/attention_fp16.sv:56: warning: @* is sensitive to all 256 words in array 'k_mem'.
+rtl/attention_fp16.sv:60: warning: @* is sensitive to all 256 words in array 'p_mem'.
+rtl/attention_fp16.sv:61: warning: @* is sensitive to all 256 words in array 'v_mem'.

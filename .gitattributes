@@ -1,0 +1,4 @@
+# Preserve upstream bytes and raw experimental evidence, including CRLF CSV.
+third_party/** -text -whitespace
+results/** -text -whitespace
+scripts/softfloat_build/** -text -whitespace

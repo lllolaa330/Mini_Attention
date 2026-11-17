@@ -1,0 +1,6 @@
+COMMAND: ['iverilog', '-g2012', '-Wall', '-s', 'tb_attention', '-Ptb_attention.CASES=19', '-o', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/bringup_iverilog/tb_attention.vvp', '-f', 'rtl/files.f', 'tb/tb_attention.sv']
+tb/tb_attention.sv:10: error: Unknown module type: attention_fp16
+2 error(s) during elaboration.
+*** These modules were missing:
+        attention_fp16 referenced 1 times.
+***

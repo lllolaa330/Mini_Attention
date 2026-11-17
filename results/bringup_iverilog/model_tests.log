@@ -1,0 +1,10 @@
+COMMAND: ['/Applications/Xcode.app/Contents/Developer/usr/bin/python3', '-m', 'unittest', 'discover', '-s', 'tests', '-v']
+test_analytical_zero_and_constant (test_model.TestModel) ... ok
+test_exp_boundaries (test_model.TestModel) ... ok
+test_invalid_inputs (test_model.TestModel) ... ok
+test_subnormal_and_rounding (test_model.TestModel) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 5.112s
+
+OK

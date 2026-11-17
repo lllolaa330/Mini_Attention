@@ -1,0 +1,3 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/arithmetic_iverilog_02/tb_fp16.vvp', '+VECTORS=arithmetic.hex', '+COUNT=17000']
+ARITHMETIC PASS vectors=17000, divider reset-abort recovery
+tb/tb_fp16.sv:65: $finish called at 612130000 (1ps)

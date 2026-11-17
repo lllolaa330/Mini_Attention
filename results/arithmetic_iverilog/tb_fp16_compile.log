@@ -1,0 +1,3 @@
+COMMAND: ['iverilog', '-g2012', '-Wall', '-s', 'tb_fp16', '-Ptb_fp16.VECTORS=17000', '-o', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/arithmetic_iverilog/tb_fp16.vvp', '-f', 'rtl/files.f', 'tb/tb_fp16.sv']
+:0: error: parameter `VECTORS` not found in `tb_fp16`.
+2 error(s) during elaboration.

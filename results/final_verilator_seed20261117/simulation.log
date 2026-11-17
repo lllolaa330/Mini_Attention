@@ -1,0 +1,114 @@
+COMMAND: ['/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/final_verilator_seed20261117/obj_tb_attention/tb_attention', '+INPUT=input.hex', '+EXPECTED=expected.hex', '+OUTPUT=actual.txt', '+SEED=20261117', '+STALLS=1']
+FRAME PASS run=0 case=0 cycles=4990 mode=0
+FRAME PASS run=1 case=1 cycles=4990 mode=0
+FRAME PASS run=2 case=2 cycles=5573 mode=1
+FRAME PASS run=3 case=3 cycles=5529 mode=1
+FRAME PASS run=4 case=4 cycles=5572 mode=1
+FRAME PASS run=5 case=5 cycles=4219 mode=1
+FRAME PASS run=6 case=6 cycles=5441 mode=1
+FRAME PASS run=7 case=7 cycles=5607 mode=1
+FRAME PASS run=8 case=8 cycles=5843 mode=1
+FRAME PASS run=9 case=9 cycles=5784 mode=1
+FRAME PASS run=10 case=10 cycles=2807 mode=1
+FRAME PASS run=11 case=11 cycles=3872 mode=1
+FRAME PASS run=12 case=12 cycles=5483 mode=1
+FRAME PASS run=13 case=13 cycles=5424 mode=1
+FRAME PASS run=14 case=14 cycles=5508 mode=1
+FRAME PASS run=15 case=15 cycles=5546 mode=1
+FRAME PASS run=16 case=16 cycles=5705 mode=1
+FRAME PASS run=17 case=17 cycles=5680 mode=1
+FRAME PASS run=18 case=18 cycles=5631 mode=1
+FRAME PASS run=19 case=19 cycles=5667 mode=1
+FRAME PASS run=20 case=20 cycles=5570 mode=1
+FRAME PASS run=21 case=21 cycles=5691 mode=1
+FRAME PASS run=22 case=22 cycles=5634 mode=1
+FRAME PASS run=23 case=23 cycles=5654 mode=1
+FRAME PASS run=24 case=24 cycles=5617 mode=1
+FRAME PASS run=25 case=25 cycles=5564 mode=1
+FRAME PASS run=26 case=26 cycles=5694 mode=1
+FRAME PASS run=27 case=27 cycles=5649 mode=1
+FRAME PASS run=28 case=28 cycles=5632 mode=1
+FRAME PASS run=29 case=29 cycles=5592 mode=1
+FRAME PASS run=30 case=30 cycles=5712 mode=1
+FRAME PASS run=31 case=31 cycles=5556 mode=1
+FRAME PASS run=32 case=32 cycles=5624 mode=1
+FRAME PASS run=33 case=33 cycles=5711 mode=1
+FRAME PASS run=34 case=34 cycles=5640 mode=1
+FRAME PASS run=35 case=35 cycles=5655 mode=1
+FRAME PASS run=36 case=36 cycles=5692 mode=1
+FRAME PASS run=37 case=37 cycles=5528 mode=1
+FRAME PASS run=38 case=38 cycles=5715 mode=1
+FRAME PASS run=39 case=39 cycles=5715 mode=1
+FRAME PASS run=40 case=40 cycles=5523 mode=1
+FRAME PASS run=41 case=41 cycles=5682 mode=1
+FRAME PASS run=42 case=42 cycles=5699 mode=1
+FRAME PASS run=43 case=43 cycles=5654 mode=1
+FRAME PASS run=44 case=44 cycles=5653 mode=1
+FRAME PASS run=45 case=45 cycles=5662 mode=1
+FRAME PASS run=46 case=46 cycles=5553 mode=1
+FRAME PASS run=47 case=47 cycles=5593 mode=1
+FRAME PASS run=48 case=48 cycles=5764 mode=1
+FRAME PASS run=49 case=49 cycles=5594 mode=1
+FRAME PASS run=50 case=50 cycles=5680 mode=1
+FRAME PASS run=51 case=51 cycles=5613 mode=1
+FRAME PASS run=52 case=52 cycles=5655 mode=1
+FRAME PASS run=53 case=53 cycles=5656 mode=1
+FRAME PASS run=54 case=54 cycles=5777 mode=1
+FRAME PASS run=55 case=55 cycles=5586 mode=1
+FRAME PASS run=56 case=56 cycles=5733 mode=1
+FRAME PASS run=57 case=57 cycles=5677 mode=1
+FRAME PASS run=58 case=58 cycles=5658 mode=1
+FRAME PASS run=59 case=59 cycles=5632 mode=1
+FRAME PASS run=60 case=60 cycles=5554 mode=1
+FRAME PASS run=61 case=61 cycles=5613 mode=1
+FRAME PASS run=62 case=62 cycles=5734 mode=1
+FRAME PASS run=63 case=63 cycles=5647 mode=1
+FRAME PASS run=64 case=64 cycles=5662 mode=1
+FRAME PASS run=65 case=65 cycles=5695 mode=1
+FRAME PASS run=66 case=66 cycles=5726 mode=1
+FRAME PASS run=67 case=67 cycles=5526 mode=1
+FRAME PASS run=68 case=68 cycles=5681 mode=1
+FRAME PASS run=69 case=69 cycles=5666 mode=1
+FRAME PASS run=70 case=70 cycles=5549 mode=1
+FRAME PASS run=71 case=71 cycles=5671 mode=1
+FRAME PASS run=72 case=72 cycles=5649 mode=1
+FRAME PASS run=73 case=73 cycles=5496 mode=1
+FRAME PASS run=74 case=74 cycles=5646 mode=1
+FRAME PASS run=75 case=75 cycles=5747 mode=1
+FRAME PASS run=76 case=76 cycles=5609 mode=1
+FRAME PASS run=77 case=77 cycles=5633 mode=1
+FRAME PASS run=78 case=78 cycles=5656 mode=1
+FRAME PASS run=79 case=79 cycles=5597 mode=1
+FRAME PASS run=80 case=80 cycles=5629 mode=1
+RESET PASS phase=0
+FRAME PASS run=81 case=7 cycles=5605 mode=1
+RESET PASS phase=1
+FRAME PASS run=82 case=8 cycles=5823 mode=1
+RESET PASS phase=2
+FRAME PASS run=83 case=9 cycles=5755 mode=1
+RESET PASS phase=3
+FRAME PASS run=84 case=10 cycles=2901 mode=1
+RESET PASS phase=4
+FRAME PASS run=85 case=11 cycles=3866 mode=1
+RESET PASS phase=5
+FRAME PASS run=86 case=12 cycles=5480 mode=1
+RESET PASS phase=6
+FRAME PASS run=87 case=13 cycles=5501 mode=1
+RESET PASS phase=7
+FRAME PASS run=88 case=14 cycles=5558 mode=1
+SOFTMAX RESET PASS phase=1
+FRAME PASS run=89 case=12 cycles=5508 mode=1
+SOFTMAX RESET PASS phase=2
+FRAME PASS run=90 case=13 cycles=5515 mode=1
+SOFTMAX RESET PASS phase=3
+FRAME PASS run=91 case=14 cycles=5464 mode=1
+SOFTMAX RESET PASS phase=4
+FRAME PASS run=92 case=15 cycles=5523 mode=1
+SOFTMAX RESET PASS phase=5
+FRAME PASS run=93 case=16 cycles=5643 mode=1
+COVERAGE frames=94 resets=14 input_bubbles=41643 output_stall_cycles=7939 no_stall_cycles=4990
+TB PASS
+- tb/tb_attention.sv:219: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.044 2026-01-01
+- Verilator: $finish at 5ms; walltime 7.192 s; speed 750.815 us/s
+- Verilator: cpu 7.181 s on 1 threads; alloced 6 MB

@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "runs": [
+    "release_iverilog_seed20261117",
+    "final_verilator_seed20261117"
+  ],
+  "actual_identical_including_cycles": true,
+  "input_expected_identical": true,
+  "actual_sha256": "ec57498b602f2a0463306cfee3c38b1af6053c13713ccf161af94818dd1a28d0",
+  "input_sha256": "da693ba3d64c13c45d2a80d89d7387b49ab4eaacf2a798571cccac4313f85a55",
+  "outputs_per_run": 24064
+}

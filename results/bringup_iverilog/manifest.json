@@ -1,0 +1,38 @@
+{
+  "status": "FAIL",
+  "command": [
+    "scripts/run.py",
+    "--random",
+    "2",
+    "--outdir",
+    "results/bringup_iverilog",
+    "--timeout",
+    "600"
+  ],
+  "seed": 20261117,
+  "random_count": 2,
+  "stalls": 1,
+  "simulator": "iverilog",
+  "started_at": "2026-11-17T10:48:47.455285+08:00",
+  "python": "3.9.6 (default, May 22 2026, 11:13:45) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+  "sources_sha256": {
+    "rtl/attention_fp16.sv": "4d551092f3f0134f41ae78ddec91ce9f8fbf26639c3516a7acc662a804c39d24",
+    "rtl/fp16_ops.sv": "3db788d6892a57e7143479f890aec16cdc77ce1ac84a52787b1b4f1f68fe4dd3",
+    "rtl/fp16_pe.sv": "edd9aabcc9a76934d18ac8cf8a00bdb59727dd94fa6cffa9dd7f9daa0553e81c",
+    "rtl/softmax_fp16.sv": "3da630ced8348788cd8f4e989c09806715a7bd70ec1b1e366ac13011ce949693",
+    "rtl/systolic_array.sv": "e4b91c6e4da790227c3ae6b25643c364fd0415df53c99912c16d84e9a2fdcd5a",
+    "tb/tb_attention.sv": "c400a181bc4e27de48268494e62b016256467c51f2fb0f069439659cb110ebff",
+    "model/attention.py": "990fee5688164c15cbf003f50e665b244a4e21360647d2a6718a2445939bbb12",
+    "model/softfloat.py": "31b99679d5db4b5a7ba52c49808e22a92f915e3ee9797b7a63e48a495f1acfd0",
+    "model/vectors.py": "36a95309e845901a3e8fd24c84e1cccd218601691fbcff27b82b587421248df5",
+    "scripts/gen_exp.py": "e1c4daa138fbb31642d8a4833623bb47963c5b37828b1626f07da2a4375c3417",
+    "scripts/run.py": "597d1113644456e738c03378dad1e3212de7fe43b5ca7f02ca26656b40e9fc28",
+    "tests/test_model.py": "9cfded26c34763656600e3f8fec8d0316f50dcfbfe9d35960310134cd7aa368a"
+  },
+  "git_commit": "HEAD",
+  "git_status": "?? build/\n?? model/\n?? rtl/\n?? scripts/\n?? tb/\n?? tests/\n?? third_party/\n",
+  "iverilog_version": "Icarus Verilog version 12.0 (stable) ()",
+  "verilator_version": "Verilator 5.044 2026-01-01 rev vUNKNOWN-built20260101",
+  "error": "CalledProcessError(2, ['iverilog', '-g2012', '-Wall', '-s', 'tb_attention', '-Ptb_attention.CASES=19', '-o', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/bringup_iverilog/tb_attention.vvp', '-f', 'rtl/files.f', 'tb/tb_attention.sv'])",
+  "elapsed_seconds": 8.358673333
+}
