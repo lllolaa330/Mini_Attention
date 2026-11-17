@@ -1,0 +1,48 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/20261117_194539_iverilog_seed20261117_3498/tb_attention.vvp', '+INPUT=input.hex', '+EXPECTED=expected.hex', '+OUTPUT=actual.txt', '+SEED=20261117', '+STALLS=1', '+WAVE=attention.vcd']
+VCD info: dumpfile attention.vcd opened for output.
+FRAME PASS run=0 case=0 cycles=4750 mode=0
+FRAME PASS run=1 case=1 cycles=4750 mode=0
+FRAME PASS run=2 case=2 cycles=5364 mode=1
+FRAME PASS run=3 case=3 cycles=5346 mode=1
+FRAME PASS run=4 case=4 cycles=5273 mode=1
+FRAME PASS run=5 case=5 cycles=3816 mode=1
+FRAME PASS run=6 case=6 cycles=5319 mode=1
+FRAME PASS run=7 case=7 cycles=5299 mode=1
+FRAME PASS run=8 case=8 cycles=5572 mode=1
+FRAME PASS run=9 case=9 cycles=5548 mode=1
+FRAME PASS run=10 case=10 cycles=2673 mode=1
+FRAME PASS run=11 case=11 cycles=3614 mode=1
+FRAME PASS run=12 case=12 cycles=5340 mode=1
+FRAME PASS run=13 case=13 cycles=5276 mode=1
+FRAME PASS run=14 case=14 cycles=5295 mode=1
+FRAME PASS run=15 case=15 cycles=5260 mode=1
+FRAME PASS run=16 case=16 cycles=5534 mode=1
+RESET PASS phase=0
+FRAME PASS run=17 case=7 cycles=5266 mode=1
+RESET PASS phase=1
+FRAME PASS run=18 case=8 cycles=5624 mode=1
+RESET PASS phase=2
+FRAME PASS run=19 case=9 cycles=5573 mode=1
+RESET PASS phase=3
+FRAME PASS run=20 case=10 cycles=2660 mode=1
+RESET PASS phase=4
+FRAME PASS run=21 case=11 cycles=3622 mode=1
+RESET PASS phase=5
+FRAME PASS run=22 case=12 cycles=5288 mode=1
+RESET PASS phase=6
+FRAME PASS run=23 case=13 cycles=5335 mode=1
+RESET PASS phase=7
+FRAME PASS run=24 case=14 cycles=5258 mode=1
+SOFTMAX RESET PASS phase=1
+FRAME PASS run=25 case=12 cycles=5227 mode=1
+SOFTMAX RESET PASS phase=2
+FRAME PASS run=26 case=13 cycles=5255 mode=1
+SOFTMAX RESET PASS phase=3
+FRAME PASS run=27 case=14 cycles=5341 mode=1
+SOFTMAX RESET PASS phase=4
+FRAME PASS run=28 case=15 cycles=5248 mode=1
+SOFTMAX RESET PASS phase=5
+FRAME PASS run=29 case=16 cycles=5484 mode=1
+COVERAGE frames=30 resets=14 input_bubbles=12928 output_stall_cycles=2493 no_stall_cycles=4750
+TB PASS
+tb/tb_attention.sv:232: $finish called at 1703046000 (1ps)

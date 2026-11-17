@@ -1,0 +1,12 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/20261117_201827_iverilog_seed20261117_45754/tb_attention.vvp', '+INPUT=input.hex', '+EXPECTED=expected.hex', '+OUTPUT=actual.txt', '+SEED=20261117', '+STALLS=1']
+FRAME PASS run=0 case=0 cycles=1406 mode=0
+FRAME PASS run=1 case=1 cycles=1406 mode=0
+FRAME PASS run=2 case=2 cycles=1972 mode=1
+FRAME PASS run=3 case=3 cycles=2027 mode=1
+FRAME PASS run=4 case=4 cycles=1847 mode=1
+FRAME PASS run=5 case=5 cycles=1834 mode=1
+FRAME PASS run=6 case=6 cycles=1905 mode=1
+FRAME PASS run=7 case=7 cycles=1925 mode=1
+FRAME PASS run=8 case=8 cycles=1982 mode=1
+FATAL: tb/tb_attention.sv:121: BIT MISMATCH run=9 case=9 row=0 col=1 got=2a0b expected=2a0c state=7
+       Time: 180315000  Scope: tb_attention.receive_frame

@@ -8,28 +8,158 @@ module softmax_fp16 #(
     output reg [15:0] probabilities [0:15],
     output wire done
 );
-    localparam IDLE=0, SCALE=1, EXP=2, DIV_START=3, DIV_WAIT=4, FINISH=5;
+    localparam IDLE=0, SCALE=1, EXP=2, SUM=3, DIV_START=4, DIV_WAIT=5, FINISH=6;
     reg [2:0] state;
-    reg [3:0] index;  // 用于遍历 16 个元素的索引
     reg [15:0] scores [0:15];  // 存储 raw_scores / 4
     reg [15:0] weights [0:15]; // 存储 exp(scores-max)
     reg [15:0] row_max, denominator; // 行最大值 & 分母 都是 FP16 （0S + 5E + 10F）
-    wire [15:0] scaled, delta, exp_value, sum_next, quotient;
-    wire div_ready, div_done;
 
-    // Negative arguments with magnitude >= 0x4c56 round exp to +0.
-    // 0x4c56 = 0100 1100 0101 0110 = 2^(19-15) * (1+86/2^10) = 17.24275
-    // The table covers magnitude 0..0x4c55, including both signed zeros.
+    wire [15:0] scaled_all [0:15];
+    wire [15:0] max_l1 [0:7];
+    wire [15:0] max_l2 [0:3];
+    wire [15:0] max_l3 [0:1];
+    wire [15:0] max_all;
+
+    wire [15:0] delta_all [0:15];
+    wire [15:0] exp_all   [0:15];
+
+    wire [15:0] sum_l1 [0:7];
+    wire [15:0] sum_l2 [0:3];
+    wire [15:0] sum_l3 [0:1];
+    wire [15:0] sum_all;
+
+    wire [15:0] quotient_all [0:15];
+    reg [15:0] div_done_seen;
+    wire [15:0] div_ready_all;
+    wire [15:0] div_done_all;
+    wire        all_div_ready, all_div_done;
+    wire        div_start_all;
+
+    // 0x4C56 represents FP16 17.34375.
+    // exp(-17.34375) rounds to +0 in FP16 (RNE).
     reg [15:0] exp_rom [0:19541];
     initial $readmemh(EXP_FILE, exp_rom);
     // 绝对值 < 17.328 就直接近似为 0
-    assign exp_value = (delta[14:0] <= 15'h4c55) ? exp_rom[delta[14:0]] : 16'h0000;
 
-    fp16_mul scale_op(.a(raw_scores[index]), .b(16'h3400), .y(scaled)); //16'h3400 = 0011 0100 0000 0000 = (-1)^0*(1+0/2^10)*2^(13-15) = 0.25
-    fp16_addsub subtract_op(.sub(1'b1), .a(scores[index]), .b(row_max), .y(delta));
-    fp16_addsub sum_op(.sub(1'b0), .a(denominator), .b(exp_value), .y(sum_next));
-    fp16_div divide_op(.clk(clk), .rst_n(rst_n), .start(state == DIV_START),
-        .a(weights[index]), .b(denominator), .ready(div_ready), .done(div_done), .y(quotient));
+    genvar i;
+
+    // 16 个 scaled
+    generate
+      for(i=0;i<16;i=i+1) begin: GEN_SCALE
+        fp16_mul scale_op(
+            .a(raw_scores[i]),
+            .b(16'h3400),
+            .y(scaled_all[i])
+        );
+      end
+    endgenerate
+
+    // 比较器数 找 max_all
+    generate
+      for(i=0;i<8;i=i+1) begin:GEN_MAX_L1
+        assign max_l1[i] = 
+          less_than(scaled_all[2*i], scaled_all[2*i+1])
+          ? scaled_all[2*i+1]
+          : scaled_all[2*i];
+      end
+    endgenerate
+
+    generate
+      for(i=0;i<4;i=i+1) begin:GEN_MAX_L2
+        assign max_l2[i] = 
+          less_than(max_l1[2*i], max_l1[2*i+1])
+          ? max_l1[2*i+1]
+          : max_l1[2*i];
+      end
+    endgenerate
+
+    generate
+      for(i=0;i<2;i=i+1) begin:GEN_MAX_L3
+        assign max_l3[i] = 
+          less_than(max_l2[2*i], max_l2[2*i+1])
+          ? max_l2[2*i+1]
+          : max_l2[2*i];
+      end
+    endgenerate
+
+    assign max_all = 
+        less_than(max_l3[0], max_l3[1])
+        ? max_l3[1]
+        : max_l3[0];
+
+    // 16 个 EXP
+    generate
+        for (i = 0; i < 16; i = i + 1) begin : GEN_EXP
+            fp16_addsub subtract_op (
+                .sub(1'b1),
+                .a(scores[i]),
+                .b(row_max),
+                .y(delta_all[i])
+            );
+            assign exp_all[i] =
+                (delta_all[i][14:0] <= 15'h4c55)
+                ? exp_rom[delta_all[i][14:0]]
+                : 16'h0000;
+        end
+    endgenerate
+
+    // 计算分母的加法树
+    generate
+        for (i = 0; i < 8; i = i + 1) begin : GEN_SUM_L1
+            fp16_addsub add_op (
+                .sub(1'b0),
+                .a(weights[2*i]),
+                .b(weights[2*i+1]),
+                .y(sum_l1[i])
+            );
+        end
+    endgenerate
+    generate
+        for (i = 0; i < 4; i = i + 1) begin : GEN_SUM_L2
+            fp16_addsub add_op (
+                .sub(1'b0),
+                .a(sum_l1[2*i]),
+                .b(sum_l1[2*i+1]),
+                .y(sum_l2[i])
+            );
+        end
+    endgenerate
+    generate
+        for (i = 0; i < 2; i = i + 1) begin : GEN_SUM_L3
+            fp16_addsub add_op (
+                .sub(1'b0),
+                .a(sum_l2[2*i]),
+                .b(sum_l2[2*i+1]),
+                .y(sum_l3[i])
+            );
+        end
+    endgenerate
+    fp16_addsub add_final (
+        .sub(1'b0),
+        .a(sum_l3[0]),
+        .b(sum_l3[1]),
+        .y(sum_all)
+    );
+
+    // 16 个 除法器
+    generate
+        for (i = 0; i < 16; i = i + 1) begin : GEN_DIV
+            fp16_div divide_op (
+                .clk(clk),
+                .rst_n(rst_n),
+                .start(div_start_all),
+                .a(weights[i]),
+                .b(denominator),
+                .ready(div_ready_all[i]),
+                .done(div_done_all[i]),
+                .y(quotient_all[i])
+            );
+        end
+    endgenerate
+
+    assign all_div_ready = &div_ready_all; // 归约与
+    assign all_div_done = &div_done_all;
+    assign div_start_all =(state == DIV_START) && all_div_ready;
 
     // Finite values, plus the initial -infinity sentinel. Signed zeros compare equal.
     function automatic less_than(input [15:0] a, input [15:0] b);
@@ -50,34 +180,45 @@ module softmax_fp16 #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state <= IDLE;
-            index <= 0;
             row_max <= 16'hfc00; // 16'hfc00 = 1111 1100 0000 0000 指数位为全1 && 尾数=0，表示-inf
             denominator <= 0;
+            div_done_seen <= 16'b0;
         end else begin
             case (state)
                 IDLE: if (start) begin
                     state <= SCALE;
-                    index <= 0;
                     row_max <= 16'hfc00;
                     denominator <= 0;
                 end
                 SCALE: begin
-                    scores[index] <= scaled; // *0.25
-                    if (less_than(row_max, scaled)) row_max <= scaled; // 更新 row_max
-                    if (index == 15) begin index <= 0; state <= EXP; end 
-                    else index <= index + 1'b1;
+                    for (integer j=0;j<16;j=j+1) begin
+                        scores[j] <= scaled_all[j];
+                    end
+                    row_max <= max_all;
+                    state <= EXP; 
                 end
                 EXP: begin
-                    weights[index] <= exp_value;
-                    denominator <= sum_next;
-                    if (index == 15) begin index <= 0; state <= DIV_START; end
-                    else index <= index + 1'b1;
+                    for (integer j = 0; j < 16; j = j + 1)
+                        weights[j] <= exp_all[j];
+                    state <= SUM;
                 end
-                DIV_START: if (div_ready) state <= DIV_WAIT;
-                DIV_WAIT: if (div_done) begin
-                    probabilities[index] <= quotient;
-                    if (index == 15) begin index <= 0; state <= FINISH; end
-                    else begin index <= index + 1'b1; state <= DIV_START; end
+                SUM: begin
+                    denominator <= sum_all;
+                    state <= DIV_START;
+                end
+                DIV_START: begin
+                    if (all_div_ready) begin
+                        div_done_seen <= 16'b0;
+                        state <= DIV_WAIT;
+                    end
+                end
+                DIV_WAIT: begin
+                    div_done_seen <= div_done_seen | div_done_all;
+                    if(&(div_done_seen | div_done_all)) begin
+                        for(integer j = 0; j < 16; j = j + 1)
+                            probabilities[j] <= quotient_all[j];
+                        state <= FINISH;
+                    end
                 end
                 FINISH: state <= IDLE;
                 default: state <= IDLE;
