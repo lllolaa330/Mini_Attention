@@ -65,10 +65,13 @@ def main():
     parser.add_argument('--stalls', type=int, choices=[0, 1], default=1,
                         help='Main regression stalls; reset recovery always includes stalls')
     parser.add_argument('--outdir', type=Path, help='New directory; must not already exist')
-    parser.add_argument('--waves', action='store_true', help='Write potentially large VCD (gitignored)')
+    parser.add_argument('--waves', action='store_true', help='Write VCD (Icarus: controls, Softmax, four PEs; Verilator: full trace)')
+    parser.add_argument('--waves-full', action='store_true', help='Write full recursive VCD, including floating-point internals (large)')
     parser.add_argument('--vectors', type=Path, help='Custom JSON list: {name, category, words:[768 binary16 integers]}')
     parser.add_argument('--timeout', type=int, default=600, help='Wall-clock seconds per subprocess')
     args = parser.parse_args()
+    if args.waves_full:
+        args.waves = True
     if args.random_count < 0 or not 0 <= args.seed <= 0x7fffffff or args.timeout < 1:
         parser.error('Require random >= 0, 0 <= seed <= 2^31-1, timeout >= 1')
     for tool in ([args.sim, 'vvp'] if args.sim == 'iverilog' else ['verilator', 'make']):
@@ -121,6 +124,8 @@ def main():
                      '+OUTPUT=actual.txt', f'+SEED={args.seed}', f'+STALLS={args.stalls}']
         if args.waves:
             cmd += ['+WAVE=attention.vcd']
+        if args.waves_full:
+            cmd += ['+WAVE_FULL']
         command(cmd, run / 'simulation.log', args.timeout, cwd=run)
         log = (run / 'simulation.log').read_text()
         if 'TB PASS' not in log:

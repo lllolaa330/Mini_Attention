@@ -1,5 +1,11 @@
 # 验证记录
 
+## 2026-11-17：Mac/Surfer 紧凑波形入口
+
+默认 Icarus `--waves` 改为记录顶层、Softmax 和 PE[0,0]/[0,1]/[1,0]/[15,15] 的一层信号；`--waves-full` 保留递归全量跟踪。Verilator 不采用该层次筛选，README 和参数帮助已注明。RTL、ROM、软件数值模型均未修改。
+
+运行 `python3 scripts/run.py --random 0 --waves --outdir results/compact_wave_check_20261117`，Icarus 12.0 下 30 帧、7,680 个输出全部逐位匹配且精度通过，14 次复位、12,577 个输入气泡周期、2,437 个输出背压周期。生成 attention.vcd 为 18,827,197 字节，138 个信号声明；检查包含四个指定 PE 的 acc 和顶层 state，且无 FMA 内部层次。完整结果见该目录 summary.json、manifest.json 和 simulation.log。VCD 已被 Git 忽略；本轮测试平台/脚本/说明改动尚未提交推送。
+
 日期：2026-11-17（Asia/Shanghai）。本轮在本机 macOS arm64 执行；Python 3.9.6、Apple clang 21.0.0、Icarus Verilog 12.0 stable、Verilator 5.044。浮点库版本见 THIRD_PARTY.md。仿真时钟周期为 10 ns，此值不代表硬件时序已闭合。
 
 ## 发布版本验证

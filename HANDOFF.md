@@ -2,6 +2,8 @@
 
 更新：2026-11-17，Asia/Shanghai。
 
+当前正在逐步指导用户在 Mac 的 VS Code/Surfer 查看波形。Surfer 已由用户安装，WaveTrace 工作区禁用。已生成并验证 `results/compact_wave_check_20261117/attention.vcd`（约 18 MiB，默认 Icarus 的紧凑范围）；下一步让用户打开该文件，再添加 clk/rst_n、dut.state、feed_step 和代表 PE 的 valid/acc。前两个用例是全零，观察数据变化应跳到第三帧或后续非零用例。波形入口改动只在本地，尚未提交/推送；详细验证见 EXPERIMENTS.md 最新一节。
+
 ## 已完成
 
 - 新建独立 Mini_Attention 项目，16×16、256 个 FP16 FMA PE 的输出驻留阵列，复用计算 QKᵀ 和 PV。

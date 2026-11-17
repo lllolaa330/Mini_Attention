@@ -29,7 +29,9 @@ python3 scripts/run.py --sim iverilog --random 64 --seed 20261117 \
   --outdir results/my_new_run --timeout 600
 ```
 
-`--outdir` 必须是不存在的目录，防止覆盖历史证据。不传时自动生成唯一目录。输入包括各自行优先的 Q、K、V 共 768 个 binary16 编码；默认用例由 `model/vectors.py` 生成。使用 `--vectors cases.json` 可注入自定义输入，每项包含 `name`、`category`、`words`（768 个整数编码）。`--waves` 输出波形；波形和编译缓存不纳入 Git。
+`--outdir` 必须是不存在的目录，防止覆盖历史证据。不传时自动生成唯一目录。输入包括各自行优先的 Q、K、V 共 768 个 binary16 编码；默认用例由 `model/vectors.py` 生成。使用 `--vectors cases.json` 可注入自定义输入，每项包含 `name`、`category`、`words`（768 个整数编码）。
+
+Mac/VS Code 波形入门：安装 Surfer 扩展后执行 `make quick ARGS="--waves"`，在终端最后显示的 Evidence 目录打开 `attention.vcd`。默认 Icarus 仿真记录顶层控制、Softmax 以及 PE[0,0]、[0,1]、[1,0]、[15,15] 的本地接口和累加值，便于查看错拍传播。使用 `--waves-full` 可递归记录全部浮点内部信号，文件会显著变大。Verilator 忽略 `$dumpvars` 的层次深度/选择，使用它运行 `--waves` 时仍为完整跟踪。波形和编译缓存不纳入 Git。
 
 对刚刚在本机跑通的目录，还可翻转一位期望值，检查 scoreboard 确实拒绝错误：
 

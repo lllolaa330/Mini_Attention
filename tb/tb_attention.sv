@@ -196,7 +196,20 @@ module tb_attention;
         if ($value$plusargs("STALLS=%d", stall_mode)) begin end
         rng = seed_arg == 0 ? 32'd1 : 32'(seed_arg);
         if ($value$plusargs("WAVE=%s", wave_path)) begin
-            $dumpfile(wave_path); $dumpvars(0, tb_attention);
+            $dumpfile(wave_path);
+            if ($test$plusargs("WAVE_FULL")) begin
+                $dumpvars(0, tb_attention);
+            end else begin
+                // Compact teaching trace: controls and four local PE interfaces.
+                // Depth 1 excludes the large combinational HardFloat internals.
+                $dumpvars(1, tb_attention);
+                $dumpvars(1, tb_attention.dut);
+                $dumpvars(1, tb_attention.dut.sm);
+                $dumpvars(1, tb_attention.dut.array_core.rows[0].cols[0].pe);
+                $dumpvars(1, tb_attention.dut.array_core.rows[0].cols[1].pe);
+                $dumpvars(1, tb_attention.dut.array_core.rows[1].cols[0].pe);
+                $dumpvars(1, tb_attention.dut.array_core.rows[15].cols[15].pe);
+            end
         end
         $readmemh(input_path, inputs); $readmemh(expected_path, expected);
         fd = $fopen(output_path, "w");
