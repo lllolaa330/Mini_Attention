@@ -20,4 +20,6 @@
 
 若要比较第二设计，先确定 FPGA 器件或 ASIC 工艺/库，再综合当前 baseline。浮点流水线、并行 Softmax、存储映射和精度变化都需要单独记录变量与同条件对比。当前没有已知功能仿真失败，没有尚在运行的验证任务。
 
-GitHub 发布目标：`lllolaa330/Mini_Attention`，main 分支，私有仓库。实际上传和提交状态以 Git remote、HEAD 及远端分支为准。
+已发布到 [lllolaa330/Mini_Attention](https://github.com/lllolaa330/Mini_Attention)，main 分支，私有仓库；初次实现提交 `34559ae87ed8d4639dcc17d0e723d62e25c99ec3`。随后补齐上游测试构建配置归档，实际最新提交以 Git remote/HEAD 为准。
+
+干净 Git 导出包的源码摘要审计已通过，软件模型可从导出文件重新编译并通过 5 个测试；证据见 results/export_check。上传不包含本地构建缓存。

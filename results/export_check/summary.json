@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "scope": "Clean git archive source audit; clean exported model build and 5 unit tests",
+  "initial_publish": "34559ae87ed8d4639dcc17d0e723d62e25c99ec3",
+  "initial_audit_failure": "Broad build/ ignore omitted upstream HardFloat test/build configuration captured by manifest; changed ignore to /build/ and included five upstream configuration files.",
+  "initial_model_check": "PASS (5 tests), all necessary numerical dependencies already present",
+  "fixed_source_audit": "PASS; same RTL/model/testbench/ROM as final simulations",
+  "audit_command": "python3 <clean-git-archive>/results/release_audit/audit.py",
+  "model_command": "make -C <clean-git-archive> model"
+}
