@@ -1,0 +1,4 @@
+VCD info: dumpfile attention.vcd opened for output.
+PASS frames=6 input_beats=288 P=1536 Y=1536 done=6
+/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/frame52_top_20261118_9myellui/tb_frame52_trace.sv:59: $finish called at 6920000 (1ps)
+HELD groups=18 stalled_valid_clocks=414 both_output_slots_full=285

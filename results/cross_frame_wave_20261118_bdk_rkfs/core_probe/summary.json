@@ -1,0 +1,84 @@
+{
+  "scope": "one unchanged systolic_array and one unchanged online_softmax16, fixture-resident matrices, always-accepting result capture, no top-level input, frame-bank or backpressure controller",
+  "frames": 6,
+  "simulator": "Icarus Verilog version 12.0 (stable) ()",
+  "source_manifest": "../sim/manifest.json",
+  "testbench_sha256": "44709979242c7cf064ddbceeb4f66ac7f08712a0ab4627478b6add99556c408f",
+  "input_hashes": {
+    "input.hex": "e4349eed0e9f5b14e61ce535238d178dcb392fbb45d567b3d44d6ae45e1a9aef",
+    "expected.hex": "83278b1bae1baae91aed5086843ef8326e94698c344fd29f56b8231475401ed5",
+    "expected_p.hex": "b14f7d001cbfb39407ce77449406c32337002ca2cb06844e96558bbd86a5611d"
+  },
+  "cases": [
+    {
+      "ii": 52,
+      "pv_offset": 36,
+      "outcome": "PASS",
+      "compile": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_overlap_schedule",
+        "-Ptb_overlap_schedule.II=52",
+        "-Ptb_overlap_schedule.PV_OFFSET=36",
+        "-o",
+        "/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/cross_frame_wave_20261118_bdk_rkfs/core_probe/ii52_pv36.vvp",
+        "-f",
+        "rtl/files.f",
+        "results/cross_frame_wave_20261118_bdk_rkfs/tb_overlap_schedule.sv"
+      ],
+      "run": [
+        "vvp",
+        "/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/cross_frame_wave_20261118_bdk_rkfs/core_probe/ii52_pv36.vvp",
+        "+WAVE=/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/cross_frame_wave_20261118_bdk_rkfs/core_probe/ii52_pv36.vcd"
+      ],
+      "log": "ii52_pv36.log"
+    },
+    {
+      "ii": 48,
+      "pv_offset": 36,
+      "outcome": "Expected conflict",
+      "compile": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_overlap_schedule",
+        "-Ptb_overlap_schedule.II=48",
+        "-Ptb_overlap_schedule.PV_OFFSET=36",
+        "-o",
+        "/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/cross_frame_wave_20261118_bdk_rkfs/core_probe/ii48_pv36.vvp",
+        "-f",
+        "rtl/files.f",
+        "results/cross_frame_wave_20261118_bdk_rkfs/tb_overlap_schedule.sv"
+      ],
+      "run": [
+        "vvp",
+        "/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/cross_frame_wave_20261118_bdk_rkfs/core_probe/ii48_pv36.vvp"
+      ],
+      "log": "ii48_pv36.log"
+    },
+    {
+      "ii": 48,
+      "pv_offset": 64,
+      "outcome": "PASS",
+      "compile": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_overlap_schedule",
+        "-Ptb_overlap_schedule.II=48",
+        "-Ptb_overlap_schedule.PV_OFFSET=64",
+        "-o",
+        "/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/cross_frame_wave_20261118_bdk_rkfs/core_probe/ii48_pv64.vvp",
+        "-f",
+        "rtl/files.f",
+        "results/cross_frame_wave_20261118_bdk_rkfs/tb_overlap_schedule.sv"
+      ],
+      "run": [
+        "vvp",
+        "/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/cross_frame_wave_20261118_bdk_rkfs/core_probe/ii48_pv64.vvp"
+      ],
+      "log": "ii48_pv64.log"
+    }
+  ]
+}

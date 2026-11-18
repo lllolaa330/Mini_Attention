@@ -1,0 +1,66 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/frame52_top_20261118_9myellui/six_frames_final/tb_attention.vvp', '+INPUT=input.hex', '+EXPECTED=expected.hex', '+EXPECTED_P=expected_p.hex', '+OUTPUT=actual.txt', '+SEED=20261117', '+STALLS=0', '+WAVE=attention.vcd']
+VCD info: dumpfile attention.vcd opened for output.
+BATCH START first_run=0 count=6 kind=main
+PIPELINE run=0 qk_first=35 qk_last=80 issue_first=67 issue_last=82 return_first=70 return_last=85 pv_first=71 pv_last=116 overlap=10 cross=0 resident=0
+FRAME PASS run=0 case=0 cycles=115 mode=0 first_in=3 first_out=87 last_out=117
+PIPELINE run=1 qk_first=87 qk_last=132 issue_first=119 issue_last=134 return_first=122 return_last=137 pv_first=123 pv_last=168 overlap=10 cross=30 resident=0
+FRAME PASS run=1 case=1 cycles=119 mode=0 first_in=51 first_out=139 last_out=169
+PIPELINE run=2 qk_first=139 qk_last=184 issue_first=171 issue_last=186 return_first=174 return_last=189 pv_first=175 pv_last=220 overlap=10 cross=30 resident=0
+FRAME PASS run=2 case=2 cycles=120 mode=0 first_in=102 first_out=191 last_out=221
+PIPELINE run=3 qk_first=191 qk_last=236 issue_first=223 issue_last=238 return_first=226 return_last=241 pv_first=227 pv_last=272 overlap=10 cross=30 resident=0
+FRAME PASS run=3 case=3 cycles=120 mode=0 first_in=154 first_out=243 last_out=273
+PIPELINE run=4 qk_first=243 qk_last=288 issue_first=275 issue_last=290 return_first=278 return_last=293 pv_first=279 pv_last=324 overlap=10 cross=30 resident=0
+FRAME PASS run=4 case=4 cycles=120 mode=0 first_in=206 first_out=295 last_out=325
+PIPELINE run=5 qk_first=295 qk_last=340 issue_first=327 issue_last=342 return_first=330 return_last=345 pv_first=331 pv_last=376 overlap=10 cross=30 resident=0
+FRAME PASS run=5 case=5 cycles=120 mode=0 first_in=258 first_out=347 last_out=377
+RESET PASS event=0
+BATCH START first_run=6 count=1 kind=recovery
+PIPELINE run=6 qk_first=452 qk_last=497 issue_first=484 issue_last=499 return_first=487 return_last=502 pv_first=488 pv_last=588 overlap=10 cross=0 resident=0
+FRAME PASS run=6 case=1 cycles=226 mode=1 first_in=390 first_out=529 last_out=615
+RESET PASS event=1
+BATCH START first_run=7 count=1 kind=recovery
+PIPELINE run=7 qk_first=768 qk_last=813 issue_first=800 issue_last=815 return_first=803 return_last=818 pv_first=804 pv_last=906 overlap=10 cross=0 resident=0
+FRAME PASS run=7 case=2 cycles=229 mode=1 first_in=705 first_out=845 last_out=933
+RESET PASS event=2
+BATCH START first_run=8 count=1 kind=recovery
+PIPELINE run=8 qk_first=1032 qk_last=1077 issue_first=1064 issue_last=1079 return_first=1067 return_last=1082 pv_first=1068 pv_last=1171 overlap=10 cross=0 resident=0
+FRAME PASS run=8 case=3 cycles=223 mode=1 first_in=976 first_out=1109 last_out=1198
+RESET PASS event=3
+BATCH START first_run=9 count=1 kind=recovery
+PIPELINE run=9 qk_first=1320 qk_last=1365 issue_first=1352 issue_last=1367 return_first=1355 return_last=1370 pv_first=1356 pv_last=1454 overlap=10 cross=0 resident=0
+FRAME PASS run=9 case=4 cycles=225 mode=1 first_in=1257 first_out=1397 last_out=1481
+RESET PASS event=4
+BATCH START first_run=10 count=1 kind=recovery
+PIPELINE run=10 qk_first=1627 qk_last=1672 issue_first=1659 issue_last=1674 return_first=1662 return_last=1677 pv_first=1663 pv_last=1761 overlap=10 cross=0 resident=0
+FRAME PASS run=10 case=5 cycles=236 mode=1 first_in=1554 first_out=1704 last_out=1789
+RESET PASS event=5
+BATCH START first_run=11 count=1 kind=recovery
+PIPELINE run=11 qk_first=1914 qk_last=1959 issue_first=1946 issue_last=1961 return_first=1949 return_last=1964 pv_first=1950 pv_last=2048 overlap=10 cross=0 resident=0
+FRAME PASS run=11 case=0 cycles=211 mode=1 first_in=1865 first_out=1991 last_out=2075
+RESET PASS event=6
+BATCH START first_run=12 count=1 kind=recovery
+PIPELINE run=12 qk_first=2230 qk_last=2275 issue_first=2262 issue_last=2277 return_first=2265 return_last=2280 pv_first=2266 pv_last=2363 overlap=10 cross=0 resident=0
+FRAME PASS run=12 case=1 cycles=239 mode=1 first_in=2152 first_out=2307 last_out=2390
+RESET PASS event=7
+BATCH START first_run=13 count=1 kind=recovery
+PIPELINE run=13 qk_first=2599 qk_last=2644 issue_first=2631 issue_last=2646 return_first=2634 return_last=2649 pv_first=2635 pv_last=2733 overlap=10 cross=0 resident=0
+FRAME PASS run=13 case=2 cycles=250 mode=1 first_in=2511 first_out=2676 last_out=2760
+PV WAIT RESET PASS
+BATCH START first_run=14 count=1 kind=recovery
+PIPELINE run=14 qk_first=2923 qk_last=2968 issue_first=2955 issue_last=2970 return_first=2958 return_last=2973 pv_first=2959 pv_last=3061 overlap=10 cross=0 resident=0
+FRAME PASS run=14 case=5 cycles=228 mode=1 first_in=2861 first_out=3004 last_out=3088
+QUEUED RESET PASS
+BATCH START first_run=15 count=1 kind=recovery
+PIPELINE run=15 qk_first=3275 qk_last=3320 issue_first=3307 issue_last=3322 return_first=3310 return_last=3325 pv_first=3311 pv_last=3408 overlap=10 cross=0 resident=0
+FRAME PASS run=15 case=0 cycles=221 mode=1 first_in=3215 first_out=3352 last_out=3435
+BATCH START first_run=16 count=2 kind=partial_v
+PIPELINE run=16 qk_first=3470 qk_last=3528 issue_first=3502 issue_last=3530 return_first=3505 return_last=3533 pv_first=3506 pv_last=3723 overlap=10 cross=0 resident=0
+FRAME PASS run=16 case=1 cycles=313 mode=1 first_in=3438 first_out=3666 last_out=3750
+PIPELINE run=17 qk_first=3666 qk_last=3740 issue_first=3727 issue_last=3742 return_first=3730 return_last=3745 pv_first=3731 pv_last=3779 overlap=10 cross=29 resident=1
+FRAME PASS run=17 case=2 cycles=239 mode=1 first_in=3543 first_out=3751 last_out=3781
+COVERAGE frames=18 resets=11 input_bubbles=600 output_stall_cycles=1015 no_stall_cycles=115
+STREAM_COVERAGE input_blocked=40 overlap_v_qk=238 overlap_v_sm=75 next_input_output=120 first_output_pv=18 long_stall_cycles=0 queued_resets=1 reset_event_mask=255 resident_count=1
+CROSS_COVERAGE cross_frame_mac_cycles=179 cross_stall_cycles=29 bank_reuse_before_retire=4
+V_COVERAGE pv_steps_before_v_complete=32 pv_missing_v_cycles=25 pv_wait_resets=1 output_input_bubble_stalls=13
+TB PASS
+tb/tb_attention.sv:687: $finish called at 38036000 (1ps)

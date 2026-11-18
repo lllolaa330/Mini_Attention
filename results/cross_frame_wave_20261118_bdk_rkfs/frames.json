@@ -1,0 +1,285 @@
+{
+  "vcd": "sim/attention.vcd",
+  "sha256": "d79e0d01bf866da104a87ebb855f32b9a217d55dca298336be96980adda5edb6",
+  "time": "absolute testbench cycle from VCD before rising edge; intervals inclusive, t_ps = 10000 * cycle + 5000",
+  "frame_ids": "zero based; contiguous main batch, source valid while data remain, ready sink",
+  "physical_MAC": "local pe.step && a_valid_in && b_valid_in; each coordinate performs 16 QK MACs then 16 PV MACs between retirements; bit 16*i+j",
+  "frames": [
+    {
+      "frame": 0,
+      "case": "random_bits_000",
+      "events": {
+        "Q": [
+          3,
+          18
+        ],
+        "K": [
+          19,
+          34
+        ],
+        "V": [
+          35,
+          50
+        ],
+        "CLEAR": [
+          35,
+          35
+        ],
+        "QK": [
+          36,
+          81
+        ],
+        "score": [
+          52,
+          82
+        ],
+        "norm_issue": [
+          68,
+          83
+        ],
+        "prob_valid": [
+          71,
+          86
+        ],
+        "PV": [
+          72,
+          117
+        ],
+        "out": [
+          88,
+          118
+        ]
+      }
+    },
+    {
+      "frame": 1,
+      "case": "random_uniform_001",
+      "events": {
+        "Q": [
+          51,
+          66
+        ],
+        "K": [
+          67,
+          82
+        ],
+        "V": [
+          83,
+          98
+        ],
+        "CLEAR": [
+          120,
+          120
+        ],
+        "QK": [
+          121,
+          166
+        ],
+        "score": [
+          137,
+          167
+        ],
+        "norm_issue": [
+          153,
+          168
+        ],
+        "prob_valid": [
+          156,
+          171
+        ],
+        "PV": [
+          157,
+          202
+        ],
+        "out": [
+          173,
+          203
+        ]
+      }
+    },
+    {
+      "frame": 2,
+      "case": "random_extremes_002",
+      "events": {
+        "Q": [
+          119,
+          134
+        ],
+        "K": [
+          135,
+          150
+        ],
+        "V": [
+          151,
+          166
+        ],
+        "CLEAR": [
+          205,
+          205
+        ],
+        "QK": [
+          206,
+          251
+        ],
+        "score": [
+          222,
+          252
+        ],
+        "norm_issue": [
+          238,
+          253
+        ],
+        "prob_valid": [
+          241,
+          256
+        ],
+        "PV": [
+          242,
+          287
+        ],
+        "out": [
+          258,
+          288
+        ]
+      }
+    },
+    {
+      "frame": 3,
+      "case": "random_bits_003",
+      "events": {
+        "Q": [
+          204,
+          219
+        ],
+        "K": [
+          220,
+          235
+        ],
+        "V": [
+          236,
+          251
+        ],
+        "CLEAR": [
+          290,
+          290
+        ],
+        "QK": [
+          291,
+          336
+        ],
+        "score": [
+          307,
+          337
+        ],
+        "norm_issue": [
+          323,
+          338
+        ],
+        "prob_valid": [
+          326,
+          341
+        ],
+        "PV": [
+          327,
+          372
+        ],
+        "out": [
+          343,
+          373
+        ]
+      }
+    },
+    {
+      "frame": 4,
+      "case": "random_uniform_004",
+      "events": {
+        "Q": [
+          289,
+          304
+        ],
+        "K": [
+          305,
+          320
+        ],
+        "V": [
+          321,
+          336
+        ],
+        "CLEAR": [
+          375,
+          375
+        ],
+        "QK": [
+          376,
+          421
+        ],
+        "score": [
+          392,
+          422
+        ],
+        "norm_issue": [
+          408,
+          423
+        ],
+        "prob_valid": [
+          411,
+          426
+        ],
+        "PV": [
+          412,
+          457
+        ],
+        "out": [
+          428,
+          458
+        ]
+      }
+    },
+    {
+      "frame": 5,
+      "case": "random_extremes_005",
+      "events": {
+        "Q": [
+          374,
+          389
+        ],
+        "K": [
+          390,
+          405
+        ],
+        "V": [
+          406,
+          421
+        ],
+        "CLEAR": [
+          460,
+          460
+        ],
+        "QK": [
+          461,
+          506
+        ],
+        "score": [
+          477,
+          507
+        ],
+        "norm_issue": [
+          493,
+          508
+        ],
+        "prob_valid": [
+          496,
+          511
+        ],
+        "PV": [
+          497,
+          542
+        ],
+        "out": [
+          513,
+          543
+        ]
+      }
+    }
+  ]
+}

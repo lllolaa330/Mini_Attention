@@ -16,14 +16,13 @@ module attention_fp16 #(
     output wire out_last, busy,
     output reg done
 );
-    localparam [1:0] LOAD=0, CLEAR=1, COMPUTE=2, DRAIN=3;
-    reg [1:0] state;
     reg [5:0] load_count;
     localparam [1:0] INPUT_Q=0, INPUT_K=1, INPUT_V=2;
     wire [1:0] input_matrix = load_count[5:4];
     wire [3:0] input_index = load_count[3:0];
     reg [5:0] qk_age, feed_step;
-    reg write_bank, compute_bank;
+    reg write_bank, qk_bank, pv_bank;
+    reg qk_active, pv_active;
     reg [1:0] qk_ready, bank_full;
     reg [15:0] p_mem [0:15][0:15];   // Each row head takes 16 words in parallel.
     reg [15:0] p_ready;
@@ -32,22 +31,28 @@ module attention_fp16 #(
     wire wave_ready = !skid_valid || out_ready;
     wire wave_slot_available = !wave_valid || wave_ready;
 
-    // All row and column inputs have injected their last Q/K word after step
-    // 30. QK tokens can still be computing in the lower-right corner until 45.
-    wire array_clear = state == CLEAR;
-    wire qk_step = state == COMPUTE && qk_age <= 6'd45;
     wire input_fire = in_valid && in_ready;
-    // All committed V columns form a prefix in this frame slot. Logical step t
-    // consumes columns max(0,t-15)..min(t,15); after t=30 only the links drain.
-    wire [4:0] v_cols_ready = bank_full[compute_bank] ? 5'd16 :
-        (write_bank == compute_bank && input_matrix == INPUT_V ? {1'b0,input_index} : 5'd0);
+    // QK and PV each own a wave counter and a frame pointer. Step 36 of
+    // this frame's QK shares its clock with step 0 of its PV. After 16 PV
+    // steps each PE is free for the following QK wave at the same skew.
+    wire can_launch_qk = qk_ready[qk_bank] &&
+        (qk_bank == pv_bank || (pv_active && feed_step >= 6'd16));
+    wire pv_due = qk_active && qk_bank == pv_bank && qk_age == 6'd36;
+    wire pv_requested = pv_active || pv_due;
+    wire [4:0] v_cols_ready = bank_full[pv_bank] ? 5'd16 :
+        (write_bank == pv_bank && input_matrix == INPUT_V ? {1'b0,input_index} : 5'd0);
     wire [3:0] newest = feed_step < 16 ? feed_step[3:0] : 4'd15;
     wire v_ready = feed_step > 30 || v_cols_ready > {1'b0,newest};
-    // Rows return in order. If the newest active row is ready, earlier ones
-    // are also ready. After boundary injection ends, only internal tokens move.
-    wire pv_inputs_ready = v_ready && p_ready[newest];
-    wire pv_step = state == COMPUTE && qk_age >= 31 && pv_inputs_ready && wave_slot_available;
+    // All operands have entered the mesh after step 30. Before then, every
+    // active edge needs its P row and V column. Both are committed in order.
+    wire pv_inputs_ready = feed_step > 30 || (v_ready && p_ready[newest]);
+    // When two waves share the mesh they must keep their relative skew. This
+    // also protects a live Y diagonal until it is accepted or copied to skid.
+    wire advance = wave_slot_available && (!pv_requested || pv_inputs_ready);
+    wire qk_step = (qk_active || can_launch_qk) && advance;
+    wire pv_step = pv_requested && advance;
     wire array_step = qk_step || pv_step;
+    wire release_input = pv_step && feed_step == 6'd30;
 
     wire [15:0] a_edge [0:15], b_edge [0:15];
     wire [15:0] edge_valid;
@@ -74,14 +79,14 @@ module attention_fp16 #(
             wire q_input = qk_step && q_idx < 16;
             wire p_input = pv_step && p_idx < 16;
             assign edge_valid[lane] = q_input || p_input;
-            assign a_edge[lane] = q_input ? q_row[compute_bank][16*q_idx[3:0] +: 16] :
+            assign a_edge[lane] = q_input ? q_row[qk_bank][16*q_idx[3:0] +: 16] :
                                   p_input ? p_mem[lane][p_idx[3:0]] : 16'b0;
-            assign b_edge[lane] = q_input ? k_row[compute_bank][16*q_idx[3:0] +: 16] :
-                                  p_input ? v_column[compute_bank][16*p_idx[3:0] +: 16] : 16'b0;
+            assign b_edge[lane] = q_input ? k_row[qk_bank][16*q_idx[3:0] +: 16] :
+                                  p_input ? v_column[pv_bank][16*p_idx[3:0] +: 16] : 16'b0;
         end
         for (d=0; d<31; d=d+1) begin : diagonals
             // PE[i,j] consumes k at logical step i+j+k of either wave. Once
-            // PV can start, these two intervals can never coincide at one PE.
+            // launched, adjacent waves are at least 16 enabled steps apart.
             // A negative offset wraps to at least 34 in these six-bit counters.
             wire [5:0] q_term = qk_age - 6'(d);
             wire [5:0] p_term = feed_step - 6'(d);
@@ -92,7 +97,7 @@ module attention_fp16 #(
         end
     endgenerate
     systolic_array #(.N(16), .DIAGONAL_CONTROL(1'b1)) array_core (
-        .clk(clk), .rst_n(rst_n), .clear(array_clear), .step(array_step),
+        .clk(clk), .rst_n(rst_n), .clear(1'b0), .step(array_step),
         .a_edge(a_edge), .b_edge(b_edge), .a_valid(edge_valid), .b_valid(edge_valid),
         .accum(accum), .diagonal_enable(diagonal_enable), .diagonal_first(diagonal_first)
     );
@@ -119,7 +124,7 @@ module attention_fp16 #(
     wire [3:0] prob_row;
     wire [15:0] probability [0:15];
     online_softmax16 #(.EXP_FILE(EXP_FILE)) normalizer (
-        .clk(clk), .rst_n(rst_n), .clear(array_clear),
+        .clk(clk), .rst_n(rst_n), .clear(1'b0),
         .score_valid(score_valid), .score_col(score_col), .raw_score(raw_score),
         .norm_issue(norm_issue), .norm_issue_row(norm_issue_row),
         .prob_valid(prob_valid), .prob_row(prob_row), .probability(probability)
@@ -129,14 +134,14 @@ module attention_fp16 #(
             for (integer j=0; j<16; j=j+1) p_mem[prob_row][j] <= probability[j];
     end
 
-    // The writer owns an input bank through V column 15 (beat 47). It may fill the other
-    // bank while this frame computes or waits for its last output handshake.
+    // A full slot is returned immediately after its last V read. The old PV
+    // tail travels on the PE links, independently of input writes to that slot.
     assign in_ready = rst_n && !bank_full[write_bank];
     wire end_k = input_fire && input_matrix == INPUT_K && input_index == 4'd15;
     wire end_v = input_fire && input_matrix == INPUT_V && input_index == 4'd15;
-    wire current_k_ready = qk_ready[compute_bank] || (write_bank == compute_bank && end_k);
     wire retire = out_valid && out_ready && out_last;
-    assign busy = rst_n && (load_count != 0 || (|bank_full) || state != LOAD);
+    assign busy = rst_n && (load_count != 0 || (|bank_full) || (|qk_ready) ||
+                            qk_active || pv_active || wave_valid || skid_valid);
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -153,10 +158,8 @@ module attention_fp16 #(
                     load_count <= 0;
                 end else load_count <= load_count + 1'b1;
             end
-            if (retire) begin
-                bank_full[compute_bank] <= 0;
-                qk_ready[compute_bank] <= 0;
-            end
+            if (qk_step && qk_age == 0) qk_ready[qk_bank] <= 0;
+            if (release_input) bank_full[pv_bank] <= 0;
         end
     end
 
@@ -213,8 +216,10 @@ module attention_fp16 #(
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            state <= LOAD;
-            compute_bank <= 0;
+            qk_active <= 0;
+            pv_active <= 0;
+            qk_bank <= 0;
+            pv_bank <= 0;
             qk_age <= 0;
             feed_step <= 0;
             score_wave <= 0;
@@ -226,27 +231,30 @@ module attention_fp16 #(
             score_wave <= qk_step && qk_age >= 15;
             if (qk_step && qk_age >= 15)
                 score_diagonal <= 5'(qk_age - 6'd15);
-            if (prob_valid) p_ready[prob_row] <= 1'b1;
-            case (state)
-                LOAD: if (current_k_ready) state <= CLEAR;
-                CLEAR: begin
+            // The following frame can be at most 14 QK steps old at this
+            // frame's last P read; its first normalized row arrives later.
+            if (release_input) p_ready <= 0;
+            else if (prob_valid) p_ready[prob_row] <= 1'b1;
+            if (qk_step) begin
+                if (qk_age == 6'd45) begin
+                    qk_active <= 0;
                     qk_age <= 0;
+                    qk_bank <= ~qk_bank;
+                end else begin
+                    qk_active <= 1;
+                    qk_age <= qk_age + 1'b1;
+                end
+            end
+            if (pv_step) begin
+                if (feed_step == 6'd45) begin
+                    pv_active <= 0;
                     feed_step <= 0;
-                    p_ready <= 0;
-                    state <= COMPUTE;
+                    pv_bank <= ~pv_bank;
+                end else begin
+                    pv_active <= 1;
+                    feed_step <= feed_step + 1'b1;
                 end
-                COMPUTE: begin
-                    if (qk_step) qk_age <= qk_age + 1'b1;
-                    if (pv_step) begin
-                        if (feed_step == 45) state <= DRAIN;
-                        else feed_step <= feed_step + 1'b1;
-                    end
-                end
-                DRAIN: if (retire) begin
-                    compute_bank <= ~compute_bank;
-                    state <= LOAD;
-                end
-            endcase
+            end
         end
     end
 endmodule

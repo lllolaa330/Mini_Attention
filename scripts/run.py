@@ -121,7 +121,10 @@ def cycle_stats(values):
     return {'min': min(values), 'max': max(values), 'mean': sum(values)/len(values)}
 
 
-def verify_frames(path, log, cases, single_frame, stalls):
+def verify_frames(path, log, cases, single_frame, stalls, *, overlap_schedule=None):
+    # Archived comparison scripts also read traces from the frame-serial top.
+    if overlap_schedule is None:
+        overlap_schedule = 'CROSS_COVERAGE ' in log
     batches = expected_batches(len(cases), single_frame, stalls)
     case_ids = [cid for _, ids in batches for cid in ids]
     captured = read_diagonal_capture(path, case_ids)
@@ -129,7 +132,11 @@ def verify_frames(path, log, cases, single_frame, stalls):
     records = re.findall(r'^FRAME PASS run=(\d+) case=(\d+) cycles=(\d+) mode=(\d+) '
                          r'first_in=(\d+) first_out=(\d+) last_out=(\d+)$', log, re.M)
     timing_keys = ('run', 'qk_first', 'qk_last', 'issue_first', 'issue_last',
-                   'return_first', 'return_last', 'pv_first', 'overlap', 'resident')
+                   'return_first', 'return_last', 'pv_first')
+    if overlap_schedule:
+        timing_keys += ('pv_last', 'overlap', 'cross', 'resident')
+    else:
+        timing_keys += ('overlap', 'resident')
     events = re.findall(r'^PIPELINE ' + ' '.join(rf'{key}=(\d+)' for key in timing_keys) + '$', log, re.M)
     if len(markers)!=len(batches) or len(records)!=len(case_ids) or len(events)!=len(records):
         raise ValueError('Incomplete or duplicate batch/frame/pipeline timing records in simulation.log')
@@ -165,8 +172,10 @@ def verify_frames(path, log, cases, single_frame, stalls):
             resident = kind == 'partial_v' and pos == 1
             if pipeline.pop('resident') != int(resident):
                 raise ValueError(f'Incorrect resident frame tag for run {rid}')
-            if pipeline['issue_last'] - pipeline['issue_first'] != 15 or pipeline['return_last'] - pipeline['return_first'] != 15:
-                raise ValueError(f'Frame {rid} did not normalize 16 complete rows on 16 consecutive clocks')
+            issue_span = pipeline['issue_last'] - pipeline['issue_first']
+            return_span = pipeline['return_last'] - pipeline['return_first']
+            if issue_span < 15 or issue_span != return_span or ((mode == 0 or not overlap_schedule) and issue_span != 15):
+                raise ValueError(f'Frame {rid} has invalid timing for the 16 normalization rows')
             if resident and (not pipeline['overlap'] or pipeline['pv_first'] >= pipeline['qk_last']):
                 raise ValueError('No simultaneous QK/PV MACs in the resident frame')
             frame = {
@@ -182,12 +191,25 @@ def verify_frames(path, log, cases, single_frame, stalls):
                 'normalization_first_return': pipeline['return_first'],
                 'normalization_last_return': pipeline['return_last'],
                 'first_qk_mac': pipeline['qk_first'], 'last_qk_mac': pipeline['qk_last'],
-                'first_pv_mac': pipeline['pv_first'], 'qk_pv_overlap_cycles': pipeline['overlap'],
+                'first_pv_mac': pipeline['pv_first'], 'last_pv_mac': pipeline.get('pv_last'),
+                'qk_pv_overlap_cycles': pipeline['overlap'], 'cross_frame_mac_cycles': pipeline.get('cross'),
                 'resident_at_dispatch': resident, 'normalized_fp16_words_checked': 256,
                 'cycles': cycles, 'input_ii_cycles': first_in-batch_frames[-1]['first_in_cycle'] if pos else None,
                 'output_beats': len(beats), 'bit_exact': True, 'finite': True,
                 'rmse': rmse, 'max_abs_error': maximum, 'passed': True,
             }
+            if batch_frames:
+                previous = batch_frames[-1]
+                frame['output_ii_cycles'] = first_out - previous['first_out_cycle']
+                frame['qk_ii_cycles'] = frame['first_qk_mac'] - previous['first_qk_mac']
+                if overlap_schedule and mode == previous['mode'] == 0:
+                    if (frame['qk_ii_cycles'] != 52 or frame['output_ii_cycles'] != 52
+                            or frame['cross_frame_mac_cycles'] != 30):
+                        raise ValueError(f'Clean frame {rid}: expected 52-cycle II and 30 cycles of cross-frame MACs')
+                    if pos >= 3 and frame['input_ii_cycles'] != 52:
+                        raise ValueError(f'Clean frame {rid}: expected steady 52-cycle input interval')
+            else:
+                frame['output_ii_cycles'] = frame['qk_ii_cycles'] = None
             batch_frames.append(frame)
             report.append(frame)
 
@@ -201,6 +223,8 @@ def verify_frames(path, log, cases, single_frame, stalls):
             'first_output_latency_cycles': cycle_stats([f['first_output_latency_cycles'] for f in batch_frames]),
             'frame_latency_cycles': cycle_stats([f['cycles'] for f in batch_frames]),
             'input_ii_cycles': cycle_stats([f['input_ii_cycles'] for f in batch_frames[1:]]),
+            'output_ii_cycles': cycle_stats([f['output_ii_cycles'] for f in batch_frames[1:]]),
+            'qk_ii_cycles': cycle_stats([f['qk_ii_cycles'] for f in batch_frames[1:]]),
         })
     return report, batch_timing
 
@@ -290,7 +314,7 @@ def main():
         log = (run / 'simulation.log').read_text()
         if 'TB PASS' not in log:
             raise RuntimeError('Simulation ended without TB PASS')
-        report, batch_timing = verify_frames(run / 'actual.txt', log, cases, args.single_frame, args.stalls)
+        report, batch_timing = verify_frames(run / 'actual.txt', log, cases, args.single_frame, args.stalls, overlap_schedule=True)
         coverage = re.search(r'COVERAGE frames=(\d+) resets=(\d+) input_bubbles=(\d+) output_stall_cycles=(\d+) no_stall_cycles=(\d+)', log)
         if not coverage:
             raise RuntimeError('Missing coverage summary')
@@ -306,6 +330,11 @@ def main():
         if not stream_match:
             raise RuntimeError('Missing streaming coverage summary')
         stream_coverage = dict(zip(stream_keys, map(int, stream_match.groups())))
+        cross_keys = ('cross_frame_mac_cycles', 'cross_stall_cycles', 'bank_reuse_before_retire')
+        cross_match = re.search(r'^CROSS_COVERAGE ' + ' '.join(rf'{key}=(\d+)' for key in cross_keys) + '$', log, re.M)
+        if not cross_match:
+            raise RuntimeError('Missing cross-frame coverage summary')
+        stream_coverage.update(zip(cross_keys, map(int, cross_match.groups())))
         v_keys = ('pv_steps_before_v_complete', 'pv_missing_v_cycles', 'pv_wait_resets', 'output_input_bubble_stalls')
         v_match = re.search(r'^V_COVERAGE ' + ' '.join(rf'{key}=(\d+)' for key in v_keys) + '$', log, re.M)
         if not v_match:
@@ -317,6 +346,11 @@ def main():
                 raise RuntimeError(f'Missing streaming overlap/protocol coverage: {stream_coverage}')
             if len(cases) >= 2 and stream_coverage['next_input_output'] <= 0:
                 raise RuntimeError('Missing next-frame input/output overlap')
+            if len(cases) >= 3 and (stream_coverage['cross_frame_mac_cycles'] <= 0 or
+                                    stream_coverage['bank_reuse_before_retire'] <= 0):
+                raise RuntimeError('Missing simultaneous cross-frame MACs or early slot reuse')
+            if args.stalls and stream_coverage['cross_stall_cycles'] <= 0:
+                raise RuntimeError('Missing output backpressure during cross-frame reuse')
             expected_stream = {'queued_resets': 1, 'reset_event_mask': 255, 'resident_count': 1, 'long_stall_cycles': 2500 if args.stalls else 0}
             if any(stream_coverage[key] != value for key, value in expected_stream.items()):
                 raise RuntimeError(f'Unexpected streaming coverage counts: {stream_coverage}')

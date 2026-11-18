@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1220" height="675" viewBox="0 0 1220 675">
+<style>text{font-family:"Source Han Sans CN","PingFang SC","Noto Sans CJK SC","Hiragino Sans GB",sans-serif}</style>
+<rect x="0.00" y="0.00" width="1220.00" height="675.00" fill="white" stroke="none" stroke-width="1"/>
+<text x="25.00" y="37.00" font-size="28" font-weight="700" text-anchor="start" fill="#222F39">连续两帧如何共用一个 OS 阵列</text>
+<text x="25.00" y="64.00" font-size="16" font-weight="400" text-anchor="start" fill="#526372">F2、F3 为连续输入的第 3、4 帧。两图共用周期轴，t = 0 对齐 F2 首个 QKᵀ 乘加（仿真第 206 拍）。</text>
+<line x1="25.00" y1="80.00" x2="1195.00" y2="80.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray=""/>
+<text x="25.00" y="112.00" font-size="21" font-weight="680" text-anchor="start" fill="#222F39">当前 RTL  ·  波形实测</text>
+<text x="1195.00" y="112.00" font-size="15" font-weight="400" text-anchor="end" fill="#526372">输入每帧 48 次握手  /  相邻帧的首个 QKᵀ 间隔 85 拍</text>
+<line x1="204.46" y1="128.00" x2="204.46" y2="300.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="204.46" y="319.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">−80</text>
+<line x1="283.39" y1="128.00" x2="283.39" y2="300.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="283.39" y="319.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">−60</text>
+<line x1="362.32" y1="128.00" x2="362.32" y2="300.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="362.32" y="319.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">−40</text>
+<line x1="441.25" y1="128.00" x2="441.25" y2="300.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="441.25" y="319.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">−20</text>
+<line x1="520.17" y1="128.00" x2="520.17" y2="300.00" stroke="#8899A4" stroke-width="1.5" stroke-dasharray=""/>
+<text x="520.17" y="319.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">0</text>
+<line x1="599.10" y1="128.00" x2="599.10" y2="300.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="599.10" y="319.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">20</text>
+<line x1="678.03" y1="128.00" x2="678.03" y2="300.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="678.03" y="319.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">40</text>
+<line x1="756.95" y1="128.00" x2="756.95" y2="300.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="756.95" y="319.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">60</text>
+<line x1="835.88" y1="128.00" x2="835.88" y2="300.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="835.88" y="319.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">80</text>
+<line x1="914.81" y1="128.00" x2="914.81" y2="300.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="914.81" y="319.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">100</text>
+<line x1="993.74" y1="128.00" x2="993.74" y2="300.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="993.74" y="319.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">120</text>
+<line x1="1072.66" y1="128.00" x2="1072.66" y2="300.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="1072.66" y="319.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">140</text>
+<line x1="1151.59" y1="128.00" x2="1151.59" y2="300.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="1151.59" y="319.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">160</text>
+<line x1="165.00" y1="300.00" x2="1195.00" y2="300.00" stroke="#AAB5BD" stroke-width="1" stroke-dasharray=""/>
+<text x="154.00" y="150.00" font-size="16" font-weight="400" text-anchor="end" fill="#222F39">输入握手</text>
+<rect x="176.84" y="133.00" width="63.14" height="24.00" fill="#D1E4F0" stroke="white" stroke-width="1"/>
+<text x="208.41" y="149.70" font-size="13" font-weight="600" text-anchor="middle" fill="#222F39">F2·Q</text>
+<rect x="239.98" y="133.00" width="63.14" height="24.00" fill="#BACDDF" stroke="white" stroke-width="1"/>
+<text x="271.55" y="149.70" font-size="13" font-weight="600" text-anchor="middle" fill="#222F39">F2·K</text>
+<rect x="303.12" y="133.00" width="63.14" height="24.00" fill="#9CB6CB" stroke="white" stroke-width="1"/>
+<text x="334.69" y="149.70" font-size="13" font-weight="600" text-anchor="middle" fill="#222F39">F2·V</text>
+<rect x="512.28" y="133.00" width="63.14" height="24.00" fill="#D1E4F0" stroke="white" stroke-width="1"/>
+<text x="543.85" y="149.70" font-size="13" font-weight="600" text-anchor="middle" fill="#222F39">F3·Q</text>
+<rect x="575.42" y="133.00" width="63.14" height="24.00" fill="#BACDDF" stroke="white" stroke-width="1"/>
+<text x="606.99" y="149.70" font-size="13" font-weight="600" text-anchor="middle" fill="#222F39">F3·K</text>
+<rect x="638.56" y="133.00" width="63.14" height="24.00" fill="#9CB6CB" stroke="white" stroke-width="1"/>
+<text x="670.13" y="149.70" font-size="13" font-weight="600" text-anchor="middle" fill="#222F39">F3·V</text>
+<rect x="366.26" y="133.00" width="146.02" height="24.00" fill="#FAF0E8" stroke="white" stroke-width="1"/>
+<text x="439.27" y="149.70" font-size="12" font-weight="600" text-anchor="middle" fill="#7E401F">in_ready = 0 · 37 拍</text>
+<text x="154.00" y="182.00" font-size="16" font-weight="400" text-anchor="end" fill="#222F39">阵列  QKᵀ</text>
+<rect x="520.17" y="165.00" width="181.53" height="24.00" fill="#276A9C" stroke="white" stroke-width="1"/>
+<text x="610.94" y="181.70" font-size="14" font-weight="600" text-anchor="middle" fill="white">F2  0–45</text>
+<rect x="855.61" y="165.00" width="181.53" height="24.00" fill="#276A9C" stroke="white" stroke-width="1"/>
+<text x="946.38" y="181.70" font-size="14" font-weight="600" text-anchor="middle" fill="white">F3  85–130</text>
+<text x="154.00" y="214.00" font-size="16" font-weight="400" text-anchor="end" fill="#222F39">Softmax  P 行返回</text>
+<rect x="658.30" y="197.00" width="63.14" height="24.00" fill="#C5E3D7" stroke="white" stroke-width="1"/>
+<text x="689.87" y="213.70" font-size="14" font-weight="600" text-anchor="middle" fill="#222F39">F2</text>
+<rect x="993.74" y="197.00" width="63.14" height="24.00" fill="#C5E3D7" stroke="white" stroke-width="1"/>
+<text x="1025.31" y="213.70" font-size="14" font-weight="600" text-anchor="middle" fill="#222F39">F3</text>
+<text x="154.00" y="246.00" font-size="16" font-weight="400" text-anchor="end" fill="#222F39">阵列  PV</text>
+<rect x="662.24" y="229.00" width="181.53" height="24.00" fill="#C56738" stroke="white" stroke-width="1"/>
+<text x="753.01" y="245.70" font-size="14" font-weight="600" text-anchor="middle" fill="white">F2  36–81</text>
+<rect x="997.68" y="229.00" width="181.53" height="24.00" fill="#C56738" stroke="white" stroke-width="1"/>
+<text x="1088.45" y="245.70" font-size="14" font-weight="600" text-anchor="middle" fill="white">F3  121–166</text>
+<text x="154.00" y="278.00" font-size="16" font-weight="400" text-anchor="end" fill="#222F39">输出握手</text>
+<rect x="725.38" y="261.00" width="122.34" height="24.00" fill="#DBE5F0" stroke="white" stroke-width="1"/>
+<text x="786.55" y="277.70" font-size="14" font-weight="600" text-anchor="middle" fill="#222F39">F2  52–82</text>
+<rect x="1060.82" y="261.00" width="122.34" height="24.00" fill="#DBE5F0" stroke="white" stroke-width="1"/>
+<text x="1121.99" y="277.70" font-size="14" font-weight="600" text-anchor="middle" fill="#222F39">F3  137–167</text>
+<text x="25.00" y="351.00" font-size="15" font-weight="700" text-anchor="start" fill="#222F39">两帧之间</text>
+<text x="124.00" y="351.00" font-size="16" font-weight="400" text-anchor="start" fill="#526372">t = 82  F2 末组输出握手     →     83  LOAD     →     84  CLEAR     →     85  F3 启动 QKᵀ</text>
+<line x1="25.00" y1="372.00" x2="1195.00" y2="372.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray=""/>
+<text x="25.00" y="405.00" font-size="21" font-weight="680" text-anchor="start" fill="#222F39">跨帧调度  ·  阵列与 Softmax 独立仿真</text>
+<text x="1195.00" y="405.00" font-size="15" font-weight="400" text-anchor="end" fill="#526372">保持每帧 QKᵀ 到 PV 的 36 拍启动距离  /  启动间隔 52 拍</text>
+<line x1="204.46" y1="439.00" x2="204.46" y2="582.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="204.46" y="601.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">−80</text>
+<line x1="283.39" y1="439.00" x2="283.39" y2="582.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="283.39" y="601.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">−60</text>
+<line x1="362.32" y1="439.00" x2="362.32" y2="582.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="362.32" y="601.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">−40</text>
+<line x1="441.25" y1="439.00" x2="441.25" y2="582.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="441.25" y="601.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">−20</text>
+<line x1="520.17" y1="439.00" x2="520.17" y2="582.00" stroke="#8899A4" stroke-width="1.5" stroke-dasharray=""/>
+<text x="520.17" y="601.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">0</text>
+<line x1="599.10" y1="439.00" x2="599.10" y2="582.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="599.10" y="601.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">20</text>
+<line x1="678.03" y1="439.00" x2="678.03" y2="582.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="678.03" y="601.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">40</text>
+<line x1="756.95" y1="439.00" x2="756.95" y2="582.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="756.95" y="601.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">60</text>
+<line x1="835.88" y1="439.00" x2="835.88" y2="582.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="835.88" y="601.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">80</text>
+<line x1="914.81" y1="439.00" x2="914.81" y2="582.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="914.81" y="601.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">100</text>
+<line x1="993.74" y1="439.00" x2="993.74" y2="582.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="993.74" y="601.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">120</text>
+<line x1="1072.66" y1="439.00" x2="1072.66" y2="582.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="1072.66" y="601.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">140</text>
+<line x1="1151.59" y1="439.00" x2="1151.59" y2="582.00" stroke="#E1E6E8" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="1151.59" y="601.00" font-size="13" font-weight="400" text-anchor="middle" fill="#526372">160</text>
+<line x1="165.00" y1="582.00" x2="1195.00" y2="582.00" stroke="#AAB5BD" stroke-width="1" stroke-dasharray=""/>
+<rect x="725.38" y="449.00" width="118.39" height="71.00" fill="#FCECDC" stroke="none" stroke-width="1"/>
+<line x1="725.38" y1="444.00" x2="843.77" y2="444.00" stroke="#8B4D2D" stroke-width="1.5" stroke-dasharray=""/>
+<line x1="725.38" y1="444.00" x2="725.38" y2="450.00" stroke="#8B4D2D" stroke-width="1.5" stroke-dasharray=""/>
+<line x1="843.77" y1="444.00" x2="843.77" y2="450.00" stroke="#8B4D2D" stroke-width="1.5" stroke-dasharray=""/>
+<text x="784.58" y="439.00" font-size="14" font-weight="600" text-anchor="middle" fill="#7E401F">跨帧重叠 30 拍</text>
+<text x="154.00" y="471.00" font-size="16" font-weight="400" text-anchor="end" fill="#222F39">阵列  QKᵀ</text>
+<rect x="520.17" y="454.00" width="181.53" height="24.00" fill="#276A9C" stroke="white" stroke-width="1"/>
+<text x="610.94" y="470.70" font-size="14" font-weight="600" text-anchor="middle" fill="white">F2  0–45</text>
+<rect x="725.38" y="454.00" width="181.53" height="24.00" fill="#276A9C" stroke="white" stroke-width="1"/>
+<text x="816.15" y="470.70" font-size="14" font-weight="600" text-anchor="middle" fill="white">F3  52–97</text>
+<text x="154.00" y="506.00" font-size="16" font-weight="400" text-anchor="end" fill="#222F39">阵列  PV</text>
+<rect x="662.24" y="489.00" width="181.53" height="24.00" fill="#C56738" stroke="white" stroke-width="1"/>
+<text x="753.01" y="505.70" font-size="14" font-weight="600" text-anchor="middle" fill="white">F2  36–81</text>
+<rect x="867.45" y="489.00" width="181.53" height="24.00" fill="#C56738" stroke="white" stroke-width="1"/>
+<text x="958.22" y="505.70" font-size="14" font-weight="600" text-anchor="middle" fill="white">F3  88–133</text>
+<text x="154.00" y="541.00" font-size="16" font-weight="400" text-anchor="end" fill="#222F39">取出结果</text>
+<rect x="725.38" y="524.00" width="122.34" height="24.00" fill="#DBE5F0" stroke="white" stroke-width="1"/>
+<text x="786.55" y="540.70" font-size="14" font-weight="600" text-anchor="middle" fill="#222F39">F2  52–82</text>
+<rect x="930.59" y="524.00" width="122.34" height="24.00" fill="#DBE5F0" stroke="white" stroke-width="1"/>
+<text x="991.76" y="540.70" font-size="14" font-weight="600" text-anchor="middle" fill="#222F39">F3  104–134</text>
+<text x="154.00" y="574.00" font-size="16" font-weight="400" text-anchor="end" fill="#222F39">单个 PE[0,0]</text>
+<rect x="520.17" y="557.00" width="63.14" height="24.00" fill="#276A9C" stroke="white" stroke-width="1"/>
+<text x="551.74" y="573.70" font-size="13" font-weight="600" text-anchor="middle" fill="white">F2·QK</text>
+<rect x="662.24" y="557.00" width="63.14" height="24.00" fill="#C56738" stroke="white" stroke-width="1"/>
+<text x="693.81" y="573.70" font-size="13" font-weight="600" text-anchor="middle" fill="white">F2·PV</text>
+<rect x="725.38" y="557.00" width="63.14" height="24.00" fill="#276A9C" stroke="white" stroke-width="1"/>
+<text x="756.95" y="573.70" font-size="13" font-weight="600" text-anchor="middle" fill="white">F3·QK</text>
+<rect x="867.45" y="557.00" width="63.14" height="24.00" fill="#C56738" stroke="white" stroke-width="1"/>
+<text x="899.02" y="573.70" font-size="13" font-weight="600" text-anchor="middle" fill="white">F3·PV</text>
+<text x="25.00" y="637.00" font-size="15" font-weight="400" text-anchor="start" fill="#526372">t 为相对时钟周期，条内起止拍均计入。下图输入已在片上，结果到达即采样。两帧共用同一组 PE 和 Softmax，顶层帧缓存及背压控制待实现。</text>
+</svg>

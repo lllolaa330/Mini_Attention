@@ -1,0 +1,10 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/frame52_top_20261118_9myellui/single_backpressure/tb_attention.vvp', '+INPUT=input.hex', '+EXPECTED=expected.hex', '+EXPECTED_P=expected_p.hex', '+OUTPUT=actual.txt', '+SEED=20261117', '+STALLS=1']
+BATCH START first_run=0 count=1 kind=main
+PIPELINE run=0 qk_first=72 qk_last=117 issue_first=104 issue_last=119 return_first=107 return_last=122 pv_first=108 pv_last=204 overlap=10 cross=0 resident=0
+FRAME PASS run=0 case=0 cycles=224 mode=1 first_in=9 first_out=149 last_out=232
+COVERAGE frames=1 resets=1 input_bubbles=53 output_stall_cycles=78 no_stall_cycles=0
+STREAM_COVERAGE input_blocked=0 overlap_v_qk=16 overlap_v_sm=11 next_input_output=0 first_output_pv=1 long_stall_cycles=0 queued_resets=0 reset_event_mask=0 resident_count=0
+CROSS_COVERAGE cross_frame_mac_cycles=0 cross_stall_cycles=0 bank_reuse_before_retire=0
+V_COVERAGE pv_steps_before_v_complete=0 pv_missing_v_cycles=0 pv_wait_resets=0 output_input_bubble_stalls=0
+TB PASS
+tb/tb_attention.sv:687: $finish called at 2546000 (1ps)

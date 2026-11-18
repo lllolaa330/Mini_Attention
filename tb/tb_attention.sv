@@ -21,7 +21,7 @@ module tb_attention;
     integer input_bubbles = 0, stalled_outputs = 0, completed = 0, reset_count = 0;
     integer no_stall_cycles = 0, planned = 0, rx_diag = 0;
     integer run_case [0:MAX_RUNS-1], run_mode [0:MAX_RUNS-1];
-    integer first_in [0:MAX_RUNS-1], first_out [0:MAX_RUNS-1];
+    integer first_in [0:MAX_RUNS-1], last_in [0:MAX_RUNS-1], first_out [0:MAX_RUNS-1];
     integer tx_slot = -1, tx_beat = 0;
     integer accepted_beats = 0, retired_frames = 0;
     integer input_blocked = 0, overlap_v_qk = 0, overlap_v_sm = 0;
@@ -46,8 +46,22 @@ module tb_attention;
             end
         end
     endgenerate
-    integer mac_count [0:255], score_count [0:15], issue_at [0:15], return_at [0:15];
-    integer issued, returned, qk_first, qk_last, pv_first, mac_overlap;
+    integer mac_count [0:255], score_count [0:15];
+    integer epoch_base, qk_slot, pv_slot, issued, returned;
+    integer qk_first [0:MAX_RUNS-1], qk_last [0:MAX_RUNS-1];
+    integer pv_first [0:MAX_RUNS-1], pv_last [0:MAX_RUNS-1];
+    integer issue_at [0:MAX_RUNS-1][0:15], return_at [0:MAX_RUNS-1][0:15];
+    integer same_frame_overlap [0:MAX_RUNS-1], previous_frame_overlap [0:MAX_RUNS-1];
+    integer bank_reuse_before_retire = 0, cross_stall_cycles = 0;
+    integer cross_frame_mac_cycles = 0;
+    logic [255:0] first_mac;
+    generate
+        for (pr=0; pr<16; pr=pr+1) begin : first_rows
+            for (pc=0; pc<16; pc=pc+1) begin : first_cols
+                assign first_mac[16*pr+pc] = dut.array_core.rows[pr].cols[pc].pe.first_term;
+            end
+        end
+    endgenerate
     integer resident_slot = -1, resident_count = 0;
     logic scoreboard_enabled = 0;
     logic [31:0] rng_in, rng_out;
@@ -91,80 +105,117 @@ module tb_attention;
     endfunction
 
     task automatic start_pipeline_monitor;
-        integer n;
         begin
-            issued=0; returned=0; qk_first=-1; qk_last=-1; pv_first=-1; mac_overlap=0;
-            for (n=0; n<256; n=n+1) mac_count[n]=0;
-            for (n=0; n<16; n=n+1) score_count[n]=0;
+            epoch_base=completed; qk_slot=epoch_base-1; pv_slot=epoch_base-1;
+            issued=0; returned=0;
+            for (int n=0; n<256; n++) mac_count[n]=0;
+            for (int row=0; row<16; row++) score_count[row]=0;
         end
     endtask
 
-    task automatic check_pipeline(input logic retire, output logic qk_mac, output logic pv_mac);
-        integer n, row, cid;
+    task automatic check_pipeline(input logic retire, output logic qk_mac, output logic pv_mac,
+                                  output logic input_frame_softmax);
+        integer d, k, accepted, slot, cid, row;
+        logic q, p;
         begin
-            qk_mac=0; pv_mac=0;
-            if (dut.array_step) begin
-                for (n=0; n<256; n=n+1) begin
+            qk_mac=0; pv_mac=0; input_frame_softmax=0;
+            if (dut.qk_step && dut.qk_age==0) begin
+                qk_slot=qk_slot+1;
+                if (scoreboard_enabled && qk_slot>=planned) $fatal(1,"Unexpected QK start");
+                qk_first[qk_slot]=cycle;
+                same_frame_overlap[qk_slot]=0;
+                previous_frame_overlap[qk_slot]=0;
+            end
+            if (dut.pv_step && dut.feed_step==0) begin
+                pv_slot=pv_slot+1;
+                if (scoreboard_enabled && pv_slot>=planned) $fatal(1,"Unexpected PV start");
+                pv_first[pv_slot]=cycle;
+            end
+            // Each physical PE accepts QK(f,0..15), PV(f,0..15), then
+            // QK(f+1,0..15). Retirement can lag these local handoffs.
+            if (dut.array_step || (|pe_mac)) begin
+                for (int n=0; n<256; n++) begin
+                    d=n/16+n%16;
+                    q=dut.qk_step && integer'(dut.qk_age)>=d && integer'(dut.qk_age)<d+16;
+                    p=dut.pv_step && integer'(dut.feed_step)>=d && integer'(dut.feed_step)<d+16;
+                    if ((q && p) || pe_mac[n] !== (q || p))
+                        $fatal(1,"PE schedule mismatch cycle=%0d PE=%0d q=%b p=%b mac=%b",cycle,n,q,p,pe_mac[n]);
                     if (pe_mac[n]) begin
-                        if (mac_count[n] < 16) qk_mac=1;
-                        else if (mac_count[n] < 32) pv_mac=1;
-                        else $fatal(1, "Extra FMA on PE[%0d,%0d]", n/16, n%16);
-                        mac_count[n]=mac_count[n]+1;
+                        accepted=mac_count[n];
+                        k=(q ? integer'(dut.qk_age) : integer'(dut.feed_step))-d;
+                        slot=q ? qk_slot : pv_slot;
+                        if (epoch_base+accepted/32 != slot || accepted%32 != (q ? k : 16+k) ||
+                            first_mac[n] !== (k==0))
+                            $fatal(1,"PE term mismatch cycle=%0d PE=%0d slot=%0d k=%0d count=%0d",cycle,n,slot,k,accepted);
+                        mac_count[n]=accepted+1;
+                        if (q) qk_mac=1;
+                        if (p) pv_mac=1;
                     end
                 end
             end
-            if (qk_mac) begin
-                if (qk_first < 0) qk_first=cycle;
-                qk_last=cycle;
+            if (qk_mac) qk_last[qk_slot]=cycle;
+            if (pv_mac) pv_last[pv_slot]=cycle;
+            if (qk_mac && pv_mac) begin
+                if (qk_slot==pv_slot) same_frame_overlap[qk_slot]++;
+                else begin
+                    if (qk_slot!=pv_slot+1) $fatal(1,"Unexpected wave order");
+                    previous_frame_overlap[qk_slot]++;
+                    if (scoreboard_enabled) cross_frame_mac_cycles++;
+                end
             end
-            if (pv_mac && pv_first < 0) pv_first=cycle;
-            if (qk_mac && pv_mac) mac_overlap=mac_overlap+1;
+            if (scoreboard_enabled && dut.qk_active && dut.pv_active && !dut.wave_slot_available &&
+                qk_slot==pv_slot+1 && qk_slot>=epoch_base && !dut.array_step)
+                cross_stall_cycles++;
 
-            for (row=0; row<16; row=row+1) begin
-                if (dut.score_valid[row]) begin
-                    if (score_count[row] >= 16 || integer'(dut.score_col[row]) != score_count[row])
-                        $fatal(1, "Duplicate or out-of-order score row=%0d col=%0d", row, dut.score_col[row]);
-                    score_count[row]=score_count[row]+1;
+            for (int i=0; i<16; i++) begin
+                if (dut.score_valid[i]) begin
+                    if (integer'(dut.score_col[i]) != score_count[i]%16)
+                        $fatal(1, "Out-of-order score row=%0d col=%0d",i,dut.score_col[i]);
+                    if (tx_slot==epoch_base+score_count[i]/16) input_frame_softmax=1;
+                    score_count[i]++;
                 end
             end
             if (dut.norm_issue) begin
-                if (issued>=16 || integer'(dut.norm_issue_row)!=issued || score_count[issued]!=16)
-                    $fatal(1, "Unexpected normalization issue row=%0d expected=%0d", dut.norm_issue_row, issued);
-                issue_at[issued]=cycle; issued=issued+1;
+                slot=epoch_base+issued/16; row=issued%16;
+                if (integer'(dut.norm_issue_row)!=row || score_count[row]!=(issued/16+1)*16)
+                    $fatal(1, "Unexpected normalization issue run=%0d row=%0d",slot,dut.norm_issue_row);
+                if (tx_slot==slot) input_frame_softmax=1;
+                issue_at[slot][row]=cycle;
+                issued++;
             end
             if (dut.prob_valid) begin
-                if (returned>=issued || integer'(dut.prob_row)!=returned)
-                    $fatal(1, "Unexpected normalization return row=%0d issued=%0d returned=%0d", dut.prob_row, issued, returned);
-                return_at[returned]=cycle;
-                if (returned>0 && cycle-issue_at[returned] != return_at[0]-issue_at[0])
-                    $fatal(1, "Normalization latency changed at row %0d", returned);
+                slot=epoch_base+returned/16; row=returned%16;
+                if (returned>=issued || integer'(dut.prob_row)!=row || cycle-issue_at[slot][row]!=3)
+                    $fatal(1, "Unexpected normalization return run=%0d row=%0d",slot,dut.prob_row);
+                if (tx_slot==slot) input_frame_softmax=1;
+                return_at[slot][row]=cycle;
                 if (scoreboard_enabled) begin
-                    cid=run_case[completed];
-                    for (n=0; n<16; n=n+1) begin
-                        if (dut.probability[n] !== expected_p[cid*256+returned*16+n])
-                            $fatal(1, "P MISMATCH case=%0d row=%0d col=%0d got=%04h expected=%04h",
-                                   cid, returned, n, dut.probability[n], expected_p[cid*256+returned*16+n]);
-                    end
+                    if (slot>=planned) $fatal(1,"Unexpected extra probability row");
+                    cid=run_case[slot];
+                    for (int n=0; n<16; n++)
+                        if (dut.probability[n] !== expected_p[cid*256+row*16+n])
+                            $fatal(1, "P MISMATCH run=%0d row=%0d col=%0d got=%04h expected=%04h",
+                                   slot,row,n,dut.probability[n],expected_p[cid*256+row*16+n]);
                 end
-                returned=returned+1;
+                returned++;
             end
-            if (retire) begin
-                if (issued!=16 || returned!=16) $fatal(1, "Retired frame before 16 normalized rows");
-                if (issue_at[15]-issue_at[0]!=15 || return_at[15]-return_at[0]!=15)
-                    $fatal(1, "Normalization did not issue and return all 16 rows on consecutive clocks");
-                for (n=0; n<256; n=n+1)
-                    if (mac_count[n]!=32) $fatal(1, "PE[%0d,%0d] MAC count=%0d", n/16, n%16, mac_count[n]);
-                if (scoreboard_enabled) begin
-                    $display("PIPELINE run=%0d qk_first=%0d qk_last=%0d issue_first=%0d issue_last=%0d return_first=%0d return_last=%0d pv_first=%0d overlap=%0d resident=%0d",
-                        completed, qk_first, qk_last, issue_at[0], issue_at[15], return_at[0], return_at[15],
-                        pv_first, mac_overlap, completed==resident_slot);
-                    if (completed == resident_slot) begin
-                        if (mac_overlap==0 || pv_first>=qk_last)
-                            $fatal(1, "No physical QK/PV MAC overlap in resident frame");
-                        resident_count=resident_count+1;
-                    end
+            if (retire && scoreboard_enabled) begin
+                slot=completed;
+                if (returned < 16*(slot-epoch_base+1)) $fatal(1, "Retired before receiving all P rows");
+                for (int n=0; n<256; n++)
+                    if (mac_count[n] < 32*(slot-epoch_base+1))
+                        $fatal(1, "Retired before all PE terms run=%0d PE=%0d",slot,n);
+                $display("PIPELINE run=%0d qk_first=%0d qk_last=%0d issue_first=%0d issue_last=%0d return_first=%0d return_last=%0d pv_first=%0d pv_last=%0d overlap=%0d cross=%0d resident=%0d",
+                    slot,qk_first[slot],qk_last[slot],issue_at[slot][0],issue_at[slot][15],
+                    return_at[slot][0],return_at[slot][15],pv_first[slot],pv_last[slot],
+                    same_frame_overlap[slot],previous_frame_overlap[slot],slot==resident_slot);
+                if (slot==resident_slot) begin
+                    if (last_in[slot]>=qk_first[slot])
+                        $fatal(1,"Queued resident frame did not finish input before compute");
+                    if (same_frame_overlap[slot]==0 || pv_first[slot]>=qk_last[slot])
+                        $fatal(1,"Missing same-frame wave overlap in queued resident frame");
+                    resident_count++;
                 end
-                start_pipeline_monitor();
             end
         end
     endtask
@@ -175,14 +226,14 @@ module tb_attention;
         integer lane, idx, slot, cid, elapsed;
         logic [15:0] lane_word;
         logic last_accepted;
-        logic missing_v_wait, qk_mac, pv_mac, holding_corner;
+        logic missing_v_wait, qk_mac, pv_mac, holding_corner, input_frame_softmax;
         logic [15:0] held_corner;
         logic [5:0] held_feed_step;
         if (cycle > (CASES+40)*100000)
-            $fatal(1, "WATCHDOG cycle=%0d state=%0d", cycle, dut.state);
+            $fatal(1, "WATCHDOG cycle=%0d", cycle);
         last_accepted = rst_n && out_valid && out_ready && out_last;
-        missing_v_wait = rst_n && dut.state == dut.COMPUTE && dut.feed_step > 0 && !dut.v_ready;
-        holding_corner = rst_n && dut.state == dut.COMPUTE && !dut.array_core.rows[0].cols[0].pe.step;
+        missing_v_wait = rst_n && dut.pv_active && dut.feed_step > 0 && !dut.v_ready;
+        holding_corner = rst_n && !dut.array_core.rows[0].cols[0].pe.step;
         held_corner = dut.array_core.rows[0].cols[0].pe.acc;
         held_feed_step = dut.feed_step;
         if (!rst_n) begin
@@ -197,12 +248,15 @@ module tb_attention;
             if (previous_stall && (!out_valid || out_data !== held_data ||
                                   out_lane_valid !== held_mask || out_last !== held_last))
                 $fatal(1, "Output vector changed while stalled at cycle %0d", cycle);
+            if (!dut.wave_slot_available && dut.array_step)
+                $fatal(1,"Array moved while a live output diagonal was blocked at cycle %0d",cycle);
             if (out_last && !out_valid) $fatal(1, "out_last without out_valid");
             if (done && previous_done) $fatal(1, "done longer than one cycle");
             if (out_valid && !busy) $fatal(1, "Output valid without busy");
-            check_pipeline(last_accepted, qk_mac, pv_mac);
-            if (scoreboard_enabled && dut.pv_step && dut.v_cols_ready < 16 &&
-                !(in_valid && in_ready && dut.write_bank == dut.compute_bank && integer'(dut.load_count) == FRAME_BEATS-1))
+            check_pipeline(last_accepted, qk_mac, pv_mac, input_frame_softmax);
+            // After feed step 30 the input bank may already hold a newer frame.
+            if (scoreboard_enabled && dut.pv_step && dut.feed_step <= 30 && dut.v_cols_ready < 16 &&
+                !(in_valid && in_ready && dut.write_bank == dut.pv_bank && integer'(dut.load_count) == FRAME_BEATS-1))
                 pv_steps_before_v_complete = pv_steps_before_v_complete + 1;
             // Count starvation independently of output backpressure. The same
             // compute bank supplies both v_cols_ready and the current PV step.
@@ -213,34 +267,38 @@ module tb_attention;
             // Check both QK edges against row-major fixtures, including cases
             // where a later input frame is already occupying the other bank.
             if (scoreboard_enabled && dut.qk_step) begin
-                cid = run_case[completed];
+                cid = run_case[qk_slot];
                 for (lane=0; lane<16; lane=lane+1) begin
                     idx = integer'(dut.qk_age)-lane;
                     if (idx>=0 && idx<16) begin
                         if (dut.a_edge[lane] !== inputs[cid*768+16*lane+idx])
-                            $fatal(1, "Q row skew mismatch run=%0d row=%0d k=%0d", completed,lane,idx);
+                            $fatal(1, "Q row skew mismatch run=%0d row=%0d k=%0d", qk_slot,lane,idx);
                         if (dut.b_edge[lane] !== inputs[cid*768+MATRIX_WORDS+16*lane+idx])
-                            $fatal(1, "K row skew mismatch run=%0d row=%0d k=%0d", completed,lane,idx);
+                            $fatal(1, "K row skew mismatch run=%0d row=%0d k=%0d", qk_slot,lane,idx);
                     end
                 end
             end
             // Compare each physical V column-head read with the fixture.
             if (scoreboard_enabled && dut.pv_step) begin
-                cid = run_case[completed];
+                cid = run_case[pv_slot];
                 for (lane=0; lane<16; lane=lane+1) begin
                     idx = integer'(dut.feed_step)-lane;
                     if (idx>=0 && idx<16 &&
                         dut.b_edge[lane] !== inputs[cid*768+2*MATRIX_WORDS+16*idx+lane])
-                        $fatal(1, "V column skew mismatch run=%0d k=%0d j=%0d", completed,idx,lane);
+                        $fatal(1, "V column skew mismatch run=%0d k=%0d j=%0d", pv_slot,idx,lane);
                 end
             end
             if (in_valid && in_ready) begin
                 if (integer'(dut.load_count) != accepted_beats % FRAME_BEATS)
                     $fatal(1, "Frame input beat counter mismatch at cycle %0d", cycle);
+                if (scoreboard_enabled && accepted_beats%FRAME_BEATS==0 &&
+                    accepted_beats/FRAME_BEATS >= retired_frames+2)
+                    bank_reuse_before_retire++;
+                if (scoreboard_enabled && tx_beat==FRAME_BEATS-1) last_in[tx_slot]=cycle;
                 accepted_beats = accepted_beats + 1;
-                if (scoreboard_enabled && tx_slot == completed && tx_beat >= QK_BEATS && qk_mac)
+                if (scoreboard_enabled && tx_slot == qk_slot && tx_beat >= QK_BEATS && qk_mac)
                     overlap_v_qk = overlap_v_qk + 1;
-                if (scoreboard_enabled && tx_slot == completed && tx_beat >= QK_BEATS && (|dut.score_valid || dut.norm_issue || dut.prob_valid))
+                if (scoreboard_enabled && tx_beat >= QK_BEATS && input_frame_softmax)
                     overlap_v_sm = overlap_v_sm + 1;
                 if (scoreboard_enabled && out_valid && out_ready && tx_slot > completed)
                     overlap_next_input_output = overlap_next_input_output + 1;
@@ -266,15 +324,15 @@ module tb_attention;
                 if (rx_diag == 0) begin
                     if (first_in[slot] < 0) $fatal(1, "Output before first input");
                     first_out[slot] = cycle;
-                    if (dut.state == dut.COMPUTE) first_output_during_pv = first_output_during_pv + 1;
+                    if (dut.pv_active) first_output_during_pv = first_output_during_pv + 1;
                 end
                 for (lane=0; lane<16; lane=lane+1) begin
                     if (out_lane_valid[lane]) begin
                         idx = (rx_diag-lane)*16+lane;
                         lane_word = out_data[16*lane+:16];
                         if (lane_word !== expected[cid*256+idx])
-                            $fatal(1, "BIT MISMATCH run=%0d case=%0d row=%0d col=%0d got=%04h expected=%04h state=%0d",
-                                   slot, cid, idx/16, idx%16, lane_word, expected[cid*256+idx], dut.state);
+                            $fatal(1, "BIT MISMATCH run=%0d case=%0d row=%0d col=%0d got=%04h expected=%04h",
+                                   slot, cid, idx/16, idx%16, lane_word, expected[cid*256+idx]);
                         $fdisplay(fd, "%0d %0d %0d %04h %0d", slot, cid, idx, lane_word, cycle);
                     end
                 end
@@ -432,12 +490,12 @@ module tb_attention;
     function automatic logic at_reset_event(input integer event_id);
         case (event_id)
             0: at_reset_event = dut.load_count==7; // partially loaded Q
-            1: at_reset_event = dut.state==dut.CLEAR;
-            2: at_reset_event = pe_mac[0] && mac_count[0]==5;
+            1: at_reset_event = out_valid && dut.qk_step && dut.pv_step && dut.qk_bank!=dut.pv_bank;
+            2: at_reset_event = pe_mac[0] && mac_count[0]%32==5;
             3: at_reset_event = dut.score_valid[0] && dut.score_col[0]==5;
             4: at_reset_event = dut.norm_issue && dut.norm_issue_row==3;
             5: at_reset_event = dut.prob_valid && dut.prob_row==3;
-            6: at_reset_event = pe_mac[0] && mac_count[0]==19;
+            6: at_reset_event = pe_mac[0] && mac_count[0]%32==19;
             7: at_reset_event = out_valid && out_last && !out_ready;
             default: at_reset_event = 0;
         endcase
@@ -450,10 +508,10 @@ module tb_attention;
             scoreboard_enabled=0; out_ready=0; n=0; timeout=0;
             @(negedge clk);
             while (!at_reset_event(event_id)) begin
-                in_valid = n<FRAME_BEATS;
-                if (in_valid) in_data=input_beat(2%CASES,n);
+                in_valid = n < ((event_id==1) ? 2*FRAME_BEATS : FRAME_BEATS);
+                if (in_valid) in_data=input_beat((2+n/FRAME_BEATS)%CASES,n%FRAME_BEATS);
                 // Release earlier diagonals, then hold the pending frame tail.
-                out_ready = event_id==7 && !out_last;
+                out_ready = event_id==1 || (event_id==7 && !out_last);
                 @(posedge clk); accepted=in_valid && in_ready;
                 if (accepted) n=n+1;
                 @(negedge clk); timeout=timeout+1;
@@ -470,7 +528,7 @@ module tb_attention;
         integer timeout;
         begin
             timeout = 0;
-            while (!(dut.state == dut.COMPUTE && !dut.v_ready && dut.feed_step == 8 &&
+            while (!(dut.pv_active && !dut.v_ready && dut.feed_step == 8 &&
                      dut.v_cols_ready == 8 && dut.wave_slot_available)) begin
                 @(negedge clk); timeout = timeout+1;
                 if (timeout > 100000) $fatal(1, "PV did not wait after consuming partial V");
@@ -484,7 +542,7 @@ module tb_attention;
             send_frame(2%CASES,QK_BEATS+8,0,-1); stop_input();
             wait_pv_missing_v();
             repeat (11) @(negedge clk);
-            if (dut.state != dut.COMPUTE || dut.v_ready || dut.feed_step != 8 || dut.v_cols_ready != 8)
+            if (!dut.pv_active || dut.v_ready || dut.feed_step != 8 || dut.v_cols_ready != 8)
                 $fatal(1, "Partial PV starvation reset point drifted");
             pv_wait_resets = pv_wait_resets+1;
             reset_dut();
@@ -622,6 +680,8 @@ module tb_attention;
         $display("STREAM_COVERAGE input_blocked=%0d overlap_v_qk=%0d overlap_v_sm=%0d next_input_output=%0d first_output_pv=%0d long_stall_cycles=%0d queued_resets=%0d reset_event_mask=%0d resident_count=%0d",
                  input_blocked, overlap_v_qk, overlap_v_sm, overlap_next_input_output, first_output_during_pv,
                  long_stall_cycles, queued_reset_count, reset_event_mask, resident_count);
+        $display("CROSS_COVERAGE cross_frame_mac_cycles=%0d cross_stall_cycles=%0d bank_reuse_before_retire=%0d",
+                 cross_frame_mac_cycles,cross_stall_cycles,bank_reuse_before_retire);
         $display("V_COVERAGE pv_steps_before_v_complete=%0d pv_missing_v_cycles=%0d pv_wait_resets=%0d output_input_bubble_stalls=%0d",
                  pv_steps_before_v_complete, pv_missing_v_cycles, pv_wait_resets, output_input_bubble_stalls);
         $display("TB PASS"); $fclose(fd); $finish;

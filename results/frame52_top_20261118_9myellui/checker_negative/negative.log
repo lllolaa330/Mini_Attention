@@ -1,0 +1,4 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/frame52_top_20261118_9myellui/icarus_stalls_final/tb_attention.vvp', '+INPUT=input.hex', '+EXPECTED=expected.hex', '+OUTPUT=actual.txt', '+STALLS=0']
+BATCH START first_run=0 count=25 kind=main
+FATAL: tb/tb_attention.sv:334: BIT MISMATCH run=0 case=0 row=0 col=0 got=0000 expected=0001
+       Time: 875000  Scope: tb_attention.monitor

@@ -1,0 +1,3 @@
+VCD info: dumpfile /Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/cross_frame_wave_20261118_bdk_rkfs/core_probe/ii52_pv36.vcd opened for output.
+PASS II=52 PV_OFFSET=36 frames=6 P=1536 Y=1536 same_edge_handoffs=1280
+results/cross_frame_wave_20261118_bdk_rkfs/tb_overlap_schedule.sv:121: $finish called at 3450000 (1ps)

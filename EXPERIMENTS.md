@@ -1,5 +1,31 @@
 # 验证记录
 
+## 2026-11-18 跨帧重叠接入 Attention 顶层
+
+上下两版均使用 16×16 个 OS PE、同一组在线 Softmax 和 48 拍输入协议。新版的 QK 和 PV 各自持有帧槽选择和逻辑步计数。每个 PE 在点积首项从 +0 开始累加，旧帧 PV 的第 30 步真正推进时归还 Q/K/V 输入槽，Skid 缓冲未能接走的输出受全局推进条件保护。调度和握手的改动保留原软件位模型。[顶层实现](rtl/attention_fp16.sv) · [数据流与停顿契约](PROJECT.md)
+
+Icarus 12.0 用同一组 6 个非零输入，经公开输入口连续供数，整组输出持续 ready。两版首个 Q 握手均在 TB 周期 3（包含在延迟内），每版每帧从 31 组输出还原 256 个 Y。沿前采样 256 个 PE 的实际 step 和输入有效位，并与每帧 P、Y 自检及握手对齐。
+
+| 顶层实测，单位为拍 | 原顶层 | 跨帧顶层 |
+|---|---:|---:|
+| 相邻 QK 启动、首组输出、末组输出间隔，5 次 | 各 85 | 各 52 |
+| 进入稳态后的相邻首输入间隔 | 85 | 52 |
+| 稳态相邻帧输入之间的等待 | 37 | 4 |
+| 上帧 PV 与下帧 QK 同时有物理乘加 | 0 | 每次 30 |
+| 第一帧从首输入至首组 / 末组输出 | 86 / 116 | 85 / 115 |
+
+新顶层首输入的 5 个相邻间隔是 48、51、52、52、52 拍。第 4 帧和第 5 帧（F3、F4）在新波形中的 QK 起点分别是周期 191 和 243。以 191 为相对 t=0，F3 的 PV 在 t=36–81 推进，F4 的 QK 在 t=52–97 推进。交叠 30 拍内，同一拍的两波分别使用不同 PE。连续 5 次换帧，共 1,280 个 PE 的旧 Y 在下一帧的本地首个 QK MAC 所在上升沿被下游接受。以上为无外部停顿的 RTL 仿真。[实测图](results/frame52_top_20261118_9myellui/full_match/timeline.png) · [逐坐标与逐帧比较](results/frame52_top_20261118_9myellui/full_match/comparison.json) · [新版 VCD](results/frame52_top_20261118_9myellui/top_ready/attention.vcd) · [旧版 VCD](results/cross_frame_wave_20261118_bdk_rkfs/sim/attention.vcd)
+
+同一 seed 20261117 的正式带背压回归在 Icarus 12.0、Verilator 5.044 各通过 41 帧。每种模拟器检查 10,496 个 P 和 10,496 个 Y，双模拟器输出（含周期）与逐帧统计逐字节一致。覆盖 11 次复位、连续 2,500 拍输出背压、1,022 拍跨帧期间的输出阻塞冻结，以及 24 次前帧尚未完成输出时重用输入槽。另用 seed 20261118 运行 97 帧 Verilator 回归，24,832 个 P 和 24,832 个 Y 均逐位一致，最大逐帧 RMSE 0.00194873、最大逐元素绝对误差 0.00809169。[双仿真器对照](results/frame52_top_20261118_9myellui/regression_audit.json) · [41 帧 Icarus](results/frame52_top_20261118_9myellui/icarus_stalls_final/summary.json) · [41 帧 Verilator](results/overlap52_vl_final/summary.json) · [97 帧回归](results/frame52_top_20261118_9myellui/extended_final_seed18/summary.json) · [严格 lint](results/lint_os_20261118_162234/manifest.json)
+
+针对交接沿，在 6 帧各自的输出对角线 0、15、30 上分别连续拒收 23 拍。18 段共 414 拍有效输出受阻，两级输出缓冲都占用的 285 拍中所有 PE 停止乘加；1,536 个 P、1,536 个 Y 及帧尾、输出稳定性检查全部通过。另将输出持续 ready 的测量延长至连续 25 帧，全部 24 个相邻 QK 起点、PV 起点、首组和末组输出的间隔均为 52 拍。以连续帧的启动间隔作分母，每个 PE 每帧执行 16 个 QK 和 16 个 PV 有效乘加，稳态利用率从 32/85 = 37.65% 增至 32/52 = 61.54%。该值仅适用于本次连续供数、输出就绪的稳态窗口。[交接沿定向背压](results/frame52_top_20261118_9myellui/targeted_hold_b/simulation.log) · [25 帧连续握手](results/frame52_top_20261118_9myellui/continuous_25/summary.json)
+
+## 2026-11-18 连续两帧在同一 OS 阵列上的调度
+
+当前顶层用 Icarus 12.0 对连续 6 个不同的非零帧记录 VCD，主批次全速供数、输出持续 ready。连同 12 个定向恢复帧，共 18 帧的 4,608 个 P 和 4,608 个 Y 逐位通过。按每个 PE 在上升沿前的真实乘加使能重建 F2/F3。F2 输入在周期 119–166 传完，167–203 两槽满，上游有效但 in_ready 为 0，F3 从 204 开始输入。以 F2 的首个 QK 乘加（周期 206）为 t=0，QK 占 t=0–45，PV 占 36–81，末组输出在 82 握手。控制器在 83 进入 LOAD，84 清阵列，85 启动 F3 的 QK。各范围含首末拍。[连续帧图](results/cross_frame_wave_20261118_bdk_rkfs/two_frames.png) · [当前顶层 VCD](results/cross_frame_wave_20261118_bdk_rkfs/sim/attention.vcd) · [原始命令与源码摘要](results/cross_frame_wave_20261118_bdk_rkfs/sim/manifest.json) · [逐 PE 与逐周期活动](results/cross_frame_wave_20261118_bdk_rkfs/cycles.csv)
+
+另在独立夹具中复用一块现有 systolic_array 和一块现有 online_softmax16，用固定排程驱动逻辑，输入已就绪，每条结果对角线直接取样。帧启动间隔 52、PV 相对 QK 偏移 +36 时，6 帧的 1,536 个 P 和 1,536 个 Y 分别与软件模型逐位一致。5 次帧交接共 1,280 个 PE 在读取旧 Y 的同一沿真正接受下一帧的点积首项。间隔 48、偏移 +36 的对照在 t=48 报 PE[0,0] 和边界 lane 0 冲突；间隔 48、偏移 +64 的排程使每个 PE 先做下一帧 QK 再做上一帧 PV，同样通过 6 帧逐位检查。本夹具未模拟候选顶层输入槽及输出背压。[调度夹具](results/cross_frame_wave_20261118_bdk_rkfs/tb_overlap_schedule.sv) · [命令、结果与边界](results/cross_frame_wave_20261118_bdk_rkfs/core_probe/summary.json) · [52 拍模块波形](results/cross_frame_wave_20261118_bdk_rkfs/core_probe/ii52_pv36.vcd) · [重放脚本](results/cross_frame_wave_20261118_bdk_rkfs/run_core_probe.py)
+
 ## 2026-11-18 Q、K 整行输入
 
 同一 256 位 ready/valid 口每次握手传 16 个 FP16，依次为 16 行 Q、16 行 K、16 列 V，每帧从 528 次输入握手降至 48 次。Q[i,k] 与 K[j,k] 各在所属行的通道 k 接收，第 j 个上边界按 k 读取 K[j,k] 参与 QKᵀ。测试平台按旧格式读取三块行优先矩阵，从阵列两条输入边独立核对 Q/K 的行号和 k。种子为 20261117。[修改前的顶层](results/qkv_row16_20261118_m8jjyw1p/before/rtl/attention_fp16.sv) · [接口契约](PROJECT.md)

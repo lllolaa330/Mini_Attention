@@ -1,0 +1,2 @@
+PASS II=48 PV_OFFSET=64 frames=6 P=1536 Y=1536 same_edge_handoffs=0
+results/cross_frame_wave_20261118_bdk_rkfs/tb_overlap_schedule.sv:121: $finish called at 3530000 (1ps)

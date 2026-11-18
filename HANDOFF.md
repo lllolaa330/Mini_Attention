@@ -6,7 +6,9 @@
 
 顶层 `attention_fp16` 用一块 16×16 OS 阵列计算 QKᵀ 和 PV。两个帧槽共用 256 位输入口，每次握手写入一整行 Q、一整行 K 或一整列 V。每帧依序接收 16 行 Q、16 行 K 和 16 列 V，共 48 拍。接收 K 最后一行后，该帧具备启动 QKᵀ 的条件。在线 Softmax 的 16 路 exp/div 每拍可接一行，P 按 k 从左侧送回阵列。输出按对角线分 31 组握手。[数据与握手契约](PROJECT.md)
 
-运行 `make quick`、`make test`、`make test SIM=verilator` 或 `make lint`。用 Surfer 打开[全宽接口非零单帧波形](results/qkv_row16_20261118_m8jjyw1p/single_wave/attention.vcd)，添加 `dut.input_fire`、`input_matrix`、`input_index`、`in_data`、`qk_step`、`pv_step` 和 `out_valid`。在握手的上升沿读取采样前的值，矩阵编号 0、1、2 依次代表 Q、K、V，行号或列号均从 0 到 15。该单帧在第 86 拍接受首组输出，第 116 拍接受末组输出，首个输入握手计为第 1 拍。[波形逐通道复核](results/qkv_row16_20261118_m8jjyw1p/wave_check.json) · [回归和连续帧计时](EXPERIMENTS.md)
+顶层支持相邻帧在同一阵列上重叠。旧帧 PV 第 16 步起允许新帧 QK 发车，第 30 步完成最后一次 P/V 边界注入后归还输入槽。无停顿的 6 帧波形显示每次相邻 QK、PV 和首末输出的间隔均为 52 拍；初始第一帧在第 85/115 拍接受首/末结果。两波共同停顿以保护阵列链路和尚未缓存的输出。[前后 timeline](results/frame52_top_20261118_9myellui/full_match/timeline.png) · [回归与证据](EXPERIMENTS.md)
+
+运行 `make quick`、`make test`、`make test SIM=verilator` 或 `make lint`。在 Surfer 打开[新版六帧 VCD](results/frame52_top_20261118_9myellui/top_ready/attention.vcd)，添加 `dut.qk_step`、`qk_age`、`qk_bank`、`pv_step`、`feed_step`、`pv_bank` 和 `out_valid`。在上升沿前观察两个 step 同为 1 且 bank 不同的区间；两帧任务分别在不同对角线上执行。信号 `release_input` 表示输入槽已完成最后一次读取，`out_last && out_valid && out_ready` 为该帧最后一组输出握手。
 
 此前仅 V 改为整列、Q/K 仍为标量的版本，每帧输入 528 拍。其 PV 空闲和 256 个位置的 PE 利用率比较保存在[V 列输入实验](results/v_column16_20261118_ioj9y7/matched/comparison.json)。更早的 OS/WS 双模式测量见[历史时间线](results/v_overlap_20261118_120306/figures/README.md)。
 

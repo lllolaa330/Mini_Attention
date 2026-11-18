@@ -1,0 +1,4 @@
+FATAL: results/cross_frame_wave_20261118_bdk_rkfs/tb_overlap_schedule.sv:59: PE contention t=48 diagonal=0
+       Time: 505000  Scope: tb_overlap_schedule.diagonals[0]
+FATAL: results/cross_frame_wave_20261118_bdk_rkfs/tb_overlap_schedule.sv:50: Edge contention t=48 lane=0
+       Time: 505000  Scope: tb_overlap_schedule.edges[0]

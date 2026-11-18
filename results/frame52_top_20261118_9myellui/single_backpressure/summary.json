@@ -1,0 +1,104 @@
+{
+  "status": "PASS",
+  "frames": 1,
+  "outputs": 256,
+  "dataflow": "os",
+  "normalization": "online_fp16_row_ii1",
+  "max_frame_rmse": 0.0006813673716108883,
+  "max_abs_error": 0.002498995012721439,
+  "limits": {
+    "rmse": 0.06,
+    "max_abs_error": 0.2
+  },
+  "seed": 20261117,
+  "stalls": 1,
+  "input_beats_per_frame": 48,
+  "output_beats": 31,
+  "normalized_fp16_words_checked": 256,
+  "coverage": {
+    "frames": 1,
+    "resets": 1,
+    "input_bubbles": 53,
+    "output_stall_cycles": 78,
+    "no_stall_cycles": 0
+  },
+  "stream_coverage": {
+    "input_blocked": 0,
+    "overlap_v_qk": 16,
+    "overlap_v_sm": 11,
+    "next_input_output": 0,
+    "first_output_pv": 1,
+    "long_stall_cycles": 0,
+    "queued_resets": 0,
+    "reset_event_mask": 0,
+    "resident_count": 0,
+    "cross_frame_mac_cycles": 0,
+    "cross_stall_cycles": 0,
+    "bank_reuse_before_retire": 0
+  },
+  "v_coverage": {
+    "pv_steps_before_v_complete": 0,
+    "pv_missing_v_cycles": 0,
+    "pv_wait_resets": 0,
+    "output_input_bubble_stalls": 0
+  },
+  "batch_timing": [
+    {
+      "kind": "main",
+      "first_run": 0,
+      "frames": 1,
+      "first_in_cycle": 9,
+      "first_out_cycle": 149,
+      "last_out_cycle": 232,
+      "first_output_latency_cycles": {
+        "min": 141,
+        "max": 141,
+        "mean": 141.0
+      },
+      "frame_latency_cycles": {
+        "min": 224,
+        "max": 224,
+        "mean": 224.0
+      },
+      "input_ii_cycles": null,
+      "output_ii_cycles": null,
+      "qk_ii_cycles": null
+    }
+  ],
+  "per_frame": [
+    {
+      "run": 0,
+      "case": 0,
+      "name": "random_uniform_001",
+      "batch": "main",
+      "category": "random",
+      "mode": 1,
+      "first_in_cycle": 9,
+      "first_out_cycle": 149,
+      "last_out_cycle": 232,
+      "first_output_latency_cycles": 141,
+      "normalization_first_issue": 104,
+      "normalization_last_issue": 119,
+      "normalization_first_return": 107,
+      "normalization_last_return": 122,
+      "first_qk_mac": 72,
+      "last_qk_mac": 117,
+      "first_pv_mac": 108,
+      "last_pv_mac": 204,
+      "qk_pv_overlap_cycles": 10,
+      "cross_frame_mac_cycles": 0,
+      "resident_at_dispatch": false,
+      "normalized_fp16_words_checked": 256,
+      "cycles": 224,
+      "input_ii_cycles": null,
+      "output_beats": 31,
+      "bit_exact": true,
+      "finite": true,
+      "rmse": 0.0006813673716108883,
+      "max_abs_error": 0.002498995012721439,
+      "passed": true,
+      "output_ii_cycles": null,
+      "qk_ii_cycles": null
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "icarus": "results/frame52_top_20261118_9myellui/icarus_stalls_final",
+  "verilator": "results/overlap52_vl_final",
+  "matching_regression_frames": 41,
+  "summaries_identical": true,
+  "identical_sha256": {
+    "input.hex": "08be9078e9aeb0afad8fae46baa2ba73ea1627888ff1f225ab092c96f8570007",
+    "expected.hex": "727a93abb0a919aa4fd72559599fcda87a3dd2eb46528c3c4d1f25600c67db1e",
+    "expected_p.hex": "eaa3f168593fa4c745be7fa99ccf68bc5dc33100f8e7aa6ceaf3e05e5f9dea5d",
+    "actual.txt": "9ae1fffd030fd2393f93079a26b6edd584c76f0e2a309f29ef45fdf9f7b3512b",
+    "per_frame.csv": "2deb160c88c6ad03ae3a394d9af9377ea7ee04e8a7fb3cc35e9eab9099e1c703"
+  },
+  "additional_seed": {
+    "frames": 97,
+    "summary": "results/frame52_top_20261118_9myellui/extended_final_seed18/summary.json"
+  },
+  "source_hashes_verified": true
+}
