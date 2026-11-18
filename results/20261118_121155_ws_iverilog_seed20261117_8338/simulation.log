@@ -1,0 +1,95 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/20261118_121155_ws_iverilog_seed20261117_8338/tb_attention.vvp', '+INPUT=input.hex', '+EXPECTED=expected.hex', '+OUTPUT=actual.txt', '+SEED=20261117', '+STALLS=1', '+WAVE=attention.vcd']
+VCD info: dumpfile attention.vcd opened for output.
+BATCH START first_run=0 count=25 kind=main
+FRAME PASS run=0 case=0 cycles=802 mode=0 first_in=3 first_out=774 last_out=804
+FRAME PASS run=1 case=1 cycles=802 mode=0 first_in=771 first_out=1542 last_out=1572
+FRAME PASS run=2 case=2 cycles=802 mode=0 first_in=1539 first_out=2310 last_out=2340
+FRAME PASS run=3 case=3 cycles=802 mode=0 first_in=2307 first_out=3078 last_out=3108
+FRAME PASS run=4 case=4 cycles=1332 mode=1 first_in=3075 first_out=4324 last_out=4406
+FRAME PASS run=5 case=5 cycles=1390 mode=1 first_in=4296 first_out=5604 last_out=5685
+FRAME PASS run=6 case=6 cycles=1316 mode=1 first_in=5576 first_out=6807 last_out=6891
+FRAME PASS run=7 case=7 cycles=1280 mode=1 first_in=6779 first_out=7974 last_out=8058
+FRAME PASS run=8 case=8 cycles=1272 mode=1 first_in=7946 first_out=9134 last_out=9217
+FRAME PASS run=9 case=9 cycles=1239 mode=1 first_in=9106 first_out=10260 last_out=10344
+FRAME PASS run=10 case=10 cycles=1313 mode=1 first_in=10231 first_out=11463 last_out=11543
+FRAME PASS run=11 case=11 cycles=1258 mode=1 first_in=11436 first_out=12605 last_out=12693
+FRAME PASS run=12 case=12 cycles=1341 mode=1 first_in=12577 first_out=13830 last_out=13917
+FRAME PASS run=13 case=13 cycles=1386 mode=1 first_in=13802 first_out=15104 last_out=15187
+FRAME PASS run=14 case=14 cycles=1322 mode=1 first_in=15076 first_out=16313 last_out=16397
+FRAME PASS run=15 case=15 cycles=1348 mode=1 first_in=16285 first_out=17543 last_out=17632
+FRAME PASS run=16 case=16 cycles=1285 mode=1 first_in=17515 first_out=18716 last_out=18799
+FRAME PASS run=17 case=17 cycles=1422 mode=1 first_in=18688 first_out=20029 last_out=20109
+FRAME PASS run=18 case=18 cycles=1330 mode=1 first_in=20001 first_out=21244 last_out=21330
+FRAME PASS run=19 case=19 cycles=1378 mode=1 first_in=21216 first_out=22508 last_out=22593
+FRAME PASS run=20 case=20 cycles=1337 mode=1 first_in=22480 first_out=23731 last_out=23816
+FRAME PASS run=21 case=21 cycles=1344 mode=1 first_in=23703 first_out=24955 last_out=25046
+FRAME PASS run=22 case=22 cycles=1377 mode=1 first_in=24926 first_out=26217 last_out=26302
+FRAME PASS run=23 case=23 cycles=1358 mode=1 first_in=26189 first_out=27459 last_out=27546
+FRAME PASS run=24 case=24 cycles=1284 mode=1 first_in=27430 first_out=28629 last_out=28713
+BATCH START first_run=25 count=4 kind=stress
+FRAME PASS run=25 case=9 cycles=3817 mode=1 first_in=28716 first_out=32446 last_out=32532
+FRAME PASS run=26 case=10 cycles=2824 mode=1 first_in=29918 first_out=32659 last_out=32741
+FRAME PASS run=27 case=11 cycles=1310 mode=1 first_in=32533 first_out=33761 last_out=33842
+FRAME PASS run=28 case=12 cycles=1319 mode=1 first_in=33733 first_out=34969 last_out=35051
+RESET PASS phase=0
+BATCH START first_run=29 count=1 kind=recovery
+FRAME PASS run=29 case=7 cycles=1301 mode=1 first_in=35108 first_out=36325 last_out=36408
+RESET PASS phase=1
+BATCH START first_run=30 count=1 kind=recovery
+FRAME PASS run=30 case=8 cycles=1352 mode=1 first_in=36926 first_out=38189 last_out=38277
+RESET PASS phase=2
+BATCH START first_run=31 count=1 kind=recovery
+FRAME PASS run=31 case=9 cycles=1410 mode=1 first_in=38825 first_out=40151 last_out=40234
+RESET PASS phase=3
+BATCH START first_run=32 count=1 kind=recovery
+FRAME PASS run=32 case=10 cycles=1262 mode=1 first_in=40816 first_out=41993 last_out=42077
+RESET PASS phase=4
+BATCH START first_run=33 count=1 kind=recovery
+FRAME PASS run=33 case=11 cycles=1354 mode=1 first_in=42666 first_out=43935 last_out=44019
+RESET PASS phase=5
+BATCH START first_run=34 count=1 kind=recovery
+FRAME PASS run=34 case=12 cycles=1329 mode=1 first_in=44619 first_out=45865 last_out=45947
+RESET PASS phase=6
+BATCH START first_run=35 count=1 kind=recovery
+FRAME PASS run=35 case=13 cycles=1368 mode=1 first_in=46734 first_out=48017 last_out=48101
+RESET PASS phase=7
+BATCH START first_run=36 count=1 kind=recovery
+FRAME PASS run=36 case=14 cycles=1337 mode=1 first_in=48933 first_out=50188 last_out=50269
+SOFTMAX RESET PASS phase=1
+BATCH START first_run=37 count=1 kind=recovery
+FRAME PASS run=37 case=12 cycles=1344 mode=1 first_in=50852 first_out=52110 last_out=52195
+SOFTMAX RESET PASS phase=2
+BATCH START first_run=38 count=1 kind=recovery
+FRAME PASS run=38 case=13 cycles=1365 mode=1 first_in=52779 first_out=54061 last_out=54143
+SOFTMAX RESET PASS phase=3
+BATCH START first_run=39 count=1 kind=recovery
+FRAME PASS run=39 case=14 cycles=1451 mode=1 first_in=54728 first_out=56093 last_out=56178
+SOFTMAX RESET PASS phase=4
+BATCH START first_run=40 count=1 kind=recovery
+FRAME PASS run=40 case=15 cycles=1338 mode=1 first_in=56764 first_out=58016 last_out=58101
+SOFTMAX RESET PASS phase=5
+BATCH START first_run=41 count=1 kind=recovery
+FRAME PASS run=41 case=16 cycles=1371 mode=1 first_in=58697 first_out=59981 last_out=60067
+SOFTMAX RESET PASS phase=6
+BATCH START first_run=42 count=1 kind=recovery
+FRAME PASS run=42 case=17 cycles=1408 mode=1 first_in=60666 first_out=61987 last_out=62073
+RESET PASS phase=8
+BATCH START first_run=43 count=1 kind=recovery
+FRAME PASS run=43 case=15 cycles=1395 mode=1 first_in=62599 first_out=63908 last_out=63993
+WS PARTIAL V RESET PASS rows=3
+BATCH START first_run=44 count=1 kind=recovery
+FRAME PASS run=44 case=16 cycles=1356 mode=1 first_in=64578 first_out=65853 last_out=65933
+PV WAIT RESET PASS
+BATCH START first_run=45 count=1 kind=recovery
+FRAME PASS run=45 case=17 cycles=1290 mode=1 first_in=66590 first_out=67796 last_out=67879
+QUEUED RESET PASS
+BATCH START first_run=46 count=1 kind=recovery
+FRAME PASS run=46 case=18 cycles=1334 mode=1 first_in=69446 first_out=70695 last_out=70779
+BATCH START first_run=47 count=2 kind=partial_v
+FRAME PASS run=47 case=19 cycles=985 mode=1 first_in=70782 first_out=71681 last_out=71766
+FRAME PASS run=48 case=20 cycles=1378 mode=1 first_in=71627 first_out=72921 last_out=73004
+COVERAGE frames=49 resets=19 input_bubbles=20286 output_stall_cycles=6917 no_stall_cycles=802
+STREAM_COVERAGE input_blocked=1386 overlap_v_qk=1563 overlap_v_sm=602 next_input_output=549 first_output_pv=49 long_stall_cycles=2500 queued_resets=1 top_reset_mask=511 softmax_reset_mask=126
+V_COVERAGE pv_steps_before_v_complete=720 pv_missing_v_cycles=14219 ws_rows_during_sm=153 pv_wait_resets=1 ws_partial_v_resets=1 output_input_bubble_stalls=13
+TB PASS
+tb/tb_attention.sv:544: $finish called at 730266000 (1ps)

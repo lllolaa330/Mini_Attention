@@ -7,10 +7,11 @@ module fp16_pe (
     input wire a_valid_in, b_valid_in,
     output reg [15:0] a_out, b_out,
     output reg a_valid_out, b_valid_out,
-    output reg [15:0] acc
+    output reg [15:0] acc,
+    input wire first_term
 );
     wire [15:0] next_acc;
-    fp16_fma fma (.a(a_in), .b(b_in), .c(acc), .y(next_acc));
+    fp16_fma fma (.a(a_in), .b(b_in), .c(first_term ? 16'h0000 : acc), .y(next_acc));
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             a_out <= 16'h0000; b_out <= 16'h0000;

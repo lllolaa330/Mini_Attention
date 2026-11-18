@@ -1,0 +1,4 @@
+COMMAND: ['verilator', '--lint-only', '--Wall', '--top-module', 'online_softmax16', 'scripts/verilator_lint.vlt', '-f', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/online_softmax16_20261118_145909/files.f']
+- V e r i l a t i o n   R e p o r t: Verilator 5.044 2026-01-01 rev vUNKNOWN-built20260101
+- Verilator: Built from 1.316 MB sources in 35 modules, into 5.718 MB in 12 C++ files needing 0.000 MB
+- Verilator: Walltime 0.474 s (elab=0.013, cvt=0.413, bld=0.000); cpu 0.472 s on 1 threads; alloced 137.000 MB

@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-11-18T12:08:29.635160+08:00",
+  "files": {
+    "actual.hex": {
+      "words": 2048,
+      "sha256": "995dd5a6afab5dcbe94da206ead39bf97697f77172aeaafc9da4f3f8d1d1d933",
+      "bit_match": true
+    },
+    "direct_actual.hex": {
+      "words": 2048,
+      "sha256": "995dd5a6afab5dcbe94da206ead39bf97697f77172aeaafc9da4f3f8d1d1d933",
+      "bit_match": true
+    }
+  }
+}

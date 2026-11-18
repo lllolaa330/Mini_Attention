@@ -1,0 +1,44 @@
+{
+  "status": "PASS",
+  "verified_utc": "2026-11-18T07:05:53.992171+00:00",
+  "runs": {
+    "iverilog": {
+      "directory": "results/20261118_150420_os_iverilog_seed20261117_21540",
+      "manifest_sha256": "04c20b11b8aa8a53d22a40db5f1e499049a0cdf99dbf53d11ac7ebfb4b98f889",
+      "sources_verified": 641
+    },
+    "verilator": {
+      "directory": "results/20261118_150418_os_verilator_seed20261117_20938",
+      "manifest_sha256": "49f2abf21b3882f7c92c82e0ccdcbda9359054a26636eab46755a65071505287",
+      "sources_verified": 641
+    }
+  },
+  "identical_files_sha256": {
+    "input.hex": "08be9078e9aeb0afad8fae46baa2ba73ea1627888ff1f225ab092c96f8570007",
+    "expected.hex": "727a93abb0a919aa4fd72559599fcda87a3dd2eb46528c3c4d1f25600c67db1e",
+    "expected_p.hex": "eaa3f168593fa4c745be7fa99ccf68bc5dc33100f8e7aa6ceaf3e05e5f9dea5d",
+    "actual.txt": "4d6d6e9ab54599b13e49152efdbc4d994d59e31f6e4b62355e8d884ef07e109f",
+    "cases.json": "aa969f4f949b622155336b1b88eb1c8abbda5fe07725dd0f08e8c4f246234d76",
+    "per_frame.csv": "0eb13a3b86f0901e065a67a43cdb8f0363f9424b1b2bb0eb7f221c42c6cdea4d",
+    "summary.json": "0da8802c814f449dc4ed502514bf96e37c3b19dceff1229b59c7ab4002713c21"
+  },
+  "frames_per_simulator": 41,
+  "normalized_P_bits_checked_as_fp16_words": 10496,
+  "Y_words": 10496,
+  "max_frame_rmse": 0.0016527969157722564,
+  "max_abs_error": 0.008003024305335948,
+  "public_input_resident_run": 40,
+  "resident_cycle_origin": "first valid QK MAC is cycle 1",
+  "resident_cycles": {
+    "first_qk_mac": 1,
+    "last_qk_mac": 46,
+    "normalization_first_issue": 33,
+    "normalization_last_issue": 48,
+    "normalization_first_return": 36,
+    "normalization_last_return": 51,
+    "first_pv_mac": 37,
+    "first_out_cycle": 53,
+    "last_out_cycle": 83
+  },
+  "resident_simultaneous_qk_pv_mac_cycles": 10
+}

@@ -2,13 +2,13 @@
 
 更新于 2026-11-18，Asia/Shanghai。
 
-## 当前的流式 Attention
+## 当前的全 OS、整行归一化实现
 
-[OS/WS 流水时间线](results/stream_timeline_20261118/mini_attention_timeline.pdf) 展示当前无背压首帧的两处重叠。逐阶段拍号及两份原始 VCD 路径见[时间线数据](results/stream_timeline_20261118/timeline.json)。
+顶层 `attention_fp16` 用一块 16×16 OS 阵列计算 QKᵀ 和 PV。两个帧槽共用 256 位输入口，每次握手写入一整行 Q、一整行 K 或一整列 V。每帧依序接收 16 行 Q、16 行 K 和 16 列 V，共 48 拍。接收 K 最后一行后，该帧具备启动 QKᵀ 的条件。在线 Softmax 的 16 路 exp/div 每拍可接一行，P 按 k 从左侧送回阵列。输出按对角线分 31 组握手。[数据与握手契约](PROJECT.md)
 
-输入端的两个 Q/K/V 帧槽独立于计算状态机。最后一个 K 字到达后即开始 QKᵀ，V 和 P 同帧就绪后执行 PV。输出端的 `out_data[255:0]` 按列切成 16 个 FP16，`out_lane_valid[j]` 标记有效列；每帧接受 31 组，最后一组握手后发出 done。运行入口仍是 `make test` 和 `make test DATAFLOW=ws`，可加 `ARGS=--waves`。观察输入与计算重叠可添加 `load_count`、`write_bank`、`compute_bank` 和 `state`。观察背压可添加 `out_valid`、`out_ready`、`out_lane_valid`、`skid_valid`、`feed_step` 和 `done`。
+运行 `make quick`、`make test`、`make test SIM=verilator` 或 `make lint`。用 Surfer 打开[全宽接口非零单帧波形](results/qkv_row16_20261118_m8jjyw1p/single_wave/attention.vcd)，添加 `dut.input_fire`、`input_matrix`、`input_index`、`in_data`、`qk_step`、`pv_step` 和 `out_valid`。在握手的上升沿读取采样前的值，矩阵编号 0、1、2 依次代表 Q、K、V，行号或列号均从 0 到 15。该单帧在第 86 拍接受首组输出，第 116 拍接受末组输出，首个输入握手计为第 1 拍。[波形逐通道复核](results/qkv_row16_20261118_m8jjyw1p/wave_check.json) · [回归和连续帧计时](EXPERIMENTS.md)
 
-Icarus 带背压验证通过 OS 45 帧和 WS 47 帧，含两槽均满时的复位恢复。连续供数、下游就绪时，两种配置的输入帧间隔均为 768 拍，整帧延迟分别为 816 和 833 拍。完整对比和复现命令见 [新旧接口同输入测量](results/pingpong_baseline_20261118_112657/README.md)。实际验证与未验证边界见 [实验记录](EXPERIMENTS.md)；本轮修改在本地工作区。
+此前仅 V 改为整列、Q/K 仍为标量的版本，每帧输入 528 拍。其 PV 空闲和 256 个位置的 PE 利用率比较保存在[V 列输入实验](results/v_column16_20261118_ioj9y7/matched/comparison.json)。更早的 OS/WS 双模式测量见[历史时间线](results/v_overlap_20261118_120306/figures/README.md)。
 
 ## 历史标量接口的单帧波形（2026-11-18）
 
@@ -16,9 +16,9 @@ Icarus 带背压验证通过 OS 45 帧和 WS 47 帧，含两槽均满时的复�
 
 新增 `--single-frame` 仅运行输入列表第一帧，常规回归默认仍保留全部复位恢复测试。未指定 `--vectors` 时第一帧是全零；要复现本次有变化的波形，使用该目录 `single_input.json` 并加 `--stalls 0 --waves`。源码快照与 VCD 计数检查已归档；此轮未重跑完整协议回归。修改尚未提交或推送。
 
-本地工作区可用 `attention_fp16.USE_WS` 在展开时选择 OS（默认）或 WS，两个模式共用 16 行并行 Softmax 和软件模型。`make quick` 跑 OS，`make quick DATAFLOW=ws` 跑 WS。查看 WS 波形可加 `ARGS=--waves`，在 `dut.array_impl.array_core.rows[0].cols[0].pe` 观察 `weight`、`a_in`、`psum_out` 和 `psum_valid_out`。
+当时的标量接口版本可用 `attention_fp16.USE_WS` 在展开时选择 OS（默认）或 WS，两个模式共用 16 行并行 Softmax 和软件模型。`make quick` 跑 OS，`make quick DATAFLOW=ws` 跑 WS。查看 WS 波形可加 `ARGS=--waves`，在 `dut.array_impl.array_core.rows[0].cols[0].pe` 观察 `weight`、`a_in`、`psum_out` 和 `psum_valid_out`。
 
-## 已完成
+## 早期实现记录
 
 - 每种配置使用 16×16、256 个 FP16 FMA PE，复用计算 QKᵀ 和 PV。OS 在 PE 内累加。WS 第一轮装 Kᵀ，第二轮装 V，部分和逐级向下传。
 - 全 FP16 稳定 Softmax、指数 ROM、迭代浮点除法、FP16 概率缓存和 ready/valid 输入输出。
@@ -30,11 +30,9 @@ Icarus 带背压验证通过 OS 45 帧和 WS 47 帧，含两槽均满时的复�
 
 `make quick` / `make test` / `make test SIM=verilator`。`make arithmetic`、`make array`、`make lint` 分别执行算术、阵列和静态检查。每次保存独立 results 目录。完整数值契约在 PROJECT.md，复用协议/验证边界在 docs/verification.md。
 
-所有边界数值为 binary16，FMA 每次按 RNE 单次舍入，支持次正规数。每轮 OS 运行 46 拍，WS 先装权 16 拍再运行 47 拍（含写回）。每行 Softmax 用四层 FP16 加法树求分母，再将 16 路归一化结果存为 FP16 P。收齐全部行后，顶层复用同一个阵列执行 PV。
-
 ## 后续
 
-本轮修复在本地工作区，尚未提交或推送。并行版本的综合、时序和功耗待验证。
+本次新 RTL、验证脚本和运行记录均在本地工作区，尚未提交或推送。全 OS 实现的面积、时序和功耗待验证。
 
 已发布到 [lllolaa330/Mini_Attention](https://github.com/lllolaa330/Mini_Attention)，main 分支，私有仓库；初次实现提交 `34559ae87ed8d4639dcc17d0e723d62e25c99ec3`。随后补齐上游测试构建配置归档，实际最新提交以 Git remote/HEAD 为准。
 

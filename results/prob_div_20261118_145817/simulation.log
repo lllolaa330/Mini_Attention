@@ -1,0 +1,3 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/prob_div_20261118_145817/test.vvp', '+COUNT=144942']
+PROB DIV PASS cases=144942 consecutive=97
+tb/tb_prob_div.sv:47: $finish called at 1464386000 (1ps)

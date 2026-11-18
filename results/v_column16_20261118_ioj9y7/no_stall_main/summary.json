@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "source": "results/20261118_153540_os_verilator_seed20261117_53973",
+  "command": [
+    "/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/20261118_153540_os_verilator_seed20261117_53973/obj_tb_attention/tb_attention",
+    "+INPUT=input.hex",
+    "+EXPECTED=expected.hex",
+    "+EXPECTED_P=expected_p.hex",
+    "+OUTPUT=actual.txt",
+    "+SEED=20261117",
+    "+STALLS=0"
+  ],
+  "checked_frames": 37,
+  "checks": [
+    "RTL self-check with continuous main batch and directed recovery phases",
+    "P and Y bit-exact",
+    "independent float64 limits"
+  ]
+}

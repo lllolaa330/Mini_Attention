@@ -1,6 +1,98 @@
 # 验证记录
 
-## 2026-11-18 流水时间线
+## 2026-11-18 Q、K 整行输入
+
+同一 256 位 ready/valid 口每次握手传 16 个 FP16，依次为 16 行 Q、16 行 K、16 列 V，每帧从 528 次输入握手降至 48 次。Q[i,k] 与 K[j,k] 各在所属行的通道 k 接收，第 j 个上边界按 k 读取 K[j,k] 参与 QKᵀ。测试平台按旧格式读取三块行优先矩阵，从阵列两条输入边独立核对 Q/K 的行号和 k。种子为 20261117。[修改前的顶层](results/qkv_row16_20261118_m8jjyw1p/before/rtl/attention_fp16.sv) · [接口契约](PROJECT.md)
+
+Icarus 12.0 运行 `make test`，41 帧的 10,496 个 P 和 10,496 个 Y 分别与软件模型逐位一致。覆盖 11 次复位、双帧槽满时顶住上游、1,852 拍输入气泡，以及连续 2,500 拍的定向输出背压。最大逐帧 RMSE 0.00165280，最大逐元素绝对误差 0.00800302。另运行 `make lint`，顶层通过严格检查。[Icarus 自检与精度](results/qkv_row16_20261118_m8jjyw1p/icarus_stalls/summary.json) · [严格 lint](results/lint_os_20261118_155935/manifest.json)
+
+对非零输入 `random_uniform_001`，用 `--single-frame --stalls 0 --waves` 生成波形，按上升沿前的有效握手核对全部 48 拍、768 个输入字及两个帧内边界。把首个 Q 握手计为第 1 拍，Q、K、V 分别占第 1–16、17–32、33–48 拍，第 86 拍接受首组输出，第 116 拍接受末组输出。上一版在相同输入上为 566/596 拍。[新版 VCD](results/qkv_row16_20261118_m8jjyw1p/single_wave/attention.vcd) · [握手实测](results/qkv_row16_20261118_m8jjyw1p/wave_check.json) · [上一版非零输入记录](results/20261118_153545_os_iverilog_seed20261117_57187/per_frame.csv)
+
+Verilator 5.044 运行相同的 41 帧带背压回归，通过相同的逐位和精度检查。两个模拟器的原始输出（含周期）、逐帧统计及双金标分别逐字节一致。首次 Verilator 构建时，生成器拆开测试平台的 fork/join 协程，生成的 C++ 无法访问同步变量；为此仅在该测试平台的 Verilator 构建中设置 `--output-split-cfuncs 0`。[双模拟器核对](results/qkv_row16_20261118_m8jjyw1p/cross_sim.json) · [最终 Verilator 记录](results/qkv_row16_verilator_20261118_03/manifest.json) · [首次 C++ 编译日志](results/qkv_row16_verilator_20261118_01/tb_attention_compile.log)
+
+两版在 Verilator 上以同一组 25 帧连续供数，下游持续 ready。上一版每两帧的首输入、首输出、末输出间隔均为 528 拍。新版相邻首输入间隔依次为 48、68，随后 22 个间隔均为 85 拍。24 个相邻首输出间隔和 24 个相邻末输出间隔均为 85 拍。从第 3 帧起，以该帧首个输入握手计为第 1 拍，含双缓冲排队的首组/末组输出延迟为 140/170 拍。按相邻末输出间隔折算的稳态吞吐量为上版的 528/85 ≈ 6.21 倍，单位为帧/时钟周期。以上为 RTL 仿真计数。[逐帧周期](results/qkv_row16_20261118_m8jjyw1p/timing/frames.csv) · [输入与时序对照](results/qkv_row16_20261118_m8jjyw1p/timing/comparison.json)
+
+## 2026-11-18 每拍一列 V 的 OS 阵列
+
+以修改前实际工作区为基线，封存两版 RTL。顶层将 `in_data` 加宽到 256 位；Q/K 各 256 拍使用低 16 位，V 使用 16 拍，拍 j 的通道 k 传输 V[k,j]。每列在两个帧槽各有一份独立列缓存；第 j 列在逻辑步 t 读取行号 k=t−j，同一列只向该列的顶部 PE 送数。软件数值模型与输出协议沿用此前实现。
+
+在相同非零矩阵 `random_uniform_001` 上测量两个版本。输入持续供数，分别保持输出持续就绪或在同一输出组阻塞 12 拍。每个 PE 的有效 FMA 由 VCD 上升沿前的局部 step 和两个 valid 统计。端点计入周期；PV 窗口从首个至末个 PV 乘加，计算窗口从首个 QK 至末个 PV 乘加。
+
+| 接收条件 | PV 闲置拍，旧→新 | PV 窗口拍数 | PE 利用率，PV 窗口 | PE 利用率，计算窗口 | 从首个输入到末个输出 |
+|---|---:|---:|---:|---:|---:|
+| 持续 ready | 189→0 | 235→46 | 6.81%→34.78% | 11.81%→39.02% | 785→596 拍 |
+| 同组阻塞 12 拍 | 200→11 | 246→57 | 6.50%→28.07% | 11.35%→34.41% | 797→608 拍 |
+
+每个坐标均执行 16 个 QK 和 16 个 PV 乘加。PV 有效推进均为 46 步；两组实验的旧版各有 189 拍缺 V，新版均为零。带背压时两版均因输出缓冲被占满停 11 拍。首个输入握手起算，两版首个 PV 乘加均在第 550 拍，首组输出握手由 755 提前到 566 拍。[波形比较](results/v_column16_20261118_ioj9y7/matched/comparison.json) · [每个 PE 的明细](results/v_column16_20261118_ioj9y7/matched/per_pe.csv) · [测试夹具](results/v_column16_20261118_ioj9y7/tb_matched.sv)
+
+运行 `make test ARGS=--waves` 和 `make test SIM=verilator`，种子 20261117。Icarus 12.0 和 Verilator 5.044 各自通过 41 帧，10,496 个 P 和 10,496 个 Y 均逐位一致。覆盖 11 次复位、连续 2,500 拍输出背压、输入等待时数据保持、第 8 列缺数和随后恢复；检查每次实际注入的 V[k,j]。相同帧的输入、双金标、实际输出（含周期）及逐帧统计在两个模拟器上相同。另运行 `make regression SIM=verilator`，97 帧的 24,832 个 P 和 24,832 个 Y 通过；最大逐帧 RMSE 为 0.00181428，最大逐元素绝对误差为 0.00800302。`make lint` 严格检查通过。上述拍数为 RTL 仿真结果，面积和最高频率尚待综合评估。[41 帧 Icarus](results/20261118_153545_os_iverilog_seed20261117_57186/summary.json) · [41 帧 Verilator](results/20261118_153540_os_verilator_seed20261117_53973/summary.json) · [97 帧回归](results/20261118_153604_os_verilator_seed20261117_66136/summary.json) · [逐字节核验](results/v_column16_20261118_ioj9y7/regression_audit.json) · [严格 lint](results/lint_os_20261118_153500/manifest.json)
+
+## 逐 PE 运算利用率（2026-11-18，标量 V 版本）
+
+从 Icarus 波形的上升沿前读取 `tb_attention.pe_mac[16*i+j]`，有效条件为本地 step 及两个操作数 valid。完整帧每个坐标实测 32 次乘加，共 8,192 次。以首个 QK MAC 到末个 PV MAC 为共同窗口（含两端），run 40 的 256 个位置各为 32/82，run 0 各为 32/271。run 0 从首个输入到末个输出握手时各为 32/785。逐坐标首末活动拍另见 [CSV](results/pe_utilization_20261118_719dIk/per_pe.csv)。
+
+复算命令为 `python3 results/pe_utilization_20261118_719dIk/count_pe.py results/20261118_150420_os_iverilog_seed20261117_21540 --frames 0 40 --output /tmp/mini_attention_pe_util_new.csv`，输出路径需尚未存在。该分析重用已有波形。
+
+## 2026-11-18 全 OS 阵列与逐拍整行 FP16 归一化
+
+端到端比较来自当前的独立 SoftFloat 位模型，在线分母按顺序递推，指数表、FP16 乘、加和直接除法按各自边界舍入。前一版使用树形分母，两版 P 在某些输入上有真实位差；独立 float64 数学定义沿用原函数。输入槽和 16 列对角线输出协议沿用此前实现。以下运行均基于本机 macOS arm64，种子 20261117；主回归含 17 个定向输入与 8 个随机输入、额外的背压及恢复帧。
+
+| 操作 | 结果 | 证据 |
+|---|---|---|
+| `make test ARGS=--waves`，Icarus 12.0 | 41 帧，10,496 个 P 和 10,496 个 Y 分别逐字一致 | [摘要](results/20261118_150420_os_iverilog_seed20261117_21540/summary.json) |
+| `make test SIM=verilator`，Verilator 5.044 | 同一批 41 帧通过，实际输出含握手拍号及逐帧统计与 Icarus 一致 | [逐帧](results/20261118_150418_os_verilator_seed20261117_20938/per_frame.csv) · [跨模拟器审计及 P/Y 翻位负向自检](results/online_os16_cross_sim_20261118_150418/summary.json) |
+| `make regression SIM=verilator` | 17 个定向和 64 个随机输入，附加协议/恢复用例后共 97 帧、24,832 个 P 和 24,832 个 Y 逐位一致；最大逐帧 RMSE 0.00181428、最大逐元素绝对误差 0.00800302 | [扩展回归](results/20261118_150551_os_verilator_seed20261117_35081/summary.json) |
+| `make lint` | 唯一的全 OS Attention 顶层严格 lint 通过 | [运行清单](results/lint_os_20261118_150420/manifest.json) |
+| `python3 scripts/run_prob_div.py` 及独立归一化模块检查 | 144,942 个直接除法向量；128 行共 2,048 个概率逐位一致，含次正规、流水气泡及清帧 | [除法](results/prob_div_20261118_145901/manifest.json) · [整行归一化](results/online_softmax16_20261118_145909/manifest.json) |
+| `make quick ARGS="--single-frame --waves --stalls 0 --vectors results/20261118_110939_single_attention_ws_os/single_input.json"` | 一帧非零输入，256 P 和 256 Y 通过 | [逐帧结果](results/20261118_150420_os_iverilog_seed20261117_21541/per_frame.csv) · [波形](results/20261118_150420_os_iverilog_seed20261117_21541/attention.vcd) |
+
+每个模拟器均有 11 次复位，覆盖输入气泡 16,235 拍、输出阻塞 7,432 拍（含连续 2,500 拍）、缺 V 及排队帧复位。与 float64 参考比较，41 帧中的最大逐帧 RMSE 为 0.001652797，最大逐元素绝对误差为 0.008003024。每帧独立检查 256 个 PE 的实际使能及输入 valid，每个 PE 恰接受 16 个 QK 和 16 个 PV 项；16 行 P 的发出、返回均连续且有序。此前版本的期望字或计时不能用作当前判据。
+
+| 实际信号，首个 QK 乘加为 T1 | 流式，无停顿，第 0 帧 | 启动时 Q/K/V 完整，第 40 帧 |
+|---|---:|---:|
+| QK 乘加窗口 | T1–46 | T1–46 |
+| 16 行归一化请求 / 返回 | T33–48 / T36–51 | T33–48 / T36–51 |
+| 首个 PV 乘加 | T37 | T37 |
+| 不同 PE 同时执行 QK、PV 的拍数 | 3 | 10 |
+| 首组 / 末组输出握手 | T242 / T272 | T53 / T83 |
+
+从两份 Icarus 展开文件独立数到 1 块 OS 阵列、256 个 OS PE 和 256 个阵列 FMA、1 个归一化模块及其 16 个流水除法器。该顶层的 WS 阵列与 WS PE 计数均为零。两个示例窗口的每个 PE 有效位、QK/PV 同拍事件、归一化和输出握手均经 VCD 直接复核。[展开与波形证据](results/online_os16_structure_20261118_150712/structure_and_timing.json)
+
+第 40 帧经正常输入端口进入第二槽，由上一帧的输出背压确保派发时 Q/K/V 全部在片上，派发后下游持续 ready。若将清阵列沿计为第 1 拍，其首末输出为 54/84 拍。流式第 0 帧从首个 Q 输入握手计为 755/785 拍，下一帧首个 Q 握手间隔为 768 拍。以上是 RTL 时钟计数；尚无综合、布局布线、STA 或功耗实测。
+
+旧源码快照、首次 lint 的无符号常量比较告警和各次运行均保留。最终实现将本地逻辑步与对角线偏移的差映射为 FP16 内积项索引，严格 lint 已用最终源码重跑。
+
+## 2026-11-18 接收 V 与 PV 重叠
+
+参照版本为 `4172ffe` 的双帧缓存、按列输出 RTL。两版保持相同的 16×16 FP16 阵列规模、Softmax、输入输出格式和舍入顺序。四个固定输入分别为全零、单位阵转置探针、随机位模式和均匀随机；软件重新生成了 1,024 个期望字。Icarus 12.0 对两个版本、两种数据流和两种计时口径共运行 32 帧，逐一核对输出掩码、帧尾和 8,192 个 FP16 字。[逐帧输出与延迟比较](results/v_overlap_20261118_120306/benchmarks/comparison.json) · [夹具校验](results/v_overlap_20261118_120306/fixture_verification.json) · [重放命令](docs/verification.md)
+
+| 下游持续 ready，拍数含首尾 | 首组，优化前 → 后 | 末组，优化前 → 后 |
+|---|---:|---:|
+| 流式 OS，4 帧 | 786 → 755 | 816 → 785 |
+| 流式 WS，4 帧 | 803 → 772 | 833 → 802 |
+| 片上预装 OS，全零帧 | 83 → 83 | 113 → 113 |
+| 片上预装 WS，全零帧 | 117 → 101 | 147 → 131 |
+
+流式从首个 Q 输入握手计，4 帧连续无气泡，3 个输入启动间隔均为 768 拍。片上对各帧单独预装，从核心执行 CLEAR_QK 的上升沿计，包含 WS 从片上缓冲向 PE 装 K 的时间。其他 3 帧的片上首末组都比零帧多 1 拍。首组只含 Y[0,0]，末组握手时已交付 256 字。[片上实测时间线](results/v_overlap_20261118_120306/figures/timeline_resident.pdf) · [流式实测时间线](results/v_overlap_20261118_120306/figures/timeline_stream.pdf) · [逐拍数据与绘图入口](results/v_overlap_20261118_120306/figures/README.md)
+
+流式全零帧中，OS 在第 579 拍首次推进 PV，第 755 拍送出首组；最后一个 V 字在第 768 拍握手。WS 在 Softmax 期间装好 V 的前 5 行，第 596 拍首次推进 PV，第 769 拍装最后一行，第 772 拍送出首组。PV 阶段跨度均为 206 拍，含 OS 的 46 个有效推进步与 160 个缺数等待拍，或 WS 的 47 个有效推进步与 159 个等待拍。片上 WS 在第 65–80 拍装 16 行 V，每次写均与 Softmax 重叠。拍数来自 RTL 仿真，频率、面积、功耗和存储器映射尚待综合评估。
+
+### 背压和复位自检
+
+运行 `make test ARGS=--waves`、`make test DATAFLOW=ws ARGS=--waves`，另运行 `make test SIM=verilator` 与 `make test DATAFLOW=ws SIM=verilator`。种子 20261117，17 个定向输入加 8 个随机输入，再运行长背压、半张 V 后暂停、连续帧及复位恢复用例。Icarus 12.0 与 Verilator 5.044 分别得到以下结果。
+
+| 数据流 | 完成帧 / 逐位一致 FP16 字 | 复位次数 | 输出被阻拍数 | 收完 V 前的 PV 实际推进步（累计） | Softmax 期间 V 行写入（累计） |
+|---|---:|---:|---:|---:|---:|
+| OS | 47 / 12,032 | 17 | 6,865 | 919 | — |
+| WS | 49 / 12,544 | 19 | 6,917 | 720 | 153 |
+
+两种模式均覆盖连续 2,500 拍输出背压、输入气泡与输出受阻同时出现、PV 缺 V 时复位和两帧槽已占用时复位。WS 还覆盖装入三行 V 后复位。与独立 float64 数学模型相比，最大逐帧 RMSE 为 0.001136984，最大逐元素绝对误差为 0.003790716。Icarus 的紧凑 VCD 与对应 summary 同目录。[OS Icarus](results/20261118_121751_os_iverilog_seed20261117_23777/summary.json) · [WS Icarus](results/20261118_121751_ws_iverilog_seed20261117_23781/summary.json) · [OS Verilator](results/20261118_121751_os_verilator_seed20261117_23780/summary.json) · [WS Verilator](results/20261118_121751_ws_verilator_seed20261117_23779/summary.json)
+
+同一数据流在两个模拟器中的输入、期望、全部实际字及其握手拍号、逐帧统计均逐字节一致。额外在两个最终 Verilator 可执行文件上分别翻转第一个 FP16 期望值的低位，scoreboard 均在第一个输出坐标报错。[源码与双模拟器审计](results/v_overlap_20261118_120306/verification_audit.json) · [OS 负向自检](results/v_overlap_20261118_120306/checker_negative_os/summary.json) · [WS 负向自检](results/v_overlap_20261118_120306/checker_negative_ws/summary.json) · [最终计时复核](results/v_overlap_20261118_120306/probe_recheck.json)
+
+WS 阵列级自检另比较了移位与定址写权，16×16 各 2,048 字、2×2 各 32 字一致；包含暂停期间写权、写权与推进同拍和旧权参与同拍 FMA。两个顶层参数的 Verilator 严格 lint 通过。跨模拟器联调时，将 WS 行写观察信号提升到稳定的顶层路径以解决 Verilator 的同名 generate 层次绑定错误，保留了原失败记录并用最终源复验。[阵列结果](results/ws_direct_array16_20261118/coverage.json) · [OS lint](results/lint_os_20261118_121751/manifest.json) · [WS lint](results/lint_ws_20261118_121751/manifest.json)
+
+## 2026-11-18 流水时间线（本次 V 优化前）
 
 从本节下方流式回归的两份 Icarus VCD 提取第 0 帧（全零、连续输入、无背压），按上升沿前信号识别数据传输并核对逐帧日志。以首个输入握手为第 1 拍，OS 在 786–816 拍输出，WS 在 803–833 拍输出，下一帧均于第 769 拍开始输入。图中 Softmax 包含启动拍至顶层收齐各行概率，内部相位另记在 JSON 中。此次使用已有仿真结果。进入 `results/stream_timeline_20261118` 后依次执行 `python3 extract_timeline.py` 与 `python3 plot_timeline.py` 即可重生成（绘图需要 Matplotlib 和中文字体）。[时间线 PDF](results/stream_timeline_20261118/mini_attention_timeline.pdf) · [带来源的周期数据](results/stream_timeline_20261118/timeline.json)
 

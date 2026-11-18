@@ -40,11 +40,7 @@ def exp16(x):
 
 
 def sum16_balanced(values, add=None):
-    """16 leaves -> 8 -> 4 -> 2 -> 1, with binary16 RNE at each node.
-
-    Matches GEN_SUM_L1/L2/L3 and add_final in softmax_fp16. Pairing is
-    adjacent in the original column order; no reassociation is permitted.
-    """
+    """Adjacent-pair FP16 reduction used by the archived tree Softmax."""
     if len(values) != 16:
         raise ValueError('Balanced Softmax reduction requires exactly 16 leaves')
     if add is None:
@@ -55,11 +51,31 @@ def sum16_balanced(values, add=None):
     return level[0]
 
 
-def bit_model(words):
+def online_normalizer(scores, op):
+    """Running maximum and scaled denominator after one 16-column score row."""
+    if len(scores) != N:
+        raise ValueError('Online Softmax requires exactly 16 scores per row')
+    one = 0x3c00
+    maximum = scores[0]
+    denominator = one
+    for score in scores[1:]:
+        if decode(score) > decode(maximum):
+            scale = exp16(op['sub'](maximum, score))
+            denominator = op['add'](op['mul'](denominator, scale), one)
+            maximum = score
+        else:
+            weight = exp16(op['sub'](score, maximum))
+            denominator = op['add'](denominator, weight)
+    return maximum, denominator
+
+
+def bit_model_with_probabilities(words):
+    """Return row-major FP16 output Y and the intermediate P tested in RTL."""
     validate(words)
     op = ops()
     q, k, v = [words[offset:offset+256] for offset in (0, 256, 512)]
     result = []
+    probability_matrix = []
     for i in range(N):
         scores = []
         for j in range(N):
@@ -67,17 +83,21 @@ def bit_model(words):
             for t in range(N):
                 acc = op['fma'](q[i*N+t], k[j*N+t], acc)
             scores.append(op['mul'](acc, 0x3400))
-        maximum = max(scores, key=decode)
+        maximum, den = online_normalizer(scores, op)
         weights = [exp16(op['sub'](s, maximum)) for s in scores]
-        den = sum16_balanced(weights, op['add'])
         assert 1 <= decode(den) <= 16
         probabilities = [op['div'](w, den) for w in weights]
+        probability_matrix.extend(probabilities)
         for j in range(N):
             acc = 0
             for t in range(N):
                 acc = op['fma'](probabilities[t], v[t*N+j], acc)
             result.append(acc)
-    return result
+    return result, probability_matrix
+
+
+def bit_model(words):
+    return bit_model_with_probabilities(words)[0]
 
 
 def reference(words):

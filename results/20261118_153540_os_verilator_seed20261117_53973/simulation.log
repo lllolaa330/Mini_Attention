@@ -1,0 +1,114 @@
+COMMAND: ['/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/20261118_153540_os_verilator_seed20261117_53973/obj_tb_attention/tb_attention', '+INPUT=input.hex', '+EXPECTED=expected.hex', '+EXPECTED_P=expected_p.hex', '+OUTPUT=actual.txt', '+SEED=20261117', '+STALLS=1']
+BATCH START first_run=0 count=25 kind=main
+PIPELINE run=0 qk_first=516 qk_last=561 issue_first=548 issue_last=563 return_first=551 return_last=566 pv_first=552 overlap=10 resident=0
+FRAME PASS run=0 case=0 cycles=596 mode=0 first_in=3 first_out=568 last_out=598
+PIPELINE run=1 qk_first=1044 qk_last=1089 issue_first=1076 issue_last=1091 return_first=1079 return_last=1094 pv_first=1080 overlap=10 resident=0
+FRAME PASS run=1 case=1 cycles=596 mode=0 first_in=531 first_out=1096 last_out=1126
+PIPELINE run=2 qk_first=1572 qk_last=1617 issue_first=1604 issue_last=1619 return_first=1607 return_last=1622 pv_first=1608 overlap=10 resident=0
+FRAME PASS run=2 case=2 cycles=596 mode=0 first_in=1059 first_out=1624 last_out=1654
+PIPELINE run=3 qk_first=2100 qk_last=2145 issue_first=2132 issue_last=2147 return_first=2135 return_last=2150 pv_first=2136 overlap=10 resident=0
+FRAME PASS run=3 case=3 cycles=596 mode=0 first_in=1587 first_out=2152 last_out=2182
+PIPELINE run=4 qk_first=2888 qk_last=2933 issue_first=2920 issue_last=2935 return_first=2923 return_last=2938 pv_first=2924 overlap=10 resident=0
+FRAME PASS run=4 case=4 cycles=935 mode=1 first_in=2115 first_out=2965 last_out=3049
+PIPELINE run=5 qk_first=3783 qk_last=3828 issue_first=3815 issue_last=3830 return_first=3818 return_last=3833 pv_first=3819 overlap=10 resident=0
+FRAME PASS run=5 case=5 cycles=1009 mode=1 first_in=2935 first_out=3860 last_out=3943
+PIPELINE run=6 qk_first=4633 qk_last=4678 issue_first=4665 issue_last=4680 return_first=4668 return_last=4683 pv_first=4669 overlap=10 resident=0
+FRAME PASS run=6 case=6 cycles=980 mode=1 first_in=3818 first_out=4710 last_out=4797
+PIPELINE run=7 qk_first=5485 qk_last=5530 issue_first=5517 issue_last=5532 return_first=5520 return_last=5535 pv_first=5521 overlap=10 resident=0
+FRAME PASS run=7 case=7 cycles=974 mode=1 first_in=4672 first_out=5563 last_out=5645
+PIPELINE run=8 qk_first=6393 qk_last=6438 issue_first=6425 issue_last=6440 return_first=6428 return_last=6443 pv_first=6429 overlap=10 resident=0
+FRAME PASS run=8 case=8 cycles=1040 mode=1 first_in=5514 first_out=6470 last_out=6553
+PIPELINE run=9 qk_first=7233 qk_last=7278 issue_first=7265 issue_last=7280 return_first=7268 return_last=7283 pv_first=7269 overlap=10 resident=0
+FRAME PASS run=9 case=9 cycles=979 mode=1 first_in=6421 first_out=7311 last_out=7399
+PIPELINE run=10 qk_first=8065 qk_last=8110 issue_first=8097 issue_last=8112 return_first=8100 return_last=8115 pv_first=8101 overlap=10 resident=0
+FRAME PASS run=10 case=10 cycles=963 mode=1 first_in=7263 first_out=8142 last_out=8225
+PIPELINE run=11 qk_first=8840 qk_last=8885 issue_first=8872 issue_last=8887 return_first=8875 return_last=8890 pv_first=8876 overlap=10 resident=0
+FRAME PASS run=11 case=11 cycles=913 mode=1 first_in=8090 first_out=8917 last_out=9002
+PIPELINE run=12 qk_first=9664 qk_last=9709 issue_first=9696 issue_last=9711 return_first=9699 return_last=9714 pv_first=9700 overlap=10 resident=0
+FRAME PASS run=12 case=12 cycles=950 mode=1 first_in=8879 first_out=9743 last_out=9828
+PIPELINE run=13 qk_first=10432 qk_last=10477 issue_first=10464 issue_last=10479 return_first=10467 return_last=10482 pv_first=10468 overlap=10 resident=0
+FRAME PASS run=13 case=13 cycles=904 mode=1 first_in=9696 first_out=10509 last_out=10599
+PIPELINE run=14 qk_first=11214 qk_last=11259 issue_first=11246 issue_last=11261 return_first=11249 return_last=11264 pv_first=11250 overlap=10 resident=0
+FRAME PASS run=14 case=14 cycles=914 mode=1 first_in=10464 first_out=11293 last_out=11377
+PIPELINE run=15 qk_first=12078 qk_last=12123 issue_first=12110 issue_last=12125 return_first=12113 return_last=12128 pv_first=12114 overlap=10 resident=0
+FRAME PASS run=15 case=15 cycles=994 mode=1 first_in=11243 first_out=12155 last_out=12236
+PIPELINE run=16 qk_first=12885 qk_last=12930 issue_first=12917 issue_last=12932 return_first=12920 return_last=12935 pv_first=12921 overlap=10 resident=0
+FRAME PASS run=16 case=16 cycles=930 mode=1 first_in=12118 first_out=12963 last_out=13047
+PIPELINE run=17 qk_first=13716 qk_last=13761 issue_first=13748 issue_last=13763 return_first=13751 return_last=13766 pv_first=13752 overlap=10 resident=0
+FRAME PASS run=17 case=17 cycles=963 mode=1 first_in=12916 first_out=13793 last_out=13878
+PIPELINE run=18 qk_first=14558 qk_last=14603 issue_first=14590 issue_last=14605 return_first=14593 return_last=14608 pv_first=14594 overlap=10 resident=0
+FRAME PASS run=18 case=18 cycles=974 mode=1 first_in=13748 first_out=14636 last_out=14721
+PIPELINE run=19 qk_first=15489 qk_last=15534 issue_first=15521 issue_last=15536 return_first=15524 return_last=15539 pv_first=15525 overlap=10 resident=0
+FRAME PASS run=19 case=19 cycles=1056 mode=1 first_in=14593 first_out=15566 last_out=15648
+PIPELINE run=20 qk_first=16316 qk_last=16361 issue_first=16348 issue_last=16363 return_first=16351 return_last=16366 pv_first=16352 overlap=10 resident=0
+FRAME PASS run=20 case=20 cycles=950 mode=1 first_in=15527 first_out=16393 last_out=16476
+PIPELINE run=21 qk_first=17162 qk_last=17207 issue_first=17194 issue_last=17209 return_first=17197 return_last=17212 pv_first=17198 overlap=10 resident=0
+FRAME PASS run=21 case=21 cycles=967 mode=1 first_in=16357 first_out=17239 last_out=17323
+PIPELINE run=22 qk_first=17994 qk_last=18039 issue_first=18026 issue_last=18041 return_first=18029 return_last=18044 pv_first=18030 overlap=10 resident=0
+FRAME PASS run=22 case=22 cycles=969 mode=1 first_in=17187 first_out=18071 last_out=18155
+PIPELINE run=23 qk_first=18885 qk_last=18930 issue_first=18917 issue_last=18932 return_first=18920 return_last=18935 pv_first=18921 overlap=10 resident=0
+FRAME PASS run=23 case=23 cycles=1004 mode=1 first_in=18041 first_out=18962 last_out=19044
+PIPELINE run=24 qk_first=19687 qk_last=19732 issue_first=19719 issue_last=19734 return_first=19722 return_last=19737 pv_first=19723 overlap=10 resident=0
+FRAME PASS run=24 case=24 cycles=927 mode=1 first_in=18924 first_out=19764 last_out=19850
+BATCH START first_run=25 count=4 kind=stress
+PIPELINE run=25 qk_first=20729 qk_last=20774 issue_first=20761 issue_last=20776 return_first=20764 return_last=20779 pv_first=20765 overlap=10 resident=0
+FRAME PASS run=25 case=9 cycles=3532 mode=1 first_in=19860 first_out=23306 last_out=23391
+PIPELINE run=26 qk_first=23394 qk_last=23439 issue_first=23426 issue_last=23441 return_first=23429 return_last=23444 pv_first=23430 overlap=10 resident=0
+FRAME PASS run=26 case=10 cycles=2795 mode=1 first_in=20762 first_out=23471 last_out=23556
+PIPELINE run=27 qk_first=24226 qk_last=24271 issue_first=24258 issue_last=24273 return_first=24261 return_last=24276 pv_first=24262 overlap=10 resident=0
+FRAME PASS run=27 case=11 cycles=997 mode=1 first_in=23392 first_out=24303 last_out=24388
+PIPELINE run=28 qk_first=25104 qk_last=25149 issue_first=25136 issue_last=25151 return_first=25139 return_last=25154 pv_first=25140 overlap=10 resident=0
+FRAME PASS run=28 case=12 cycles=1015 mode=1 first_in=24251 first_out=25181 last_out=25265
+RESET PASS event=0
+BATCH START first_run=29 count=1 kind=recovery
+PIPELINE run=29 qk_first=26089 qk_last=26134 issue_first=26121 issue_last=26136 return_first=26124 return_last=26139 pv_first=26125 overlap=10 resident=0
+FRAME PASS run=29 case=7 cycles=943 mode=1 first_in=25308 first_out=26168 last_out=26250
+RESET PASS event=1
+BATCH START first_run=30 count=1 kind=recovery
+PIPELINE run=30 qk_first=27645 qk_last=27690 issue_first=27677 issue_last=27692 return_first=27680 return_last=27695 pv_first=27681 overlap=10 resident=0
+FRAME PASS run=30 case=8 cycles=1040 mode=1 first_in=26768 first_out=27723 last_out=27807
+RESET PASS event=2
+BATCH START first_run=31 count=1 kind=recovery
+PIPELINE run=31 qk_first=29132 qk_last=29177 issue_first=29164 issue_last=29179 return_first=29167 return_last=29182 pv_first=29168 overlap=10 resident=0
+FRAME PASS run=31 case=9 cycles=965 mode=1 first_in=28331 first_out=29209 last_out=29295
+RESET PASS event=3
+BATCH START first_run=32 count=1 kind=recovery
+PIPELINE run=32 qk_first=30685 qk_last=30730 issue_first=30717 issue_last=30732 return_first=30720 return_last=30735 pv_first=30721 overlap=10 resident=0
+FRAME PASS run=32 case=10 cycles=1013 mode=1 first_in=29835 first_out=30762 last_out=30847
+RESET PASS event=4
+BATCH START first_run=33 count=1 kind=recovery
+PIPELINE run=33 qk_first=32179 qk_last=32224 issue_first=32211 issue_last=32226 return_first=32214 return_last=32229 pv_first=32215 overlap=10 resident=0
+FRAME PASS run=33 case=11 cycles=941 mode=1 first_in=31401 first_out=32256 last_out=32341
+RESET PASS event=5
+BATCH START first_run=34 count=1 kind=recovery
+PIPELINE run=34 qk_first=33767 qk_last=33812 issue_first=33799 issue_last=33814 return_first=33802 return_last=33817 pv_first=33803 overlap=10 resident=0
+FRAME PASS run=34 case=12 cycles=1024 mode=1 first_in=32905 first_out=33844 last_out=33928
+RESET PASS event=6
+BATCH START first_run=35 count=1 kind=recovery
+PIPELINE run=35 qk_first=35247 qk_last=35292 issue_first=35279 issue_last=35294 return_first=35282 return_last=35297 pv_first=35283 overlap=10 resident=0
+FRAME PASS run=35 case=13 cycles=917 mode=1 first_in=34492 first_out=35324 last_out=35408
+RESET PASS event=7
+BATCH START first_run=36 count=1 kind=recovery
+PIPELINE run=36 qk_first=36799 qk_last=36844 issue_first=36831 issue_last=36846 return_first=36834 return_last=36849 pv_first=36835 overlap=10 resident=0
+FRAME PASS run=36 case=14 cycles=955 mode=1 first_in=36012 first_out=36876 last_out=36966
+PV WAIT RESET PASS
+BATCH START first_run=37 count=1 kind=recovery
+PIPELINE run=37 qk_first=38406 qk_last=38451 issue_first=38438 issue_last=38453 return_first=38441 return_last=38456 pv_first=38442 overlap=10 resident=0
+FRAME PASS run=37 case=17 cycles=1028 mode=1 first_in=37540 first_out=38483 last_out=38567
+QUEUED RESET PASS
+BATCH START first_run=38 count=1 kind=recovery
+PIPELINE run=38 qk_first=40469 qk_last=40514 issue_first=40501 issue_last=40516 return_first=40504 return_last=40519 pv_first=40505 overlap=10 resident=0
+FRAME PASS run=38 case=18 cycles=976 mode=1 first_in=39654 first_out=40547 last_out=40629
+BATCH START first_run=39 count=2 kind=partial_v
+PIPELINE run=39 qk_first=41145 qk_last=41190 issue_first=41177 issue_last=41192 return_first=41180 return_last=41195 pv_first=41181 overlap=8 resident=0
+FRAME PASS run=39 case=19 cycles=1571 mode=1 first_in=40632 first_out=42117 last_out=42202
+PIPELINE run=40 qk_first=42205 qk_last=42250 issue_first=42237 issue_last=42252 return_first=42240 return_last=42255 pv_first=42241 overlap=10 resident=1
+FRAME PASS run=40 case=20 cycles=1075 mode=1 first_in=41213 first_out=42257 last_out=42287
+COVERAGE frames=41 resets=11 input_bubbles=11492 output_stall_cycles=6767 no_stall_cycles=596
+STREAM_COVERAGE input_blocked=1804 overlap_v_qk=609 overlap_v_sm=258 next_input_output=590 first_output_pv=41 long_stall_cycles=2500 queued_resets=1 reset_event_mask=255 resident_count=1
+V_COVERAGE pv_steps_before_v_complete=66 pv_missing_v_cycles=17 pv_wait_resets=1 output_input_bubble_stalls=13
+TB PASS
+- tb/tb_attention.sv:613: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.044 2026-01-01
+- Verilator: $finish at 423us; walltime 4.442 s; speed 95.324 us/s
+- Verilator: cpu 4.439 s on 1 threads; alloced 3 MB

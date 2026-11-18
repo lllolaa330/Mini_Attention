@@ -1,0 +1,5 @@
+frame,origin,first_output,last_output,first_output_latency,last_output_latency,input_ii,output_beats,output_words
+0,5,121,151,117,147,-1,31,256
+1,155,272,302,118,148,-1,31,256
+2,306,423,453,118,148,-1,31,256
+3,457,574,604,118,148,-1,31,256

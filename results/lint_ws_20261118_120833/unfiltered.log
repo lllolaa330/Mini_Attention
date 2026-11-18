@@ -1,0 +1,695 @@
+COMMAND: ['verilator', '--lint-only', '--Wall', '--top-module', 'attention_fp16', "-GUSE_WS=1'b1", '-Wno-fatal', '-f', 'rtl/files.f']
+%Warning-DECLFILENAME: third_party/HardFloat-1/source/HardFloat_primitives.v:41:5: Filename 'HardFloat_primitives' does not match MODULE name: 'reverse'
+   41 |     reverse#(parameter width = 1) (
+      |     ^~~~~~~
+                       ... For warning description see https://verilator.org/warn/DECLFILENAME?v=5.044
+                       ... Use "/* verilator lint_off DECLFILENAME */" and lint_on around source to disable this message.
+%Warning-DECLFILENAME: third_party/HardFloat-1/source/HardFloat_rawFN.v:44:5: Filename 'HardFloat_rawFN' does not match MODULE name: 'recFNToRawFN'
+   44 |     recFNToRawFN#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~
+%Warning-DECLFILENAME: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:44:5: Filename 'HardFloat_specialize' does not match MODULE name: 'iNFromException'
+   44 |     iNFromException#(parameter width = 1) (
+      |     ^~~~~~~~~~~~~~~
+%Warning-DECLFILENAME: third_party/HardFloat-1/source/mulAddRecFN.v:44:5: Filename 'mulAddRecFN' does not match MODULE name: 'mulAddRecFNToRaw_preMul'
+   44 |     mulAddRecFNToRaw_preMul#(
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-DECLFILENAME: third_party/HardFloat-1/source/addRecFN.v:44:5: Filename 'addRecFN' does not match MODULE name: 'addRecFNToRaw'
+   44 |     addRecFNToRaw#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~
+%Warning-DECLFILENAME: third_party/HardFloat-1/source/mulRecFN.v:44:5: Filename 'mulRecFN' does not match MODULE name: 'mulRecFNToFullRaw'
+   44 |     mulRecFNToFullRaw#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~~~~~
+%Warning-DECLFILENAME: third_party/HardFloat-1/source/divSqrtRecFN_small.v:47:5: Filename 'divSqrtRecFN_small' does not match MODULE name: 'divSqrtRecFNToRaw_small'
+   47 |     divSqrtRecFNToRaw_small#(
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-DECLFILENAME: rtl/fp16_ops.sv:7:8: Filename 'fp16_ops' does not match MODULE name: 'fp16_fma'
+    7 | module fp16_fma (
+      |        ^~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/HardFloat_primitives.v:41:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   41 |     reverse#(parameter width = 1) (
+      |     ^~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.044
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/HardFloat_primitives.v:58:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   58 |     lowMaskHiLo#(
+      |     ^~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/HardFloat_primitives.v:85:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   85 |     lowMaskLoHi#(
+      |     ^~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/HardFloat_primitives.v:112:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  112 |     countLeadingZeros#(parameter inWidth = 1, parameter countWidth = 1) (
+      |     ^~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/HardFloat_primitives.v:140:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  140 |     compressBy2#(parameter inWidth = 1) (
+      |     ^~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/HardFloat_primitives.v:159:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  159 |     compressBy4#(parameter inWidth = 1) (
+      |     ^~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/HardFloat_rawFN.v:44:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   44 |     recFNToRawFN#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/HardFloat_rawFN.v:74:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   74 |     roundAnyRawFNToRecFN#(
+      |     ^~~~~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/HardFloat_rawFN.v:324:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  324 |     roundRawFNToRecFN#(
+      |     ^~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:44:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   44 |     iNFromException#(parameter width = 1) (
+      |     ^~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:59:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   59 |     propagateFloatNaN_add#(parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:84:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   84 |     propagateFloatNaN_mul#(parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:108:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  108 |     propagateFloatNaN_mulAdd#(parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:140:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  140 |     propagateFloatNaN_divSqrt#(parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/isSigNaNRecFN.v:41:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   41 |     isSigNaNRecFN#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/fNToRecFN.v:41:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   41 |     fNToRecFN#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/recFNToFN.v:41:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   41 |     recFNToFN#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/mulAddRecFN.v:44:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   44 |     mulAddRecFNToRaw_preMul#(
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/mulAddRecFN.v:216:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  216 |     mulAddRecFNToRaw_postMul#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/mulAddRecFN.v:368:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  368 |     mulAddRecFNToRaw#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/mulAddRecFN.v:431:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  431 |     mulAddRecFN#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/addRecFN.v:44:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   44 |     addRecFNToRaw#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/addRecFN.v:205:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  205 |     addRecFN#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/mulRecFN.v:44:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   44 |     mulRecFNToFullRaw#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/mulRecFN.v:119:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  119 |     mulRecFNToRaw#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/mulRecFN.v:195:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  195 |     mulRecFN#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/divSqrtRecFN_small.v:47:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   47 |     divSqrtRecFNToRaw_small#(
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/divSqrtRecFN_small.v:277:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  277 |     divSqrtRecFN_small#(
+      |     ^~~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: rtl/fp16_ops.sv:7:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    7 | module fp16_fma (
+      |        ^~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: rtl/fp16_ops.sv:23:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   23 | module fp16_addsub (
+      |        ^~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: rtl/fp16_ops.sv:39:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   39 | module fp16_mul (
+      |        ^~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: rtl/fp16_ops.sv:55:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   55 | module fp16_div (
+      |        ^~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: rtl/fp16_pe.sv:4:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    4 | module fp16_pe (
+      |        ^~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: rtl/systolic_array.sv:6:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    6 | module systolic_array #(parameter integer N = 16) (
+      |        ^~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-GENUNNAMED: third_party/HardFloat-1/source/HardFloat_rawFN.v:141:44: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                            : ... Suggest assign a label with 'begin : gen_<label_name>'
+  141 |         if (inSigWidth <= outSigWidth + 2) begin
+      |                                            ^~~~~
+                     ... For warning description see https://verilator.org/warn/GENUNNAMED?v=5.044
+                     ... Use "/* verilator lint_off GENUNNAMED */" and lint_on around source to disable this message.
+%Warning-GENUNNAMED: third_party/HardFloat-1/source/HardFloat_rawFN.v:143:18: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                            : ... Suggest assign a label with 'begin : gen_<label_name>'
+  143 |         end else begin
+      |                  ^~~~~
+%Warning-GENUNNAMED: third_party/HardFloat-1/source/HardFloat_rawFN.v:161:11: Unnamed generate block 'genblk2' (IEEE 1800-2023 27.6)
+                                                                            : ... Suggest assign a label with 'begin : gen_<label_name>'
+  161 |         ) begin
+      |           ^~~~~
+%Warning-GENUNNAMED: third_party/HardFloat-1/source/HardFloat_rawFN.v:171:18: Unnamed generate block 'genblk2' (IEEE 1800-2023 27.6)
+                                                                            : ... Suggest assign a label with 'begin : gen_<label_name>'
+  171 |         end else begin
+      |                  ^~~~~
+%Warning-GENUNNAMED: third_party/HardFloat-1/source/HardFloat_rawFN.v:175:34: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                            : ... Suggest assign a label with 'begin : gen_<label_name>'
+  175 |             if (neverUnderflows) begin
+      |                                  ^~~~~
+%Warning-GENUNNAMED: third_party/HardFloat-1/source/HardFloat_rawFN.v:177:22: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                            : ... Suggest assign a label with 'begin : gen_<label_name>'
+  177 |             end else begin
+      |                      ^~~~~
+%Warning-GENUNNAMED: third_party/HardFloat-1/source/HardFloat_primitives.v:124:26: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                 : ... Suggest assign a label with 'begin : gen_<label_name>'
+  124 |             if (ix == 0) begin
+      |                          ^~~~~
+%Warning-GENUNNAMED: third_party/HardFloat-1/source/HardFloat_primitives.v:126:22: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                 : ... Suggest assign a label with 'begin : gen_<label_name>'
+  126 |             end else begin
+      |                      ^~~~~
+%Warning-GENUNNAMED: third_party/HardFloat-1/source/HardFloat_primitives.v:129:49: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                 : ... Suggest assign a label with 'begin : gen_<label_name>'
+  129 |                 if (ix == inWidth) assign count = countSoFar;
+      |                                                 ^
+%Warning-VARHIDDEN: third_party/HardFloat-1/source/HardFloat_localFuncs.vi:41:19: Declaration of signal hides declaration in upper scope: 'a'
+   41 |     input integer a;
+      |                   ^
+                    third_party/HardFloat-1/source/mulAddRecFN.v:384:1: ... note: In file included from 'mulAddRecFN.v'
+                    third_party/HardFloat-1/source/mulAddRecFN.v:371:41: ... Location of original declaration
+  371 |         input [(expWidth + sigWidth):0] a,
+      |                                         ^
+                    ... For warning description see https://verilator.org/warn/VARHIDDEN?v=5.044
+                    ... Use "/* verilator lint_off VARHIDDEN */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/HardFloat_primitives.v:102:54: Operator ASSIGNW expects 3 bits on the Assign RHS, but Assign RHS's SHIFTR generates 9 bits.
+                                                                                 : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_postMul.lowMask_notCDom_sigExtraMask'
+  102 |     wire [(bottomBound - topBound - 1):0] reverseOut =
+      |                                                      ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.044
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/HardFloat_primitives.v:102:54: Operator ASSIGNW expects 2 bits on the Assign RHS, but Assign RHS's SHIFTR generates 5 bits.
+                                                                                 : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_postMul.lowMask_CDom_sigExtraMask'
+  102 |     wire [(bottomBound - topBound - 1):0] reverseOut =
+      |                                                      ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:132:44: Operator COND expects 9 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                           : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_preMul.propagateNaN'
+  132 |                    : notNaNAOrB_propagateC ? fractC[(sigWidth - 3):0] : 1'b0};
+      |                                            ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.044
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/HardFloat_primitives.v:75:54: Operator ASSIGNW expects 2 bits on the Assign RHS, but Assign RHS's SHIFTR generates 17 bits.
+                                                                                : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_preMul.lowMask_CExtraMask'
+   75 |     wire [(topBound - bottomBound - 1):0] reverseOut =
+      |                                                      ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/HardFloat_primitives.v:102:54: Operator ASSIGNW expects 12 bits on the Assign RHS, but Assign RHS's SHIFTR generates 65 bits.
+                                                                                 : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.roundRawOut.roundAnyRawFNToRecFN.genblk2.genblk1.lowMask_roundMask'
+  102 |     wire [(bottomBound - topBound - 1):0] reverseOut =
+      |                                                      ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/HardFloat_primitives.v:75:54: Operator ASSIGNW expects 4 bits on the Assign RHS, but Assign RHS's SHIFTR generates 5 bits.
+                                                                                : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw.lowMask_far_roundExtraMask'
+   75 |     wire [(topBound - bottomBound - 1):0] reverseOut =
+      |                                                      ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/HardFloat_rawFN.v:65:17: Operator ASSIGNW expects 7 bits on the Assign RHS, but Assign RHS's VARREF 'exp' generates 6 bits.
+                                                                            : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_preMul.recFNToRawFN_c'
+   65 |     assign sExp = exp;
+      |                 ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/mulAddRecFN.v:263:38: Operator ASSIGNW expects 10 bits on the Assign RHS, but Assign RHS's VARREF 'intermed_highAlignedSigC' generates 13 bits.
+                                                                        : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_postMul'
+  263 |     wire [(sigWidth - 2):0] fractNaN = intermed_highAlignedSigC;
+      |                                      ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/mulAddRecFN.v:278:62: Operator SUB expects 7 bits on the RHS, but RHS's VARREF 'doSubMags' generates 1 bits.
+                                                                         : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_postMul'
+  278 |     wire signed [(expWidth + 1):0] CDom_sExp = intermed_sExp - doSubMags;
+      |                                                              ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/mulAddRecFN.v:285:42: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's SHIFTR generates 24 bits.
+                                                                        : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_postMul'
+  285 |     wire [(sigWidth + 4):0] CDom_mainSig =
+      |                                          ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/mulAddRecFN.v:299:56: Operator AND expects 3 bits on the RHS, but RHS's VARREF 'CDom_sigExtraMask' generates 2 bits.
+                                                                         : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_postMul'
+  299 |     wire CDom_reduced4SigExtra = |(CDom_reduced4LowSig & CDom_sigExtraMask);
+      |                                                        ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/mulAddRecFN.v:300:38: Operator ASSIGNW expects 14 bits on the Assign RHS, but Assign RHS's REPLICATE generates 17 bits.
+                                                                        : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_postMul'
+  300 |     wire [(sigWidth + 2):0] CDom_sig =
+      |                                      ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/mulAddRecFN.v:308:41: Operator ADD expects 25 bits on the RHS, but RHS's VARREF 'doSubMags' generates 1 bits.
+                                                                         : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_postMul'
+  308 |             : sigSum[(prodWidth + 2):0] + doSubMags;
+      |                                         ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/mulAddRecFN.v:320:23: Operator SUB expects 7 bits on the RHS, but RHS's VARREF 'notCDom_nearNormDist' generates 5 bits.
+                                                                         : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_postMul'
+  320 |         intermed_sExp - notCDom_nearNormDist;
+      |                       ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/mulAddRecFN.v:321:45: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's SHIFTR generates 26 bits.
+                                                                        : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_postMul'
+  321 |     wire [(sigWidth + 4):0] notCDom_mainSig =
+      |                                             ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/mulAddRecFN.v:324:48: Operator SHIFTL expects 7 bits on the LHS, but LHS's SEL generates 6 bits.
+                                                                         : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_postMul'
+  324 |         notCDom_reduced2AbsSigSum[sigWidth/2:0]<<((sigWidth/2) & 1);
+      |                                                ^~
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/mulAddRecFN.v:336:37: Operator AND expects 4 bits on the RHS, but RHS's VARREF 'notCDom_sigExtraMask' generates 3 bits.
+                                                                         : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_postMul'
+  336 |         |(notCDom_reduced4AbsSigSum & notCDom_sigExtraMask);
+      |                                     ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/mulAddRecFN.v:337:41: Operator ASSIGNW expects 14 bits on the Assign RHS, but Assign RHS's REPLICATE generates 17 bits.
+                                                                        : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_postMul'
+  337 |     wire [(sigWidth + 2):0] notCDom_sig =
+      |                                         ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/mulAddRecFN.v:356:19: Operator COND expects 14 bits on the Conditional True, but Conditional True's REPLICATE generates 13 bits.
+                                                                         : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_postMul'
+  356 |         out_isNaN ? {1'b1, fractNaN, 2'b00}
+      |                   ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/mulAddRecFN.v:120:21: Operator COND expects 32 or 8 bits on the Conditional True, but Conditional True's VARREF 'sExpC' generates 7 bits.
+                                                                         : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_preMul'
+  120 |         CIsDominant ? sExpC : sExpAlignedProd - sigWidth;
+      |                     ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/mulAddRecFN.v:119:44: Operator ASSIGNW expects 7 bits on the Assign RHS, but Assign RHS's COND generates 32 or 8 bits.
+                                                                        : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_preMul'
+  119 |     wire signed [(expWidth + 1):0] sExpSum =
+      |                                            ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/mulAddRecFN.v:128:48: Operator ASSIGNW expects 38 bits on the Assign RHS, but Assign RHS's SHIFTRS generates 39 bits.
+                                                                        : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_preMul'
+  128 |     wire [(sigSumWidth + 1):0] mainAlignedSigC = extComplSigC>>>CAlignDist;
+      |                                                ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/mulAddRecFN.v:139:42: Operator AND expects 3 bits on the RHS, but RHS's VARREF 'CExtraMask' generates 2 bits.
+                                                                         : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_preMul'
+  139 |     wire reduced4CExtra = |(reduced4SigC & CExtraMask);
+      |                                          ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/mulAddRecFN.v:140:44: Operator ASSIGNW expects 36 bits on the Assign RHS, but Assign RHS's REPLICATE generates 39 bits.
+                                                                        : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_preMul'
+  140 |     wire [(sigSumWidth - 1):0] alignedSigC =
+      |                                            ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/mulAddRecFN.v:188:20: Operator ASSIGNW expects 11 bits on the Assign RHS, but Assign RHS's VARREF 'sigA' generates 12 bits.
+                                                                        : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_preMul'
+  188 |     assign mulAddA = sigA;
+      |                    ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/mulAddRecFN.v:189:20: Operator ASSIGNW expects 11 bits on the Assign RHS, but Assign RHS's VARREF 'sigB' generates 12 bits.
+                                                                        : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_preMul'
+  189 |     assign mulAddB = sigB;
+      |                    ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/mulAddRecFN.v:206:19: Operator COND expects 13 bits on the Conditional True, but Conditional True's VARREF 'fractNaN' generates 10 bits.
+                                                                         : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_preMul'
+  206 |          isNaNOut ? fractNaN :
+      |                   ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/HardFloat_rawFN.v:176:34: Operator ASSIGNW expects 14 bits on the Assign RHS, but Assign RHS's REPLICATE generates 3 bits.
+                                                                             : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.roundRawOut.roundAnyRawFNToRecFN'
+  176 |                 assign roundMask = {doShiftSigDown1, 2'b11};
+      |                                  ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/HardFloat_rawFN.v:210:51: Operator ASSIGNW expects 13 bits on the Assign RHS, but Assign RHS's COND generates 32 or 14 bits.
+                                                                            : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.roundRawOut.roundAnyRawFNToRecFN'
+  210 |             wire [(outSigWidth + 1):0] roundedSig =
+      |                                                   ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/HardFloat_rawFN.v:219:62: Operator ASSIGNW expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'sAdjustedExp' generates 7 bits.
+                                                                             : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.roundRawOut.roundAnyRawFNToRecFN'
+  219 |             wire signed [adjustedExpWidth:0] sExtAdjustedExp = sAdjustedExp;
+      |                                                              ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/HardFloat_rawFN.v:221:33: Operator ADD expects 13 bits on the LHS, but LHS's VARREF 'sExtAdjustedExp' generates 8 bits.
+                                                                             : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.roundRawOut.roundAnyRawFNToRecFN'
+  221 |                 sExtAdjustedExp + (roundedSig>>outSigWidth);
+      |                                 ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/HardFloat_rawFN.v:220:58: Operator ASSIGNW expects 8 bits on the Assign RHS, but Assign RHS's ADD generates 13 bits.
+                                                                            : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.roundRawOut.roundAnyRawFNToRecFN'
+  220 |             wire signed [adjustedExpWidth:0] sRoundedExp =
+      |                                                          ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/HardFloat_rawFN.v:224:34: Operator ASSIGNW expects 6 bits on the Assign RHS, but Assign RHS's VARREF 'sRoundedExp' generates 8 bits.
+                                                                            : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.roundRawOut.roundAnyRawFNToRecFN'
+  224 |             assign common_expOut = sRoundedExp;
+      |                                  ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/HardFloat_rawFN.v:225:36: Operator ASSIGNW expects 10 bits on the Assign RHS, but Assign RHS's COND generates 13 bits.
+                                                                            : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.roundRawOut.roundAnyRawFNToRecFN'
+  225 |             assign common_fractOut =
+      |                                    ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/HardFloat_rawFN.v:302:14: Operator COND expects 9 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                             : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.roundRawOut.roundAnyRawFNToRecFN'
+  302 |              ? common_fractOut[(outSigWidth - 3):0] : 1'b0}
+      |              ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/HardFloat_rawFN.v:185:58: Operator SHIFTL expects 6 bits on the LHS, but LHS's CONST '1'h1' generates 1 bits.
+                                                                             : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.roundRawOut.roundAnyRawFNToRecFN'
+  185 |                             | (propagateNaNPayload ? 1'b1<<outExpWidth : 1'b0),
+      |                                                          ^~
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/HardFloat_rawFN.v:185:52: Operator COND expects 6 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                             : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.roundRawOut.roundAnyRawFNToRecFN'
+  185 |                             | (propagateNaNPayload ? 1'b1<<outExpWidth : 1'b0),
+      |                                                    ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/HardFloat_rawFN.v:188:52: Operator OR expects 12 bits on the RHS, but RHS's VARREF 'doShiftSigDown1' generates 1 bits.
+                                                                             : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.roundRawOut.roundAnyRawFNToRecFN'
+  188 |                 assign roundMask = {roundMask_main | doShiftSigDown1, 2'b11};
+      |                                                    ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:158:27: Operator COND expects 9 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                           : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_DIV[15].divide_op.core.divSqrtRecFNToRaw.propagateNaN'
+  158 |              : isTrueNaNB ? fractB[(sigWidth - 3):0] : 1'b0};
+      |                           ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:75:53: Operator COND expects 9 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                          : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw.propagateNaN'
+   75 |          isNaNA ? fractA[(sigWidth - 3):0] : isNaNB ? fractB[(sigWidth - 3):0]
+      |                                                     ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:100:23: Operator COND expects 9 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                           : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_SCALE[15].scale_op.core.mulRecFNToRaw.propagateNaN'
+  100 |              : isNaNB ? fractB[(sigWidth - 3):0] : 1'b0};
+      |                       ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/divSqrtRecFN_small.v:215:42: Operator SHIFTL expects 32 or 14 bits on the LHS, but LHS's VARREF 'sigA_S' generates 12 bits.
+                                                                                : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_DIV[15].divide_op.core.divSqrtRecFNToRaw'
+  215 |           (inReady && !oddSqrt_S ? sigA_S<<1 : 0)
+      |                                          ^~
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/divSqrtRecFN_small.v:218:28: Operator SHIFTL expects 32 or 14 bits on the LHS, but LHS's VARREF 'rem_Z' generates 13 bits.
+                                                                                : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_DIV[15].divide_op.core.divSqrtRecFNToRaw'
+  218 |         | (!inReady ? rem_Z<<1 : 0);
+      |                            ^~
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/divSqrtRecFN_small.v:219:31: Operator ASSIGNW expects 12 bits on the Assign RHS, but Assign RHS's SHIFTR generates 14 bits.
+                                                                               : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_DIV[15].divide_op.core.divSqrtRecFNToRaw'
+  219 |     wire [sigWidth:0] bitMask = ({{(sigWidth + 2){1'b0}}, 1'b1}<<cycleNum)>>2;
+      |                               ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/divSqrtRecFN_small.v:221:43: Operator SHIFTL expects 32 or 13 bits on the LHS, but LHS's VARREF 'sigB_S' generates 12 bits.
+                                                                                : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_DIV[15].divide_op.core.divSqrtRecFNToRaw'
+  221 |           ( inReady && !sqrtOp    ? sigB_S<<1           : 0)
+      |                                           ^~
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/divSqrtRecFN_small.v:224:53: Operator SHIFTL expects 32 or 13 bits on the LHS, but LHS's REPLICATE generates 11 bits.
+                                                                                : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_DIV[15].divide_op.core.divSqrtRecFNToRaw'
+  224 |         | (!inReady && !sqrtOp_Z  ? {1'b1, fractB_Z}<<1 : 0)
+      |                                                     ^~
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/divSqrtRecFN_small.v:225:47: Operator OR expects 32 or 13 bits on the RHS, but RHS's VARREF 'bitMask' generates 12 bits.
+                                                                                : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_DIV[15].divide_op.core.divSqrtRecFNToRaw'
+  225 |         | (!inReady &&  sqrtOp_Z  ? sigX_Z<<1 | bitMask : 0);
+      |                                               ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/divSqrtRecFN_small.v:226:51: Operator SUB expects 15 bits on the RHS, but RHS's VARREF 'trialTerm' generates 13 bits.
+                                                                                : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_DIV[15].divide_op.core.divSqrtRecFNToRaw'
+  226 |     wire signed [(sigWidth + 3):0] trialRem = rem - trialTerm;
+      |                                                   ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/divSqrtRecFN_small.v:230:29: Operator COND expects 15 bits on the Conditional False, but Conditional False's VARREF 'rem' generates 14 bits.
+                                                                                : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_DIV[15].divide_op.core.divSqrtRecFNToRaw'
+  230 |             rem_Z <= newBit ? trialRem : rem;
+      |                             ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/divSqrtRecFN_small.v:230:19: Operator ASSIGNDLY expects 13 bits on the Assign RHS, but Assign RHS's COND generates 15 bits.
+                                                                               : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_DIV[15].divide_op.core.divSqrtRecFNToRaw'
+  230 |             rem_Z <= newBit ? trialRem : rem;
+      |                   ^~
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/divSqrtRecFN_small.v:240:59: Operator SHIFTL expects 32 or 13 bits on the LHS, but LHS's VARREF 'newBit' generates 1 bits.
+                                                                                : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_DIV[15].divide_op.core.divSqrtRecFNToRaw'
+  240 |                 | (inReady && !isNaN_S && !sqrtOp ? newBit<<(sigWidth + 1) : 0)
+      |                                                           ^~
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/divSqrtRecFN_small.v:243:58: Operator SHIFTL expects 32 or 13 bits on the LHS, but LHS's VARREF 'newBit' generates 1 bits.
+                                                                                : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_DIV[15].divide_op.core.divSqrtRecFNToRaw'
+  243 |                                                  ? newBit<<(sigWidth - 1) : 0)
+      |                                                          ^~
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/divSqrtRecFN_small.v:244:59: Operator OR expects 32 or 13 bits on the RHS, but RHS's VARREF 'bitMask' generates 12 bits.
+                                                                                : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_DIV[15].divide_op.core.divSqrtRecFNToRaw'
+  244 |                 | (!inReady                      ? sigX_Z | bitMask       : 0);
+      |                                                           ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/addRecFN.v:85:51: Operator ASSIGNW expects 4 bits on the Assign RHS, but Assign RHS's COND generates 7 bits.
+                                                                    : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw'
+   85 |     wire [(alignDistWidth - 1):0] modNatAlignDist =
+      |                                                   ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/addRecFN.v:97:52: Operator SHIFTL expects 32 or 14 bits on the LHS, but LHS's VARREF 'sigA' generates 12 bits.
+                                                                     : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw'
+   97 |           ((0 <= sDiffExps) &&  sDiffExps[0] ? sigA<<2 : 0)
+      |                                                    ^~
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/addRecFN.v:98:52: Operator SHIFTL expects 32 or 14 bits on the LHS, but LHS's VARREF 'sigA' generates 12 bits.
+                                                                     : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw'
+   98 |         | ((0 <= sDiffExps) && !sDiffExps[0] ? sigA<<1 : 0)
+      |                                                    ^~
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/addRecFN.v:99:46: Operator COND expects 32 or 14 bits on the Conditional True, but Conditional True's VARREF 'sigA' generates 12 bits.
+                                                                     : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw'
+   99 |         | ((sDiffExps < 0)                   ? sigA    : 0);
+      |                                              ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/addRecFN.v:101:34: Operator SHIFTL expects 14 bits on the LHS, but LHS's VARREF 'sigB' generates 12 bits.
+                                                                      : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw'
+  101 |         close_alignedSigA - (sigB<<1);
+      |                                  ^~
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/addRecFN.v:102:42: Operator ASSIGNW expects 13 bits on the Assign RHS, but Assign RHS's COND generates 14 bits.
+                                                                     : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw'
+  102 |     wire [(sigWidth + 1):0] close_sigSum =
+      |                                          ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/addRecFN.v:105:21: Operator SHIFTL expects 14 bits on the LHS, but LHS's VARREF 'close_sigSum' generates 13 bits.
+                                                                      : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw'
+  105 |         close_sigSum<<(sigWidth & 1);
+      |                     ^~
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/addRecFN.v:115:22: Operator SHIFTL expects 14 bits on the LHS, but LHS's VARREF 'close_sigSum' generates 13 bits.
+                                                                      : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw'
+  115 |         (close_sigSum<<close_nearNormDist)<<1;
+      |                      ^~
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/addRecFN.v:122:44: Operator ASSIGNW expects 11 bits on the Assign RHS, but Assign RHS's COND generates 12 bits.
+                                                                     : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw'
+  122 |     wire [(sigWidth - 1):0] far_sigLarger  = (sDiffExps < 0) ? sigB : sigA;
+      |                                            ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/addRecFN.v:123:44: Operator ASSIGNW expects 11 bits on the Assign RHS, but Assign RHS's COND generates 12 bits.
+                                                                     : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw'
+  123 |     wire [(sigWidth - 1):0] far_sigSmaller = (sDiffExps < 0) ? sigA : sigB;
+      |                                            ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/addRecFN.v:134:51: Operator ASSIGNW expects 14 bits on the Assign RHS, but Assign RHS's REPLICATE generates 17 bits.
+                                                                     : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw'
+  134 |     wire [(sigWidth + 2):0] far_alignedSigSmaller =
+      |                                                   ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/addRecFN.v:143:23: Operator SHIFTL expects 15 bits on the LHS, but LHS's VARREF 'far_sigLarger' generates 11 bits.
+                                                                      : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw'
+  143 |         (far_sigLarger<<3) + far_negAlignedSigSmaller + far_subMags;
+      |                       ^~
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/addRecFN.v:143:55: Operator ADD expects 15 bits on the RHS, but RHS's VARREF 'far_subMags' generates 1 bits.
+                                                                      : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw'
+  143 |         (far_sigLarger<<3) + far_negAlignedSigSmaller + far_subMags;
+      |                                                       ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/addRecFN.v:145:50: Operator OR expects 15 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                      : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw'
+  145 |         far_subMags ? far_sigSum : far_sigSum>>1 | far_sigSum[0];
+      |                                                  ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/addRecFN.v:144:40: Operator ASSIGNW expects 14 bits on the Assign RHS, but Assign RHS's COND generates 15 bits.
+                                                                     : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw'
+  144 |     wire [(sigWidth + 2):0] far_sigOut =
+      |                                        ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/addRecFN.v:165:29: Operator COND expects 7 bits on the Conditional True, but Conditional True's VARREF 'close_nearNormDist' generates 4 bits.
+                                                                      : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw'
+  165 |             - (closeSubMags ? close_nearNormDist : far_subMags);
+      |                             ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/addRecFN.v:165:29: Operator COND expects 7 bits on the Conditional False, but Conditional False's VARREF 'far_subMags' generates 1 bits.
+                                                                      : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw'
+  165 |             - (closeSubMags ? close_nearNormDist : far_subMags);
+      |                             ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/addRecFN.v:192:32: Operator COND expects 14 bits on the Conditional True, but Conditional True's REPLICATE generates 13 bits.
+                                                                      : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw'
+  192 |     assign out_sig = out_isNaN ? {1'b1, fractNaN, 2'b00} : common_sigOut;
+      |                                ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/mulRecFN.v:182:32: Operator COND expects 14 bits on the Conditional True, but Conditional True's REPLICATE generates 13 bits.
+                                                                      : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_SCALE[15].scale_op.core.mulRecFNToRaw'
+  182 |     assign out_sig = out_isNaN ? {1'b1, fractNaN, 2'b00} : common_sigOut;
+      |                                ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/recFNToFN.v:58:30: Operator LT expects 7 bits on the RHS, but RHS's VARREF 'minNormExp' generates 6 bits.
+                                                                      : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.cy'
+   58 |     wire isSubnormal = (sExp < minNormExp);
+      |                              ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/recFNToFN.v:61:50: Operator ASSIGNW expects 4 bits on the Assign RHS, but Assign RHS's SUB generates 32 or 7 bits.
+                                                                     : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.cy'
+   61 |     wire [(normDistWidth - 1):0] denormShiftDist = minNormExp - 1 - sExp;
+      |                                                  ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/recFNToFN.v:64:31: Operator COND expects 32 or 7 bits on the Conditional True, but Conditional True's REPLICATE generates 5 bits.
+                                                                      : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.cy'
+   64 |             | (isNaN || isInf ? {expWidth{1'b1}} : 0);
+      |                               ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/recFNToFN.v:62:36: Operator ASSIGNW expects 5 bits on the Assign RHS, but Assign RHS's OR generates 32 or 7 bits.
+                                                                     : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.cy'
+   62 |     wire [(expWidth - 1):0] expOut =
+      |                                    ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/recFNToFN.v:65:38: Operator ASSIGNW expects 10 bits on the Assign RHS, but Assign RHS's COND generates 32 or 12 bits.
+                                                                     : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.cy'
+   65 |     wire [(sigWidth - 2):0] fractOut =
+      |                                      ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/fNToRecFN.v:65:33: Operator XOR expects 32 or 6 bits on the LHS, but LHS's VARREF 'normDist' generates 4 bits.
+                                                                      : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.cc'
+   65 |         (isZeroExpIn ? normDist ^ ((1<<(expWidth + 1)) - 1) : expIn)
+      |                                 ^
+%Warning-WIDTHEXPAND: third_party/HardFloat-1/source/fNToRecFN.v:65:22: Operator COND expects 32 or 6 bits on the Conditional False, but Conditional False's VARREF 'expIn' generates 5 bits.
+                                                                      : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.cc'
+   65 |         (isZeroExpIn ? normDist ^ ((1<<(expWidth + 1)) - 1) : expIn)
+      |                      ^
+%Warning-WIDTHTRUNC: third_party/HardFloat-1/source/fNToRecFN.v:75:34: Operator ASSIGNW expects 3 bits on the Assign RHS, but Assign RHS's VARREF 'adjustedExp' generates 6 bits.
+                                                                     : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.cc'
+   75 |     assign exp[(expWidth - 3):0] = adjustedExp;
+      |                                  ^
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/recFNToFN.v:53:24: Signal is not used: 'isZero'
+                                                                       : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.cy'
+   53 |     wire isNaN, isInf, isZero, sign;
+      |                        ^~~~~~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.044
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
+%Warning-UNUSEDPARAM: third_party/HardFloat-1/source/divSqrtRecFN_small.v:48:67: Parameter is not used: 'options'
+                                                                               : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_DIV[15].divide_op.core.divSqrtRecFNToRaw'
+   48 |         parameter expWidth = 3, parameter sigWidth = 3, parameter options = 0
+      |                                                                   ^~~~~~~
+                      ... For warning description see https://verilator.org/warn/UNUSEDPARAM?v=5.044
+                      ... Use "/* verilator lint_off UNUSEDPARAM */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:85:27: Signal is not used: 'control'
+                                                                                           : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_SCALE[15].scale_op.core.mulRecFNToRaw.propagateNaN'
+   85 |         input [(1 - 1):0] control,
+      |                           ^~~~~~~
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:88:34: Bits of signal are not used: 'fractA'[9]
+                                                                                           : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_SCALE[15].scale_op.core.mulRecFNToRaw.propagateNaN'
+   88 |         input [(sigWidth - 2):0] fractA,
+      |                                  ^~~~~~
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:91:34: Bits of signal are not used: 'fractB'[9]
+                                                                                           : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_SCALE[15].scale_op.core.mulRecFNToRaw.propagateNaN'
+   91 |         input [(sigWidth - 2):0] fractB,
+      |                                  ^~~~~~
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:60:27: Signal is not used: 'control'
+                                                                                           : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw.propagateNaN'
+   60 |         input [(1 - 1):0] control,
+      |                           ^~~~~~~
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:61:15: Signal is not used: 'subOp'
+                                                                                           : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw.propagateNaN'
+   61 |         input subOp,
+      |               ^~~~~
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:64:34: Bits of signal are not used: 'fractA'[9]
+                                                                                           : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw.propagateNaN'
+   64 |         input [(sigWidth - 2):0] fractA,
+      |                                  ^~~~~~
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:67:34: Bits of signal are not used: 'fractB'[9]
+                                                                                           : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.add_final.core.addRecFNToRaw.propagateNaN'
+   67 |         input [(sigWidth - 2):0] fractB,
+      |                                  ^~~~~~
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:141:27: Signal is not used: 'control'
+                                                                                            : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_DIV[15].divide_op.core.divSqrtRecFNToRaw.propagateNaN'
+  141 |         input [(1 - 1):0] control,
+      |                           ^~~~~~~
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:145:34: Bits of signal are not used: 'fractA'[9]
+                                                                                            : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_DIV[15].divide_op.core.divSqrtRecFNToRaw.propagateNaN'
+  145 |         input [(sigWidth - 2):0] fractA,
+      |                                  ^~~~~~
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:148:34: Bits of signal are not used: 'fractB'[9]
+                                                                                            : ... note: In instance 'attention_fp16.parallel_softmax[15].sm.GEN_DIV[15].divide_op.core.divSqrtRecFNToRaw.propagateNaN'
+  148 |         input [(sigWidth - 2):0] fractB,
+      |                                  ^~~~~~
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/HardFloat_rawFN.v:122:10: Signal is not used: 'roundingMode_minMag'
+                                                                              : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.roundRawOut.roundAnyRawFNToRecFN'
+  122 |     wire roundingMode_minMag      = (roundingMode == 3'b001);
+      |          ^~~~~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/mulAddRecFN.v:84:23: Bits of signal are not used: 'sigA'[11]
+                                                                         : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_preMul'
+   84 |     wire [sigWidth:0] sigA;
+      |                       ^~~~
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/mulAddRecFN.v:91:23: Bits of signal are not used: 'sigB'[11]
+                                                                         : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_preMul'
+   91 |     wire [sigWidth:0] sigB;
+      |                       ^~~~
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/HardFloat_primitives.v:118:22: Bits of signal are not used: 'oneLeastReverseIn'[0]
+                                                                                   : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.cc.countLeadingZeros'
+  118 |     wire [inWidth:0] oneLeastReverseIn =
+      |                      ^~~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:109:27: Signal is not used: 'control'
+                                                                                            : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_preMul.propagateNaN'
+  109 |         input [(1 - 1):0] control,
+      |                           ^~~~~~~
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:110:21: Signal is not used: 'op'
+                                                                                            : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_preMul.propagateNaN'
+  110 |         input [1:0] op,
+      |                     ^~
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:113:34: Bits of signal are not used: 'fractA'[9]
+                                                                                            : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_preMul.propagateNaN'
+  113 |         input [(sigWidth - 2):0] fractA,
+      |                                  ^~~~~~
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:116:34: Bits of signal are not used: 'fractB'[9]
+                                                                                            : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_preMul.propagateNaN'
+  116 |         input [(sigWidth - 2):0] fractB,
+      |                                  ^~~~~~
+%Warning-UNUSEDSIGNAL: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:120:34: Bits of signal are not used: 'fractC'[9]
+                                                                                            : ... note: In instance 'attention_fp16.array_impl.array_core.rows[15].cols[15].pe.fma.core.mulAddRecFNToRaw.mulAddToRaw_preMul.propagateNaN'
+  120 |         input [(sigWidth - 2):0] fractC,
+      |                                  ^~~~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.044 2026-01-01 rev vUNKNOWN-built20260101
+- Verilator: Built from 1.960 MB sources in 39 modules, into 111.086 MB in 139 C++ files needing 0.000 MB
+- Verilator: Walltime 16.017 s (elab=0.311, cvt=14.316, bld=0.000); cpu 15.815 s on 1 threads; alloced 1778.938 MB

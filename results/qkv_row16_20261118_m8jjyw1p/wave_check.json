@@ -1,0 +1,30 @@
+{
+  "case": "random_uniform_001",
+  "waveform": "single_wave/attention.vcd",
+  "vcd_sha256": "34d7fa62126d1bfa08a9c4bbd5a14a5c69b90e80295839704e864e981f8b2b53",
+  "sample": "immediately before each rising clock edge",
+  "period_ps": 10000,
+  "source": "single_wave/input.hex in row-major Q, K, V order",
+  "input_fp16_words_checked": 768,
+  "Q_first_last_handshake_ps": [
+    35000,
+    185000
+  ],
+  "K_first_last_handshake_ps": [
+    195000,
+    345000
+  ],
+  "V_first_last_handshake_ps": [
+    355000,
+    505000
+  ],
+  "output_first_last_handshake_ps": [
+    885000,
+    1185000
+  ],
+  "input_beats": 48,
+  "output_beats": 31,
+  "first_output_inclusive_cycles": 86,
+  "last_output_inclusive_cycles": 116,
+  "status": "PASS"
+}

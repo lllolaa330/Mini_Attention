@@ -1,0 +1,16 @@
+['verilator', '--lint-only', '--Wall', '--top-module', 'online_softmax16', 'scripts/verilator_lint.vlt', '-f', 'results/online_softmax16_20261118_145837/files.f']
+%Warning-UNOPTFLAT: rtl/fp16_prob_div.sv:38:17: Signal unoptimizable: Circular combinational logic: 'online_softmax16.normalization[0].divide.first'
+   38 |     wire [21:0] first [0:6];
+      |                 ^~~~~
+                    ... For warning description see https://verilator.org/warn/UNOPTFLAT?v=5.044
+                    ... Use "/* verilator lint_off UNOPTFLAT */" and lint_on around source to disable this message.
+                    rtl/fp16_prob_div.sv:38:17:      Example path: online_softmax16.normalization[0].divide.first
+                    rtl/fp16_prob_div.sv:43:39:      Example path: ALWAYS
+                    rtl/fp16_prob_div.sv:38:17:      Example path: online_softmax16.normalization[0].divide.first
+%Warning-UNOPTFLAT: rtl/fp16_prob_div.sv:62:17: Signal unoptimizable: Circular combinational logic: 'online_softmax16.normalization[0].divide.last'
+   62 |     wire [21:0] last [0:5];
+      |                 ^~~~
+                    rtl/fp16_prob_div.sv:62:17:      Example path: online_softmax16.normalization[0].divide.last
+                    rtl/fp16_prob_div.sv:66:38:      Example path: ALWAYS
+                    rtl/fp16_prob_div.sv:62:17:      Example path: online_softmax16.normalization[0].divide.last
+%Error: Exiting due to 2 warning(s)

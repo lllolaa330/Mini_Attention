@@ -1,0 +1,12 @@
+COMMAND: ['verilator', '--lint-only', '--Wall', '--top-module', 'attention_fp16', "-GUSE_WS=1'b0", 'scripts/verilator_lint.vlt', '-f', 'rtl/files.f']
+%Warning-UNUSEDSIGNAL: rtl/attention_fp16.sv:39:10: Signal is not used: 'ws_row_load'
+                                                  : ... note: In instance 'attention_fp16'
+   39 |     wire ws_row_load;
+      |          ^~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.044
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: rtl/attention_fp16.sv:40:16: Signal is not used: 'ws_load_row'
+                                                  : ... note: In instance 'attention_fp16'
+   40 |     wire [3:0] ws_load_row;
+      |                ^~~~~~~~~~~
+%Error: Exiting due to 2 warning(s)

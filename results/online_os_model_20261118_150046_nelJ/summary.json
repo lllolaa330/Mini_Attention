@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "scope": "Software model only. QK FMA uses SoftFloat in both paths. The independent online row oracle uses the two exponential terms of the recurrence, Python math.exp, and binary16 rounding through struct. Float64 Y is a separate mathematical reference.",
+  "command": "python3 results/online_os_model_20261118_150046_nelJ/check.py",
+  "python": "3.9.6",
+  "seed": 20261117,
+  "directed_frames": 17,
+  "random_frames": 64,
+  "rows": 1296,
+  "p_words_matched": 20736,
+  "y_words_with_float64_reference": 20736,
+  "max_frame_rmse": 0.0018142782905053649,
+  "max_abs_error": 0.008003024305335948,
+  "tolerance": {
+    "frame_rmse": 0.06,
+    "max_abs_error": 0.2
+  },
+  "sources_sha256": {
+    "model/attention.py": "5761fcd3746ffd0b9badfb7513fb87c7fa833a2e66365b695c93f4bd3fd4328f",
+    "model/vectors.py": "36a95309e845901a3e8fd24c84e1cccd218601691fbcff27b82b587421248df5",
+    "model/softfloat.py": "f9375e9892448fbc7902155c75f522ce11d0604a294c165f0ac72d32740e67fc",
+    "model/softfloat_bridge.c": "b3d1514b04b04599df22a27dc6c0ed6f0b7f45eb96659e95582e61c64ddfe2b5",
+    "tests/test_model.py": "59463e74eb22b9061e407bbb79f0268894c17048cc7d6839720665a6e0890c43",
+    "rtl/exp_fp16.hex": "d9ce10bac86d996ca8dfeea7a3acde04b83c83c754d5ec9a8cfe159da9a8f378"
+  }
+}

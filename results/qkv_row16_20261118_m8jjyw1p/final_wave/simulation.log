@@ -1,0 +1,10 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/qkv_row16_20261118_m8jjyw1p/final_wave/tb_attention.vvp', '+INPUT=input.hex', '+EXPECTED=expected.hex', '+EXPECTED_P=expected_p.hex', '+OUTPUT=actual.txt', '+SEED=20261117', '+STALLS=0', '+WAVE=attention.vcd']
+VCD info: dumpfile attention.vcd opened for output.
+BATCH START first_run=0 count=1 kind=main
+PIPELINE run=0 qk_first=36 qk_last=81 issue_first=68 issue_last=83 return_first=71 return_last=86 pv_first=72 overlap=10 resident=0
+FRAME PASS run=0 case=0 cycles=116 mode=0 first_in=3 first_out=88 last_out=118
+COVERAGE frames=1 resets=1 input_bubbles=0 output_stall_cycles=0 no_stall_cycles=116
+STREAM_COVERAGE input_blocked=0 overlap_v_qk=15 overlap_v_sm=0 next_input_output=0 first_output_pv=1 long_stall_cycles=0 queued_resets=0 reset_event_mask=0 resident_count=0
+V_COVERAGE pv_steps_before_v_complete=0 pv_missing_v_cycles=0 pv_wait_resets=0 output_input_bubble_stalls=0
+TB PASS
+tb/tb_attention.sv:631: $finish called at 1406000 (1ps)

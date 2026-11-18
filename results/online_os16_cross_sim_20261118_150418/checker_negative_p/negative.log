@@ -1,0 +1,4 @@
+BATCH START first_run=0 count=25 kind=main
+[5515000] %Fatal: tb_attention.sv:128: Assertion failed in tb_attention.check_pipeline: P MISMATCH case=0 row=0 col=15 got=2c00 expected=2c01
+%Error: tb/tb_attention.sv:128: Verilog $stop
+Aborting...

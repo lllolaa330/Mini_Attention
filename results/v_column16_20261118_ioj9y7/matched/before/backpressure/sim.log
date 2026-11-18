@@ -1,0 +1,4 @@
+Command: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/v_column16_20261118_ioj9y7/matched/before/sim.vvp', '+HOLD=12']
+VCD info: dumpfile attention.vcd opened for output.
+PASS beats=768 output_words=256 prob_rows=16 blocked=12
+/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/v_column16_20261118_ioj9y7/tb_matched.sv:76: $finish called at 7995000 (1ps)

@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "tool": "Icarus Verilog version 12.0 (stable) ()",
+  "python": "3.9.6 (default, May 22 2026, 11:13:45) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+  "seed": 20261118,
+  "command": [
+    "scripts/run_prob_div.py"
+  ],
+  "sources_sha256": {
+    "rtl/fp16_prob_div.sv": "e5b3869d39e6c42f66c824cc2c5ef929bcb46f59b9a73be7e3f0ee2bc599fa38",
+    "tb/tb_prob_div.sv": "7610701fcfda2bc993d4980478fbb5592f039269149c583db16352124f0b50bb",
+    "scripts/run_prob_div.py": "9eb293502e6d177cd2731e829cbb29161a4667d685bc6a1c1ecc0cfe854d6173",
+    "model/softfloat.py": "f9375e9892448fbc7902155c75f522ce11d0604a294c165f0ac72d32740e67fc",
+    "model/softfloat_bridge.c": "b3d1514b04b04599df22a27dc6c0ed6f0b7f45eb96659e95582e61c64ddfe2b5"
+  },
+  "coverage": {
+    "total": 144942,
+    "subnormal_results": 37801,
+    "underflow_to_zero": 4631,
+    "halfway_down": 257,
+    "halfway_up": 258,
+    "smallest_normal_results": 14
+  }
+}

@@ -1,0 +1,1 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/cross_frame_wave_20261118_bdk_rkfs/sim/tb_attention.vvp', '+INPUT=input.hex', '+EXPECTED=expected.hex', '+EXPECTED_P=expected_p.hex', '+OUTPUT=actual.txt', '+SEED=20261117', '+STALLS=0', '+WAVE=attention.vcd']

@@ -11,14 +11,24 @@
 // The bottom PE result is registered at t=i+(N-1)+j and captured below
 // on t+1. Thus N=16 requires t=0..46 (47 enabled steps) after weight loading.
 // Completed outputs are retained; extra invalid steps cannot overwrite them.
-module ws_systolic_array #(parameter integer N = 16) (
+// With DIRECT_V enabled, row_load replaces only row_addr with row_data. This
+// may run alongside clear or step without shifting any other row. The caller
+// must wait until the next clock edge before computing with the new weight.
+module ws_systolic_array #(
+    parameter integer N = 16,
+    parameter bit DIRECT_V = 1'b0
+) (
     input wire clk, rst_n, clear, load_weights, step,
     input wire [15:0] weight_edge [0:N-1],
     input wire [15:0] a_edge [0:N-1],
     input wire [N-1:0] a_valid,
-    output reg [15:0] accum [0:N-1][0:N-1]
+    output reg [15:0] accum [0:N-1][0:N-1],
+    input wire row_load,
+    input wire [((N > 1) ? $clog2(N) : 1)-1:0] row_addr,
+    input wire [15:0] row_data [0:N-1]
 );
     localparam integer COUNT_W = $clog2(N+1);
+    localparam integer ROW_W = (N > 1) ? $clog2(N) : 1;
     wire [15:0] weight_link [0:N][0:N-1];
     wire [15:0] a_link [0:N-1][0:N];
     wire a_valid_link [0:N-1][0:N];
@@ -40,6 +50,8 @@ module ws_systolic_array #(parameter integer N = 16) (
                 fp16_ws_pe pe (
                     .clk(clk), .rst_n(rst_n), .clear(clear),
                     .load_weights(load_weights), .step(step),
+                    .direct_load(DIRECT_V && row_load && (row_addr == ROW_W'(k))),
+                    .direct_weight(row_data[j]),
                     .weight_in(weight_link[k][j]),
                     .a_in(a_link[k][j]), .psum_in(psum_link[k][j]),
                     .a_valid_in(a_valid_link[k][j]),

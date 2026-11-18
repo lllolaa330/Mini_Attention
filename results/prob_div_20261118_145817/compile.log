@@ -1,0 +1,1 @@
+COMMAND: ['iverilog', '-g2012', '-Wall', '-s', 'tb_prob_div', '-o', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/prob_div_20261118_145817/test.vvp', 'rtl/fp16_prob_div.sv', 'tb/tb_prob_div.sv']

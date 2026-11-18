@@ -1,0 +1,61 @@
+{
+  "status": "PASS",
+  "method": "Before publishing the new measurement, compared every byte of each per-edge CSV, per-frame timing CSV, numerical summary, captured outputs and input/expected fixtures with the retained pre-probe results. Verified all eight benchmark configurations against case goldens.",
+  "per_scope": {
+    "after_os/stream": {
+      "identical_sha256": {
+        "schedule.csv": "3d53e07a5f4639e76cdd599b2e75fa8506e3b6347cc41ed3bc78c462e4f7e2ad",
+        "timing.csv": "5fc620c0f86b0d6f946a3940ff7d5871e3e5c559a18ceab171d21d97fc8ec907",
+        "summary.json": "fd0594be6a2fcbddb39ed0359feb37e0b16713b2b4a5dff1c06efe004653c137",
+        "actual.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e",
+        "expected.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e",
+        "input.hex": "662befcd9c868a000cadae2d600e8c142fb6fb6c3dcfe5a1b4d17ea60de12442"
+      },
+      "schedule_edges": 785,
+      "frames": 4
+    },
+    "after_os/resident": {
+      "identical_sha256": {
+        "schedule.csv": "cd5d1d52e7f7a3895fffb22cdbefbd5edc161478ed946a76c83627f3b0adc763",
+        "timing.csv": "1fa01821ad226af2b0be733aa00fe6dcb74d23acd8d4e272aa5d265af095e509",
+        "summary.json": "17e9eb238a3b0b0d38f6af191228ac45377fa8857343e82850bb356dc8a4d169",
+        "actual.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e",
+        "expected.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e",
+        "input.hex": "662befcd9c868a000cadae2d600e8c142fb6fb6c3dcfe5a1b4d17ea60de12442"
+      },
+      "schedule_edges": 113,
+      "frames": 4
+    },
+    "after_ws/stream": {
+      "identical_sha256": {
+        "schedule.csv": "15a7af2435b49ef207b472e105d88d59a4840c38fada87bd99f73d140efaaadf",
+        "timing.csv": "aa0d9dc879f73e2ac5df3e868ab6679f20a6db1bd0e9865a7122d96541f82d9e",
+        "summary.json": "a2e6f9dc2bff1d52926156d75772e9a55cd4b073ad4b91d5a5f1abd25a7cb335",
+        "actual.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e",
+        "expected.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e",
+        "input.hex": "662befcd9c868a000cadae2d600e8c142fb6fb6c3dcfe5a1b4d17ea60de12442"
+      },
+      "schedule_edges": 802,
+      "frames": 4
+    },
+    "after_ws/resident": {
+      "identical_sha256": {
+        "schedule.csv": "0cef3ef8068e2cc5679694558e5744080666bf2c4ace8e8b76de60f8edb61487",
+        "timing.csv": "bf3c83471a4002f8565da4cb38e50d758bbad246f1443be6990dbabf2c80dd50",
+        "summary.json": "7df7aacf0f07ccf6b2d740073bd29faec6dad03d3164a691336fb67cb86d5d42",
+        "actual.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e",
+        "expected.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e",
+        "input.hex": "662befcd9c868a000cadae2d600e8c142fb6fb6c3dcfe5a1b4d17ea60de12442"
+      },
+      "schedule_edges": 131,
+      "frames": 4
+    }
+  },
+  "comparison_sha256": "3e0c5285db9f598a0a93d9b36ca0f94008772929f9958b84d83f37c8d5bd0b02",
+  "frozen_after_sha256": "efd385a3265240b253af9719e945c8c65c0d5674fd7051d680df48e8b4b3e312",
+  "pre_probe_after_sha256": "400e53bf1c8de3360f5070b622b19d96f789e0f45a60ece17735293b4de83ad0",
+  "configurations": 8,
+  "word_comparisons": 8192,
+  "unique_case_outputs": 1024,
+  "additional_after_rerun_word_checks": 4096
+}

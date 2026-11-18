@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "runs": {
+    "results/20261118_153545_os_iverilog_seed20261117_57186": {
+      "status": "PASS",
+      "source_files_checked": 641
+    },
+    "results/20261118_153540_os_verilator_seed20261117_53973": {
+      "status": "PASS",
+      "source_files_checked": 641
+    },
+    "results/20261118_153604_os_verilator_seed20261117_66136": {
+      "status": "PASS",
+      "source_files_checked": 641
+    }
+  },
+  "identical_artifacts_of_41_frame_runs": {
+    "actual.txt": "f062e2ca0c184686c58a00771ec102a100be945e42a35a3ad14555d784a2ed77",
+    "summary.json": "b15309804cf15ec5a7bbcbf9935b5c522cc835d353c0badf62b177cfa1a852e7",
+    "per_frame.csv": "0d86494f2ecd26cd341e1b85f977cfde832999b214a017f278effd5faeabd642",
+    "input.hex": "08be9078e9aeb0afad8fae46baa2ba73ea1627888ff1f225ab092c96f8570007",
+    "expected.hex": "727a93abb0a919aa4fd72559599fcda87a3dd2eb46528c3c4d1f25600c67db1e",
+    "expected_p.hex": "eaa3f168593fa4c745be7fa99ccf68bc5dc33100f8e7aa6ceaf3e05e5f9dea5d",
+    "cases.json": "aa969f4f949b622155336b1b88eb1c8abbda5fe07725dd0f08e8c4f246234d76"
+  },
+  "input_fixture_matches_scalar_baseline": true,
+  "after_rtl_matches_checkout": true
+}

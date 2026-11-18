@@ -1,0 +1,2 @@
+run,case,name,batch,category,mode,first_in_cycle,first_out_cycle,last_out_cycle,first_output_latency_cycles,normalization_first_issue,normalization_last_issue,normalization_first_return,normalization_last_return,first_qk_mac,last_qk_mac,first_pv_mac,qk_pv_overlap_cycles,resident_at_dispatch,normalized_fp16_words_checked,cycles,input_ii_cycles,output_beats,bit_exact,finite,rmse,max_abs_error,passed
+0,0,random_uniform_001,main,random,0,3,568,598,566,548,563,551,566,516,561,552,10,False,256,596,,31,True,True,0.0006813673716108883,0.002498995012721439,True

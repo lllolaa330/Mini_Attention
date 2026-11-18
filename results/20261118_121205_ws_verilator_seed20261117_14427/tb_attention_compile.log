@@ -1,0 +1,215 @@
+COMMAND: ['verilator', '--binary', '--timing', '--assert', '-j', '2', '-Wno-fatal', '--top-module', 'tb_attention', '-GCASES=25', "-GUSE_WS=1'b1", "-GSINGLE_FRAME=1'b0", '--Mdir', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/20261118_121205_ws_verilator_seed20261117_14427/obj_tb_attention', '-o', 'tb_attention', '-f', 'rtl/files.f', 'tb/tb_attention.sv']
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/HardFloat_primitives.v:41:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   41 |     reverse#(parameter width = 1) (
+      |     ^~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.044
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/HardFloat_primitives.v:58:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   58 |     lowMaskHiLo#(
+      |     ^~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/HardFloat_primitives.v:85:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   85 |     lowMaskLoHi#(
+      |     ^~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/HardFloat_primitives.v:112:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  112 |     countLeadingZeros#(parameter inWidth = 1, parameter countWidth = 1) (
+      |     ^~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/HardFloat_primitives.v:140:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  140 |     compressBy2#(parameter inWidth = 1) (
+      |     ^~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/HardFloat_primitives.v:159:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  159 |     compressBy4#(parameter inWidth = 1) (
+      |     ^~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/HardFloat_rawFN.v:44:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   44 |     recFNToRawFN#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/HardFloat_rawFN.v:74:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   74 |     roundAnyRawFNToRecFN#(
+      |     ^~~~~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/HardFloat_rawFN.v:324:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  324 |     roundRawFNToRecFN#(
+      |     ^~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:44:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   44 |     iNFromException#(parameter width = 1) (
+      |     ^~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:59:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   59 |     propagateFloatNaN_add#(parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:84:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   84 |     propagateFloatNaN_mul#(parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:108:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  108 |     propagateFloatNaN_mulAdd#(parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v:140:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  140 |     propagateFloatNaN_divSqrt#(parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/isSigNaNRecFN.v:41:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   41 |     isSigNaNRecFN#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/fNToRecFN.v:41:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   41 |     fNToRecFN#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/recFNToFN.v:41:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   41 |     recFNToFN#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/mulAddRecFN.v:44:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   44 |     mulAddRecFNToRaw_preMul#(
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/mulAddRecFN.v:216:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  216 |     mulAddRecFNToRaw_postMul#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/mulAddRecFN.v:368:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  368 |     mulAddRecFNToRaw#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/mulAddRecFN.v:431:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  431 |     mulAddRecFN#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/addRecFN.v:44:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   44 |     addRecFNToRaw#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/addRecFN.v:205:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  205 |     addRecFN#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/mulRecFN.v:44:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   44 |     mulRecFNToFullRaw#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/mulRecFN.v:119:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  119 |     mulRecFNToRaw#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/mulRecFN.v:195:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  195 |     mulRecFN#(parameter expWidth = 3, parameter sigWidth = 3) (
+      |     ^~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/divSqrtRecFN_small.v:47:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   47 |     divSqrtRecFNToRaw_small#(
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: third_party/HardFloat-1/source/divSqrtRecFN_small.v:277:5: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  277 |     divSqrtRecFN_small#(
+      |     ^~~~~~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: rtl/fp16_ops.sv:7:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    7 | module fp16_fma (
+      |        ^~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: rtl/fp16_ops.sv:23:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   23 | module fp16_addsub (
+      |        ^~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: rtl/fp16_ops.sv:39:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   39 | module fp16_mul (
+      |        ^~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: rtl/fp16_ops.sv:55:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   55 | module fp16_div (
+      |        ^~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: rtl/fp16_pe.sv:4:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    4 | module fp16_pe (
+      |        ^~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Warning-TIMESCALEMOD: rtl/systolic_array.sv:6:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    6 | module systolic_array #(parameter integer N = 16) (
+      |        ^~~~~~~~~~~~~~
+                       rtl/fp16_ws_pe.sv:5:8: ... Location of module with timescale
+    5 | module fp16_ws_pe (
+      |        ^~~~~~~~~~
+%Error: tb/tb_attention.sv:19:49: Can't find definition of 'ws_row_load' in dotted variable/method: 'dut.array_impl.ws_row_load'
+   19 |             assign ws_row_load = dut.array_impl.ws_row_load;
+      |                                                 ^~~~~~~~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.044 for more assistance.
+%Error: tb/tb_attention.sv:20:49: Can't find definition of 'ws_load_row' in dotted variable/method: 'dut.array_impl.ws_load_row'
+   20 |             assign ws_load_row = dut.array_impl.ws_load_row;
+      |                                                 ^~~~~~~~~~~
+%Error: Exiting due to 2 error(s)

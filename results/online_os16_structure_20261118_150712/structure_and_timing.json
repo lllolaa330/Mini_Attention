@@ -1,0 +1,155 @@
+{
+  "status": "PASS",
+  "run_source": "results/20261118_150420_os_iverilog_seed20261117_21540",
+  "second_elaboration": "results/20261118_150420_os_iverilog_seed20261117_21541",
+  "sha256": {
+    "results/20261118_150420_os_iverilog_seed20261117_21540/tb_attention.vvp": "c02788d8ba47ab434b3d4bc74a045c869710b6431f4ec7ebc4c5759439d1bca4",
+    "results/20261118_150420_os_iverilog_seed20261117_21541/tb_attention.vvp": "75d9ed56c11b091f8513f68b71dac033789782d0314cb58b2d921ee3e83c6d2f",
+    "results/20261118_150420_os_iverilog_seed20261117_21540/simulation.log": "bfe6b605515a9ff43bdc318293cae646836ec513e97c7f23a3277424dfa1e8d1",
+    "results/20261118_150420_os_iverilog_seed20261117_21540/summary.json": "0da8802c814f449dc4ed502514bf96e37c3b19dceff1229b59c7ab4002713c21",
+    "results/20261118_150420_os_iverilog_seed20261117_21540/attention.vcd": "bcfcad529938ff2e0b311f57b19565f9d7c10afd6625f7f9476eacb1f37bab2e"
+  },
+  "elaborated_module_counts": {
+    "systolic_array": 1,
+    "fp16_pe": 256,
+    "fp16_fma": 256,
+    "online_softmax16": 1,
+    "fp16_prob_div": 16,
+    "ws_systolic_array": 0,
+    "fp16_ws_pe": 0
+  },
+  "vcd_declarations_bits": {
+    "tb_attention.pe_mac": 256,
+    "tb_attention.clk": 1,
+    "tb_attention.cycle": 32,
+    "tb_attention.dut.array_step": 1,
+    "tb_attention.dut.out_last": 1,
+    "tb_attention.dut.out_ready": 1,
+    "tb_attention.dut.out_valid": 1,
+    "tb_attention.dut.pv_step": 1,
+    "tb_attention.dut.qk_step": 1,
+    "tb_attention.dut.rst_n": 1,
+    "tb_attention.dut.v_words_ready": 9,
+    "tb_attention.dut.score_valid": 16,
+    "tb_attention.dut.prob_valid": 1,
+    "tb_attention.dut.prob_row": 4,
+    "tb_attention.dut.norm_issue_row": 4,
+    "tb_attention.dut.norm_issue": 1,
+    "tb_attention.dut.p_ready": 16
+  },
+  "method": "Scopes counted by module type in both Icarus VVPs. Pre-rising-edge VCD reads by enabled pe_mac bits, first 16 local FMA on each PE are QK, next 16 PV. Cross-checked both against PIPELINE/FRAME PASS and per-frame JSON. Relative edges include first QK MAC as T1; stream run 0 has a bubble-free source and sink; run 40 was already loaded in a queued bank through the real scalar input port.",
+  "frames": [
+    {
+      "run": 0,
+      "case": "all_zero",
+      "resident_at_dispatch": false,
+      "first_input_cycle": 3,
+      "v_words_at_first_qk": 1,
+      "absolute_edges": {
+        "first_qk_mac": 516,
+        "last_qk_mac": 561,
+        "normalization_first_issue": 548,
+        "normalization_last_issue": 563,
+        "normalization_first_return": 551,
+        "normalization_last_return": 566,
+        "first_pv_mac": 552,
+        "first_out_cycle": 757,
+        "last_out_cycle": 787,
+        "first_score_accepted": 532,
+        "last_score_accepted": 562,
+        "last_pv_mac": 786
+      },
+      "first_qk_mac_is_T1": {
+        "first_qk_mac": 1,
+        "last_qk_mac": 46,
+        "normalization_first_issue": 33,
+        "normalization_last_issue": 48,
+        "normalization_first_return": 36,
+        "normalization_last_return": 51,
+        "first_pv_mac": 37,
+        "first_out_cycle": 242,
+        "last_out_cycle": 272,
+        "first_score_accepted": 17,
+        "last_score_accepted": 47,
+        "last_pv_mac": 271
+      },
+      "overlap_absolute_edges": [
+        552,
+        553,
+        554
+      ],
+      "overlap_relative_edges": [
+        37,
+        38,
+        39
+      ],
+      "overlap_count": 3,
+      "p_rows": 16,
+      "output_beats": 31,
+      "score_words": 256
+    },
+    {
+      "run": 40,
+      "case": "random_bits_003",
+      "resident_at_dispatch": true,
+      "first_input_cycle": 55119,
+      "v_words_at_first_qk": 256,
+      "absolute_edges": {
+        "first_qk_mac": 56472,
+        "last_qk_mac": 56517,
+        "normalization_first_issue": 56504,
+        "normalization_last_issue": 56519,
+        "normalization_first_return": 56507,
+        "normalization_last_return": 56522,
+        "first_pv_mac": 56508,
+        "first_out_cycle": 56524,
+        "last_out_cycle": 56554,
+        "first_score_accepted": 56488,
+        "last_score_accepted": 56518,
+        "last_pv_mac": 56553
+      },
+      "first_qk_mac_is_T1": {
+        "first_qk_mac": 1,
+        "last_qk_mac": 46,
+        "normalization_first_issue": 33,
+        "normalization_last_issue": 48,
+        "normalization_first_return": 36,
+        "normalization_last_return": 51,
+        "first_pv_mac": 37,
+        "first_out_cycle": 53,
+        "last_out_cycle": 83,
+        "first_score_accepted": 17,
+        "last_score_accepted": 47,
+        "last_pv_mac": 82
+      },
+      "overlap_absolute_edges": [
+        56508,
+        56509,
+        56510,
+        56511,
+        56512,
+        56513,
+        56514,
+        56515,
+        56516,
+        56517
+      ],
+      "overlap_relative_edges": [
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46
+      ],
+      "overlap_count": 10,
+      "p_rows": 16,
+      "output_beats": 31,
+      "score_words": 256
+    }
+  ]
+}

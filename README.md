@@ -1,10 +1,10 @@
 # Mini_Attention
 
-**16×16 全 FP16 注意力脉动阵列，支持输出驻留（OS）和权重驻留（WS），包含 Softmax 和逐位自检。**
+**用一个 16×16 全 FP16 输出驻留（OS）脉动阵列计算 `Y = Softmax(QKᵀ / 4)V`。**
 
-计算 `Y = Softmax(QKᵀ / 4)V`，Q、K、V、Y 均为 16×16。每种配置均用同一个 256 PE 阵列先执行 QKᵀ，再执行 PV。OS 将部分和保存在 PE，WS 将右矩阵元素保存在 PE。16 个 Softmax 单元并行处理 16 行。每行用四层 FP16 加法树计算分母，再用 16 个迭代除法器并行求概率。输入输出及每次算术结果均为 IEEE binary16，RNE 舍入并支持次正规数。
+QKᵀ 的点积沿阵列对角线完成。每行一边保存缩放分数，一边更新在线 Softmax 的最大值和分母。行统计完成后，共享的 16 路 exp/div 同时归一化整行。流水线可以连续 16 拍接收 16 行，依次将每行的 16 个 FP16 概率写入行首缓冲。该行从左向右按 k 送出 P，V 从上边界向下传播，同一批 PE 就地累加 Y。在 V 已到齐且输出可接收时，左上方的 PE 可以做 PV，右下方的 PE 仍在完成 QKᵀ。
 
-输入仍以每拍一个 FP16 字传输。Q 和 K 收齐即启动 QKᵀ，Softmax 与后续 V 的接收可重叠。双缓冲支持同时接收下一帧。**输出接口现为 16 列并行**：`out_data[255:0]`、`out_lane_valid[15:0]` 和整组 ready/valid。第 j 路携带第 j 列，每帧 31 次握手共 256 个 FP16 字。旧的 16-bit 行优先接收端需按新接口适配。[时序及还原方法](PROJECT.md#6-外部握手与-16-路输出)
+Q、K、V 共用一个 256 位 ready/valid 输入口，每次握手传 16 个 FP16。每帧依次传 Q 的 16 行、K 的 16 行和 V 的 16 列，共 48 次握手。通道 k 位于 `in_data[16*k +: 16]`，在这三个阶段分别携带 Q[i,k]、K[j,k] 和 V[k,j]。双帧缓冲允许在处理当前帧时接收下一帧。输出的 16 个通道分别对应 16 列，`out_lane_valid[15:0]` 指示每组中有效的列，一帧共 31 次整组握手、256 个 FP16 字。[时序及矩阵还原](PROJECT.md#6-外部握手与-16-路输出)
 
 本项目为自建课程基线。RTL 仿真结果与实际综合、时序和功耗是不同验证层级；已执行结果、版本和原始证据见 [EXPERIMENTS.md](EXPERIMENTS.md)，当前交接见 [HANDOFF.md](HANDOFF.md)。
 
@@ -15,30 +15,29 @@
 在仓库根目录执行：
 
 ```sh
-make quick                       # OS（默认）
-make quick DATAFLOW=ws           # WS，使用相同的 FP16 软件模型
-make quick DATAFLOW=ws ARGS=--waves  # 在 Evidence 目录生成 WS 波形
-make test                        # 定向 + 随机输入、协议/复位自检
-make test SIM=verilator           # 第二种仿真器
+make quick                       # 定向输入及协议自检
+make quick ARGS=--waves          # 生成 OS 波形
+make test                        # 定向、随机输入及复位/背压
+make test SIM=verilator          # 第二种仿真器
 make model                       # 软件模型检查
 make lut-check                   # 指数 ROM 全表检查
-make arithmetic                  # FMA / 加减 / 乘 / 除与 SoftFloat 比较
-make array DATAFLOW=ws           # 单独检查 WS 阵列
-make lint DATAFLOW=ws            # 检查 WS 的 RTL 展开配置
+make arithmetic                  # IEEE binary16 运算单测
+make array                       # OS 矩阵乘单测
+make lint                        # 当前 Attention 顶层的严格静态检查
 ```
 
-顶层参数 `USE_WS` 在编译或综合时选择阵列，只展开一种结构。已有顶层实例默认使用 OS。选择 WS 可写作 `attention_fp16 #(.USE_WS(1'b1)) dut (...);`。
+Attention 顶层只实例化一个 OS 阵列。旧的 WS 阵列源文件与独立单测保留用于重放以往实验。
 
 直接调用 Python 时可选择模式并指定输出目录。
 
 ```sh
-python3 scripts/run.py --sim iverilog --dataflow ws --random 64 --seed 20261117 \
+python3 scripts/run.py --sim iverilog --dataflow os --random 64 --seed 20261117 \
   --outdir results/my_new_run --timeout 600
 ```
 
-`--outdir` 必须是不存在的目录，防止覆盖历史证据。不传时自动生成唯一目录。输入包括各自行优先的 Q、K、V 共 768 个 binary16 编码；默认用例由 `model/vectors.py` 生成。使用 `--vectors cases.json` 可注入自定义输入，每项包含 `name`、`category`、`words`（768 个整数编码）。
+`--outdir` 必须是不存在的目录，防止覆盖历史证据。不传时自动生成唯一目录。向量文件保存各自行优先的 Q、K、V，共 768 个 binary16 编码。testbench 将 Q、K 各打包为 16 个行向量，将 V 打包为 16 个列向量；默认用例由 `model/vectors.py` 生成。使用 `--vectors cases.json` 可注入自定义输入，每项包含 `name`、`category`、`words`（768 个整数编码）。
 
-Mac/VS Code 波形入门：安装 Surfer 扩展后执行 `make quick ARGS="--waves"`，在终端最后显示的 Evidence 目录打开 `attention.vcd`。默认 Icarus 仿真记录顶层控制、第 0 行 Softmax（`dut.parallel_softmax[0].sm`）以及 PE[0,0]、[0,1]、[1,0]、[15,15] 的本地接口。展开 `dut.array_impl.array_core.rows[0].cols[0].pe`，在 OS 下观察 `acc`，在 WS 下观察 `weight`、`a_in`、`psum_out` 和 `psum_valid_out`。使用 `--waves-full` 可递归记录全部浮点内部信号，文件会显著变大。Verilator 忽略 `$dumpvars` 的层次深度/选择，使用它运行 `--waves` 时仍为完整跟踪。波形和编译缓存不纳入 Git。
+在 Mac 的 VS Code 安装 Surfer，执行 `make quick ARGS=--waves`，打开终端报告的 Evidence 目录下的 `attention.vcd`。在 `dut` 下对齐 `load_count`、`input_fire`、`v_cols_ready`、`feed_step`、`v_ready`、`pv_step` 和 `wave_slot_available`，可核对每帧 48 次输入握手。观察上升沿前的 `input_fire` 和 `load_count`，计数 15、31、47 分别对应接收最后一行 Q、最后一行 K、最后一列 V。在实际供数有气泡时，`v_cols_ready` 和 `pv_step` 可显示各列到达与 PV 推进的关系。对齐 `norm_issue/norm_issue_row` 和 `prob_valid/prob_row` 可看连续的归一化请求及整行返回。展开 `dut.array_core.rows[0].cols[0].pe` 观察 `step`、`a_valid_in`、`b_valid_in` 及 `acc`。观察 `out_valid`、`out_ready` 和 `out_lane_valid` 可区分结果已就绪及实际传输的时刻。`--waves-full` 递归记录内部层次，文件会显著增大；Verilator 的 `--waves` 为完整跟踪。波形和编译缓存由运行命令生成。
 
 只看一次 Attention 时，加 `--single-frame --stalls 0 --waves`：仅运行输入列表的第一帧，保留启动复位、完整 256 字输出自检和结束后空闲检查，不追加中途复位恢复测试。用 `--vectors` 指定有变化的输入；未指定时，默认列表第一帧为全零。标量接口版本的同输入 OS / WS 历史波形与复现命令见 [单帧运行目录](results/20261118_110939_single_attention_ws_os/README.md)。默认回归仍执行全部协议与复位测试。
 
@@ -55,13 +54,12 @@ python3 scripts/checker_selftest.py --run results/my_new_run \
 
 | 文件 | 用途 |
 |---|---|
-| [rtl/attention_fp16.sv](rtl/attention_fp16.sv) | 顶层输入缓存、两轮阵列调度、P 缓存、输出握手 |
+| [rtl/attention_fp16.sv](rtl/attention_fp16.sv) | 双帧缓存、QKᵀ 与 PV 调度、P 行首缓冲、输出握手 |
 | [rtl/systolic_array.sv](rtl/systolic_array.sv) | 16×16 邻接互连和边界输入 |
 | [rtl/fp16_pe.sv](rtl/fp16_pe.sv) | FP16 FMA、累加驻留、操作数和 valid 转发 |
-| [rtl/ws_systolic_array.sv](rtl/ws_systolic_array.sv) | WS 装权、部分和链路及阵列底部写回 |
-| [rtl/fp16_ws_pe.sv](rtl/fp16_ws_pe.sv) | WS 的驻留权重寄存器与 FP16 FMA |
-| [rtl/fp16_ops.sv](rtl/fp16_ops.sv) | HardFloat binary16 包装：FMA、加减、乘、除 |
-| [rtl/softmax_fp16.sv](rtl/softmax_fp16.sv) | 单行缩放、减行最大值、exp、树形求和、并行归一化 |
+| [rtl/fp16_ops.sv](rtl/fp16_ops.sv) | HardFloat binary16 算术 |
+| [rtl/online_softmax16.sv](rtl/online_softmax16.sv) | 逐分数更新各行统计、共享 16 路整行归一化 |
+| [rtl/fp16_prob_div.sv](rtl/fp16_prob_div.sv) | 为 FP16 归一化操作数设计的两级直接除法，按余数和商最低位做 RNE |
 | [rtl/exp_fp16.hex](rtl/exp_fp16.hex) | 正确舍入的 FP16 指数 ROM 内容 |
 | [rtl/files.f](rtl/files.f) | RTL 和第三方浮点源文件清单 |
 | [model/attention.py](model/attention.py) | SoftFloat 逐位模型与独立 float64 数学参考 |
@@ -70,15 +68,13 @@ python3 scripts/checker_selftest.py --run results/my_new_run \
 
 [PROJECT.md](PROJECT.md) 给出完整数值契约、数据映射、舍入顺序和握手。FMA 是单次舍入操作；拆成独立乘法和加法会改变结果。Softmax 显式存储 FP16 的 P，归一化没有移到 PV 之后。
 
-## 阵列时序
+## 过往架构的测量
 
-| 每次 16×16 矩阵乘 | OS | WS |
-|---|---|---|
-| PE 内驻留值 | 输出 C[i,j] 的部分和 | 右矩阵元素 B[k,j] |
-| 启动与计算 | 清零后运行 46 拍 | 清零后装权 16 拍，运行 47 拍（含最后的写回） |
-| 结果位置 | 256 个 PE 的累加器 | 阵列底部按列写入 16×16 结果缓存 |
+上一个版本用 256 位端口传输 V 的整列，Q、K 仍各用 256 拍，整帧需要 528 次输入握手。该接口的 PV 空闲与 PE 利用率对照使用相同的非零矩阵和输出背压规则。[V 列输入实验](results/v_column16_20261118_ioj9y7/matched/comparison.json)
 
-两种实现的每个输出都从 FP16 的 +0 开始，按 k 递增做 16 次融合乘加。整帧测量包括输入、清零、Softmax、输出及握手停顿，各阶段允许重叠。仿真周期与综合频率、面积、功耗需要分别测量。
+此前 V 按行、每拍一个 FP16 的全 OS 版本，在 Q/K/V 已全部入槽的实测帧，从第一拍 QK 乘加计，T33–48 依次发起整行归一化，T36–51 逐行返回，T37–46 的 10 拍内不同 PE 同时执行 QK 与 PV，T53 和 T83 分别接受首末输出组。该版本普通连续输入帧的首末结果在首个输入握手后的第 755/785 拍（含首拍）。[实测展开和波形](results/online_os16_structure_20261118_150712/structure_and_timing.json)
+
+原来采用四层加法树、提供 OS/WS 选项的基线已有两种口径的完整记录。流式全零帧的 OS 首/末结果为 755/785 拍，WS 为 772/802 拍；片上预装分别为 83/113 拍和 101/131 拍。上述数字属于此前的顶层及数值顺序。当前在线 Softmax 版的实测见 [EXPERIMENTS.md](EXPERIMENTS.md)。[历史片上时间线](results/v_overlap_20261118_120306/figures/timeline_resident.pdf) · [历史流式时间线](results/v_overlap_20261118_120306/figures/timeline_stream.pdf) · [四帧逐项对照](results/v_overlap_20261118_120306/benchmarks/comparison.json) · [旧 RTL 重放脚本](results/v_overlap_20261118_120306/benchmark.py)
 
 ## 验证标准
 

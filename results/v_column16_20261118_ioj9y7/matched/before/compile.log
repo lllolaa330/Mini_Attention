@@ -1,0 +1,1 @@
+Command: ['iverilog', '-g2012', '-s', 'tb_matched', '-o', 'sim.vvp', '-f', 'files.f', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/v_column16_20261118_ioj9y7/tb_matched.sv']

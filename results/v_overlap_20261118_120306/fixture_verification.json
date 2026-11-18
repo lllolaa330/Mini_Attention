@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "fixture_sha256": "585d5f8a7baf431899d09b241b36cf930419714879982c1e044b686bc02747c8",
+  "source_cases": "results/pingpong_baseline_20261118_112657/cases.json",
+  "source_sha256": "6b72207b4cb49444575b5ff4554ba2e66e6dae3f1443e901a2c958739b6da5d2",
+  "seed": 20261117,
+  "source_case_ids": [
+    0,
+    9,
+    17,
+    18
+  ],
+  "outputs": 1024,
+  "verified": "Regenerated all case expected fields with bit_model and float64_reference with reference; also matched the historical source fixture.",
+  "model_sha256": {
+    "model/__init__.py": "f58d0a36f004b372420c579c658b1398c26601cf7325864c17045f9568bc7948",
+    "model/attention.py": "96aea0b2f329de62abeeb156f214c9fdf2a3152bd9abfdfd38e8899755914798",
+    "model/softfloat.py": "f9375e9892448fbc7902155c75f522ce11d0604a294c165f0ac72d32740e67fc",
+    "model/softfloat_bridge.c": "b3d1514b04b04599df22a27dc6c0ed6f0b7f45eb96659e95582e61c64ddfe2b5",
+    "model/vectors.py": "36a95309e845901a3e8fd24c84e1cccd218601691fbcff27b82b587421248df5"
+  }
+}

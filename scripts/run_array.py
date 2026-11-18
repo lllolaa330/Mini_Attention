@@ -73,7 +73,8 @@ def main():
     try:
         command([args.sim,'--version'] if args.sim=='verilator' else ['iverilog','-V'],run/'tool_version.log',60)
         bench = 'tb_array_ws' if args.dataflow == 'ws' else 'tb_array'
-        exe=compile_tb(args,run,bench,'N',n)
+        legacy_sources = ['rtl/fp16_ws_pe.sv', 'rtl/ws_systolic_array.sv'] if args.dataflow == 'ws' else []
+        exe=compile_tb(args,run,bench,'N',n,extra_sources=legacy_sources)
         command(exe+['+A=a.hex','+B=b.hex','+EXPECTED=expected.hex',f'+COUNT={len(matrices)}'],
                 run/'array.log',args.timeout,cwd=run)
         if 'PASS array' not in (run/'array.log').read_text(): raise RuntimeError('Array PASS missing')

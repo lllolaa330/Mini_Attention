@@ -1,0 +1,4 @@
+COMMAND: ['verilator', '--lint-only', '--Wall', '--top-module', 'attention_fp16', 'scripts/verilator_lint.vlt', '-f', 'rtl/files.f']
+- V e r i l a t i o n   R e p o r t: Verilator 5.044 2026-01-01 rev vUNKNOWN-built20260101
+- Verilator: Built from 1.811 MB sources in 38 modules, into 64.019 MB in 79 C++ files needing 0.000 MB
+- Verilator: Walltime 3.808 s (elab=0.071, cvt=3.337, bld=0.000); cpu 3.806 s on 1 threads; alloced 888.328 MB

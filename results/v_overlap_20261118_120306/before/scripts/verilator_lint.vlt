@@ -1,0 +1,21 @@
+`verilator_config
+// Release-1 upstream coding style. Preserve unfiltered diagnostics alongside
+// every strict lint run; these waivers apply only to the vendored file paths.
+`define HF_FILES -file "*third_party/HardFloat-1/source/*"
+lint_off -rule DECLFILENAME `HF_FILES
+lint_off -rule TIMESCALEMOD `HF_FILES
+lint_off -rule WIDTHEXPAND `HF_FILES
+lint_off -rule WIDTHTRUNC `HF_FILES
+lint_off -rule UNUSEDSIGNAL `HF_FILES
+lint_off -rule UNUSEDPARAM `HF_FILES
+lint_off -rule GENUNNAMED `HF_FILES
+lint_off -rule VARHIDDEN `HF_FILES
+`undef HF_FILES
+// Project wrappers intentionally collect four binary16 arithmetic modules.
+lint_off -rule DECLFILENAME -file "*rtl/fp16_ops.sv"
+// Synthesizable modules contain no time-valued expressions or delays.
+lint_off -rule TIMESCALEMOD -file "*rtl/fp16_ops.sv"
+lint_off -rule TIMESCALEMOD -file "*rtl/fp16_pe.sv"
+lint_off -rule TIMESCALEMOD -file "*rtl/systolic_array.sv"
+// Stable Softmax difference is <= 0; exp table is indexed by its magnitude.
+lint_off -rule UNUSEDSIGNAL -file "*rtl/softmax_fp16.sv" -match "*Bits of signal are not used: 'delta'[15]*"

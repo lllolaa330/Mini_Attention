@@ -13,7 +13,6 @@ third_party/HardFloat-1/source/divSqrtRecFN_small.v
 rtl/fp16_ops.sv
 rtl/fp16_pe.sv
 rtl/systolic_array.sv
-rtl/fp16_ws_pe.sv
-rtl/ws_systolic_array.sv
-rtl/softmax_fp16.sv
+rtl/fp16_prob_div.sv
+rtl/online_softmax16.sv
 rtl/attention_fp16.sv

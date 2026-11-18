@@ -1,0 +1,307 @@
+{
+  "status": "PASS",
+  "units": "inclusive cycles from first input transfer (stream) or CLEAR_QK edge (resident); input_ii uses start-to-start difference",
+  "first_frame_schedule": "<version>_<flow>/<mode>/schedule.csv",
+  "per_case": {
+    "os": {
+      "stream": [
+        {
+          "case": "all_zero",
+          "first_output_latency": {
+            "before": 786,
+            "after": 755,
+            "cycles_saved": 31
+          },
+          "last_output_latency": {
+            "before": 816,
+            "after": 785,
+            "cycles_saved": 31
+          },
+          "input_ii": {
+            "before": null,
+            "after": null,
+            "cycles_saved": null
+          }
+        },
+        {
+          "case": "identity_transpose_probe",
+          "first_output_latency": {
+            "before": 786,
+            "after": 755,
+            "cycles_saved": 31
+          },
+          "last_output_latency": {
+            "before": 816,
+            "after": 785,
+            "cycles_saved": 31
+          },
+          "input_ii": {
+            "before": 768,
+            "after": 768,
+            "cycles_saved": 0
+          }
+        },
+        {
+          "case": "random_bits_000",
+          "first_output_latency": {
+            "before": 786,
+            "after": 755,
+            "cycles_saved": 31
+          },
+          "last_output_latency": {
+            "before": 816,
+            "after": 785,
+            "cycles_saved": 31
+          },
+          "input_ii": {
+            "before": 768,
+            "after": 768,
+            "cycles_saved": 0
+          }
+        },
+        {
+          "case": "random_uniform_001",
+          "first_output_latency": {
+            "before": 786,
+            "after": 755,
+            "cycles_saved": 31
+          },
+          "last_output_latency": {
+            "before": 816,
+            "after": 785,
+            "cycles_saved": 31
+          },
+          "input_ii": {
+            "before": 768,
+            "after": 768,
+            "cycles_saved": 0
+          }
+        }
+      ],
+      "resident": [
+        {
+          "case": "all_zero",
+          "first_output_latency": {
+            "before": 83,
+            "after": 83,
+            "cycles_saved": 0
+          },
+          "last_output_latency": {
+            "before": 113,
+            "after": 113,
+            "cycles_saved": 0
+          },
+          "input_ii": {
+            "before": null,
+            "after": null,
+            "cycles_saved": null
+          }
+        },
+        {
+          "case": "identity_transpose_probe",
+          "first_output_latency": {
+            "before": 84,
+            "after": 84,
+            "cycles_saved": 0
+          },
+          "last_output_latency": {
+            "before": 114,
+            "after": 114,
+            "cycles_saved": 0
+          },
+          "input_ii": {
+            "before": null,
+            "after": null,
+            "cycles_saved": null
+          }
+        },
+        {
+          "case": "random_bits_000",
+          "first_output_latency": {
+            "before": 84,
+            "after": 84,
+            "cycles_saved": 0
+          },
+          "last_output_latency": {
+            "before": 114,
+            "after": 114,
+            "cycles_saved": 0
+          },
+          "input_ii": {
+            "before": null,
+            "after": null,
+            "cycles_saved": null
+          }
+        },
+        {
+          "case": "random_uniform_001",
+          "first_output_latency": {
+            "before": 84,
+            "after": 84,
+            "cycles_saved": 0
+          },
+          "last_output_latency": {
+            "before": 114,
+            "after": 114,
+            "cycles_saved": 0
+          },
+          "input_ii": {
+            "before": null,
+            "after": null,
+            "cycles_saved": null
+          }
+        }
+      ]
+    },
+    "ws": {
+      "stream": [
+        {
+          "case": "all_zero",
+          "first_output_latency": {
+            "before": 803,
+            "after": 772,
+            "cycles_saved": 31
+          },
+          "last_output_latency": {
+            "before": 833,
+            "after": 802,
+            "cycles_saved": 31
+          },
+          "input_ii": {
+            "before": null,
+            "after": null,
+            "cycles_saved": null
+          }
+        },
+        {
+          "case": "identity_transpose_probe",
+          "first_output_latency": {
+            "before": 803,
+            "after": 772,
+            "cycles_saved": 31
+          },
+          "last_output_latency": {
+            "before": 833,
+            "after": 802,
+            "cycles_saved": 31
+          },
+          "input_ii": {
+            "before": 768,
+            "after": 768,
+            "cycles_saved": 0
+          }
+        },
+        {
+          "case": "random_bits_000",
+          "first_output_latency": {
+            "before": 803,
+            "after": 772,
+            "cycles_saved": 31
+          },
+          "last_output_latency": {
+            "before": 833,
+            "after": 802,
+            "cycles_saved": 31
+          },
+          "input_ii": {
+            "before": 768,
+            "after": 768,
+            "cycles_saved": 0
+          }
+        },
+        {
+          "case": "random_uniform_001",
+          "first_output_latency": {
+            "before": 803,
+            "after": 772,
+            "cycles_saved": 31
+          },
+          "last_output_latency": {
+            "before": 833,
+            "after": 802,
+            "cycles_saved": 31
+          },
+          "input_ii": {
+            "before": 768,
+            "after": 768,
+            "cycles_saved": 0
+          }
+        }
+      ],
+      "resident": [
+        {
+          "case": "all_zero",
+          "first_output_latency": {
+            "before": 117,
+            "after": 101,
+            "cycles_saved": 16
+          },
+          "last_output_latency": {
+            "before": 147,
+            "after": 131,
+            "cycles_saved": 16
+          },
+          "input_ii": {
+            "before": null,
+            "after": null,
+            "cycles_saved": null
+          }
+        },
+        {
+          "case": "identity_transpose_probe",
+          "first_output_latency": {
+            "before": 118,
+            "after": 102,
+            "cycles_saved": 16
+          },
+          "last_output_latency": {
+            "before": 148,
+            "after": 132,
+            "cycles_saved": 16
+          },
+          "input_ii": {
+            "before": null,
+            "after": null,
+            "cycles_saved": null
+          }
+        },
+        {
+          "case": "random_bits_000",
+          "first_output_latency": {
+            "before": 118,
+            "after": 102,
+            "cycles_saved": 16
+          },
+          "last_output_latency": {
+            "before": 148,
+            "after": 132,
+            "cycles_saved": 16
+          },
+          "input_ii": {
+            "before": null,
+            "after": null,
+            "cycles_saved": null
+          }
+        },
+        {
+          "case": "random_uniform_001",
+          "first_output_latency": {
+            "before": 118,
+            "after": 102,
+            "cycles_saved": 16
+          },
+          "last_output_latency": {
+            "before": 148,
+            "after": 132,
+            "cycles_saved": 16
+          },
+          "input_ii": {
+            "before": null,
+            "after": null,
+            "cycles_saved": null
+          }
+        }
+      ]
+    }
+  }
+}

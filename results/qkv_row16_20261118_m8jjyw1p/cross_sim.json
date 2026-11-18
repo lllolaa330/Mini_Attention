@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "verilator": "results/qkv_row16_verilator_20261118_03",
+  "icarus": "results/qkv_row16_20261118_m8jjyw1p/icarus_stalls",
+  "frames_per_simulator": 41,
+  "summaries_equal": true,
+  "sha256_of_identical_files": {
+    "input.hex": "08be9078e9aeb0afad8fae46baa2ba73ea1627888ff1f225ab092c96f8570007",
+    "expected_p.hex": "eaa3f168593fa4c745be7fa99ccf68bc5dc33100f8e7aa6ceaf3e05e5f9dea5d",
+    "expected.hex": "727a93abb0a919aa4fd72559599fcda87a3dd2eb46528c3c4d1f25600c67db1e",
+    "actual.txt": "dbcf93fc22c1ff86d597b7c1a7f42587df4ffa7caf0a00aef25cb575bb5434f7",
+    "per_frame.csv": "17b60a4a87c891f5953598fa3d1ac097d67f3feb8cd69940cc06760f085e78b3"
+  },
+  "notes": "Same RTL and SV testbench. The final runner disables C++ coroutine function splitting when compiling tb_attention with Verilator."
+}

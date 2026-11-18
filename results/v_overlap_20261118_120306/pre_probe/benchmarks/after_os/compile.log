@@ -1,0 +1,1 @@
+COMMAND: ['iverilog', '-g2012', '-s', 'tb_overlap_bench', '-Ptb_overlap_bench.CASES=4', '-Ptb_overlap_bench.USE_WS=0', '-o', 'bench.vvp', '-f', 'compile.f', '-DNEW_V_SCHEDULER', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/v_overlap_20261118_120306/tb_overlap_bench.sv']

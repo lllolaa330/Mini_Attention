@@ -11,7 +11,7 @@ module tb_array #(parameter integer N=16, K=16);
     reg [15:0] mat_a [0:65535],mat_b[0:65535],expected[0:65535];
     string a_path,b_path,e_path;
     integer count,frame,t,i,j,idx,hold_count;
-    systolic_array #(N) dut(clk,rst_n,clear,step,a_edge,b_edge,av,bv,accum);
+    systolic_array #(N) dut(clk,rst_n,clear,step,a_edge,b_edge,av,bv,accum,{(2*N-1){1'b1}},{(2*N-1){1'b0}});
     initial begin
         if(!$value$plusargs("A=%s",a_path) || !$value$plusargs("B=%s",b_path) ||
            !$value$plusargs("EXPECTED=%s",e_path) || !$value$plusargs("COUNT=%d",count))

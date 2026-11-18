@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "source_run": "results/20261118_150418_os_verilator_seed20261117_20938",
+  "mutation": "expected[0] XOR 1",
+  "returncode": 1,
+  "checker_rejected_mutation": true,
+  "scope": "Negative scoreboard self-test; not a DUT numerical failure"
+}

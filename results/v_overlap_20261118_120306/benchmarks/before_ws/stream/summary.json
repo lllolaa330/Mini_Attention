@@ -1,0 +1,68 @@
+{
+  "mode": "stream",
+  "status": "PASS",
+  "frames": 4,
+  "output_beats": 124,
+  "outputs": 1024,
+  "bit_exact": true,
+  "per_frame": [
+    {
+      "frame": 0,
+      "origin": 4,
+      "first_output": 806,
+      "last_output": 836,
+      "first_output_latency": 803,
+      "last_output_latency": 833,
+      "input_ii": null,
+      "output_beats": 31,
+      "output_words": 256,
+      "case_name": "all_zero",
+      "rmse": 0.0,
+      "max_abs_error": 0.0
+    },
+    {
+      "frame": 1,
+      "origin": 772,
+      "first_output": 1574,
+      "last_output": 1604,
+      "first_output_latency": 803,
+      "last_output_latency": 833,
+      "input_ii": 768,
+      "output_beats": 31,
+      "output_words": 256,
+      "case_name": "identity_transpose_probe",
+      "rmse": 9.240055942469388e-05,
+      "max_abs_error": 0.00022875996586543823
+    },
+    {
+      "frame": 2,
+      "origin": 1540,
+      "first_output": 2342,
+      "last_output": 2372,
+      "first_output_latency": 803,
+      "last_output_latency": 833,
+      "input_ii": 768,
+      "output_beats": 31,
+      "output_words": 256,
+      "case_name": "random_bits_000",
+      "rmse": 9.187425648259683e-05,
+      "max_abs_error": 0.00044841840744802575
+    },
+    {
+      "frame": 3,
+      "origin": 2308,
+      "first_output": 3110,
+      "last_output": 3140,
+      "first_output_latency": 803,
+      "last_output_latency": 833,
+      "input_ii": 768,
+      "output_beats": 31,
+      "output_words": 256,
+      "case_name": "random_uniform_001",
+      "rmse": 0.0006682487948267032,
+      "max_abs_error": 0.002498995012721439
+    }
+  ],
+  "schedule_scope": "Frame 0; pre-edge values, first measured edge is relative cycle 1.",
+  "actual_sha256": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e"
+}

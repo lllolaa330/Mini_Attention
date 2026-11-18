@@ -1,0 +1,301 @@
+{
+  "status": "PASS",
+  "command": [
+    "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+    "results/v_overlap_20261118_120306/verification_audit.py"
+  ],
+  "checked_at": "2026-11-18T12:23:04.509292+08:00",
+  "scope": "Final 12:17:51 OS/WS x Icarus/Verilator; source identity, raw data and handshake timing, accuracy and coverage; frozen before/after benchmark lineage.",
+  "limits": {
+    "rmse": 0.06,
+    "max_abs_error": 0.2
+  },
+  "runs": {
+    "os_iverilog": {
+      "directory": "results/20261118_121751_os_iverilog_seed20261117_23777",
+      "source_check": {
+        "files_checked": 637,
+        "mismatches": []
+      },
+      "manifest_sha256": "59dbe86fe06db2ca6eb98b41cf74894f339ff8c9ea7d6ca6208fa513dee8f22e",
+      "summary_sha256": "b2dcd7aeb1ff20d63081ddcbcbeb50ee1a299739270c55cc8bc2817a34cb05fd",
+      "frames": 47,
+      "outputs": 12032,
+      "output_beats": 1457,
+      "max_frame_rmse": 0.0011369835920301476,
+      "max_abs_error": 0.0037907157648744416,
+      "independent_float64_reference_max_delta": 3.1086244689504383e-15,
+      "coverage": {
+        "frames": 47,
+        "resets": 17,
+        "input_bubbles": 19315,
+        "output_stall_cycles": 6865,
+        "no_stall_cycles": 785
+      },
+      "stream_coverage": {
+        "input_blocked": 1353,
+        "overlap_v_qk": 1337,
+        "overlap_v_sm": 615,
+        "next_input_output": 470,
+        "first_output_pv": 47,
+        "long_stall_cycles": 2500,
+        "queued_resets": 1,
+        "top_reset_mask": 255,
+        "softmax_reset_mask": 126
+      },
+      "v_coverage": {
+        "pv_steps_before_v_complete": 919,
+        "pv_missing_v_cycles": 13137,
+        "ws_rows_during_sm": 0,
+        "pv_wait_resets": 1,
+        "ws_partial_v_resets": 0,
+        "output_input_bubble_stalls": 13
+      }
+    },
+    "os_verilator": {
+      "directory": "results/20261118_121751_os_verilator_seed20261117_23780",
+      "source_check": {
+        "files_checked": 637,
+        "mismatches": []
+      },
+      "manifest_sha256": "2876c412b8c48f337faa531524099286e0c3cb484040e572cfd855f82a383397",
+      "summary_sha256": "b2dcd7aeb1ff20d63081ddcbcbeb50ee1a299739270c55cc8bc2817a34cb05fd",
+      "frames": 47,
+      "outputs": 12032,
+      "output_beats": 1457,
+      "max_frame_rmse": 0.0011369835920301476,
+      "max_abs_error": 0.0037907157648744416,
+      "independent_float64_reference_max_delta": 3.1086244689504383e-15,
+      "coverage": {
+        "frames": 47,
+        "resets": 17,
+        "input_bubbles": 19315,
+        "output_stall_cycles": 6865,
+        "no_stall_cycles": 785
+      },
+      "stream_coverage": {
+        "input_blocked": 1353,
+        "overlap_v_qk": 1337,
+        "overlap_v_sm": 615,
+        "next_input_output": 470,
+        "first_output_pv": 47,
+        "long_stall_cycles": 2500,
+        "queued_resets": 1,
+        "top_reset_mask": 255,
+        "softmax_reset_mask": 126
+      },
+      "v_coverage": {
+        "pv_steps_before_v_complete": 919,
+        "pv_missing_v_cycles": 13137,
+        "ws_rows_during_sm": 0,
+        "pv_wait_resets": 1,
+        "ws_partial_v_resets": 0,
+        "output_input_bubble_stalls": 13
+      }
+    },
+    "ws_iverilog": {
+      "directory": "results/20261118_121751_ws_iverilog_seed20261117_23781",
+      "source_check": {
+        "files_checked": 637,
+        "mismatches": []
+      },
+      "manifest_sha256": "13ef93be7674b8128c430a97bd642a6a052cf2b8b598cd883817a1ca2917f183",
+      "summary_sha256": "ed1f4efd4eceb16b8bcbf73949ed9ddf210fa3e352e3efc1b58decd84b28dcbd",
+      "frames": 49,
+      "outputs": 12544,
+      "output_beats": 1519,
+      "max_frame_rmse": 0.0011369835920301476,
+      "max_abs_error": 0.0037907157648744416,
+      "independent_float64_reference_max_delta": 3.1086244689504383e-15,
+      "coverage": {
+        "frames": 49,
+        "resets": 19,
+        "input_bubbles": 20286,
+        "output_stall_cycles": 6917,
+        "no_stall_cycles": 802
+      },
+      "stream_coverage": {
+        "input_blocked": 1386,
+        "overlap_v_qk": 1563,
+        "overlap_v_sm": 602,
+        "next_input_output": 549,
+        "first_output_pv": 49,
+        "long_stall_cycles": 2500,
+        "queued_resets": 1,
+        "top_reset_mask": 511,
+        "softmax_reset_mask": 126
+      },
+      "v_coverage": {
+        "pv_steps_before_v_complete": 720,
+        "pv_missing_v_cycles": 14219,
+        "ws_rows_during_sm": 153,
+        "pv_wait_resets": 1,
+        "ws_partial_v_resets": 1,
+        "output_input_bubble_stalls": 13
+      }
+    },
+    "ws_verilator": {
+      "directory": "results/20261118_121751_ws_verilator_seed20261117_23779",
+      "source_check": {
+        "files_checked": 637,
+        "mismatches": []
+      },
+      "manifest_sha256": "c444bcfd3dfd7796e3697b7ee86c9fa0fce00d334be51f27baa189bc72cefbe9",
+      "summary_sha256": "ed1f4efd4eceb16b8bcbf73949ed9ddf210fa3e352e3efc1b58decd84b28dcbd",
+      "frames": 49,
+      "outputs": 12544,
+      "output_beats": 1519,
+      "max_frame_rmse": 0.0011369835920301476,
+      "max_abs_error": 0.0037907157648744416,
+      "independent_float64_reference_max_delta": 3.1086244689504383e-15,
+      "coverage": {
+        "frames": 49,
+        "resets": 19,
+        "input_bubbles": 20286,
+        "output_stall_cycles": 6917,
+        "no_stall_cycles": 802
+      },
+      "stream_coverage": {
+        "input_blocked": 1386,
+        "overlap_v_qk": 1563,
+        "overlap_v_sm": 602,
+        "next_input_output": 549,
+        "first_output_pv": 49,
+        "long_stall_cycles": 2500,
+        "queued_resets": 1,
+        "top_reset_mask": 511,
+        "softmax_reset_mask": 126
+      },
+      "v_coverage": {
+        "pv_steps_before_v_complete": 720,
+        "pv_missing_v_cycles": 14219,
+        "ws_rows_during_sm": 153,
+        "pv_wait_resets": 1,
+        "ws_partial_v_resets": 1,
+        "output_input_bubble_stalls": 13
+      }
+    }
+  },
+  "same_flow_simulators": {
+    "os": {
+      "byte_identical_files_sha256": {
+        "actual.txt": "5f8061dc5e2d93124b554e18816937ea05c5018c817c593661bde7df86f6e98a",
+        "per_frame.csv": "5c329e775e838edfb37c4a9140edaf08683572be23b36c61987d332705c1b869",
+        "input.hex": "08be9078e9aeb0afad8fae46baa2ba73ea1627888ff1f225ab092c96f8570007",
+        "expected.hex": "e2f69d7dc3db9e12c8fa14e135569ac2c32b91596cb18dee346790b573d3f80d",
+        "cases.json": "6b72207b4cb49444575b5ff4554ba2e66e6dae3f1443e901a2c958739b6da5d2",
+        "summary.json": "b2dcd7aeb1ff20d63081ddcbcbeb50ee1a299739270c55cc8bc2817a34cb05fd"
+      },
+      "actual_includes_all_handshake_cycles": true
+    },
+    "ws": {
+      "byte_identical_files_sha256": {
+        "actual.txt": "c747d235d584bd290222eafc9607d5ba7a1f4fe7aa96e50429e06b266912a2fc",
+        "per_frame.csv": "a02a7b03e9f4f2026001aa53318e906157abc3a76ed239103e416b87b3761ace",
+        "input.hex": "08be9078e9aeb0afad8fae46baa2ba73ea1627888ff1f225ab092c96f8570007",
+        "expected.hex": "e2f69d7dc3db9e12c8fa14e135569ac2c32b91596cb18dee346790b573d3f80d",
+        "cases.json": "6b72207b4cb49444575b5ff4554ba2e66e6dae3f1443e901a2c958739b6da5d2",
+        "summary.json": "ed1f4efd4eceb16b8bcbf73949ed9ddf210fa3e352e3efc1b58decd84b28dcbd"
+      },
+      "actual_includes_all_handshake_cycles": true
+    }
+  },
+  "after_rtl_matches_checkout": {
+    "files_checked": 9,
+    "mismatches": []
+  },
+  "after_rtl_snapshot": {
+    "files_checked": 9,
+    "mismatches": []
+  },
+  "before_snapshot_integrity": {
+    "files_checked": 30,
+    "mismatches": []
+  },
+  "benchmarks": {
+    "before_os": {
+      "source_check": {
+        "files_checked": 22,
+        "mismatches": []
+      },
+      "manifest_sha256": "73dc7ca33e40c41eedd07b59aa9830c061bbcf7700335087b9db99400fda2e34"
+    },
+    "before_ws": {
+      "source_check": {
+        "files_checked": 22,
+        "mismatches": []
+      },
+      "manifest_sha256": "f1c771ea90b96546f020018d5702079fe30954d9c5d3c302fe81fd6e34cd70a3"
+    },
+    "after_os": {
+      "source_check": {
+        "files_checked": 22,
+        "mismatches": []
+      },
+      "manifest_sha256": "bbd74f51f51cd19b744c7feacfbbafda64fa98d2a821e3460ae67790c3367b07"
+    },
+    "after_ws": {
+      "source_check": {
+        "files_checked": 22,
+        "mismatches": []
+      },
+      "manifest_sha256": "27ffea39dfa4dd449c9d6b786545437aadb9dd803ad05737039e681a86ab1268"
+    }
+  },
+  "probe_fix_recheck": {
+    "os/stream": {
+      "schedule.csv": "3d53e07a5f4639e76cdd599b2e75fa8506e3b6347cc41ed3bc78c462e4f7e2ad",
+      "timing.csv": "5fc620c0f86b0d6f946a3940ff7d5871e3e5c559a18ceab171d21d97fc8ec907",
+      "summary.json": "fd0594be6a2fcbddb39ed0359feb37e0b16713b2b4a5dff1c06efe004653c137",
+      "actual.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e",
+      "input.hex": "662befcd9c868a000cadae2d600e8c142fb6fb6c3dcfe5a1b4d17ea60de12442",
+      "expected.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e"
+    },
+    "os/resident": {
+      "schedule.csv": "cd5d1d52e7f7a3895fffb22cdbefbd5edc161478ed946a76c83627f3b0adc763",
+      "timing.csv": "1fa01821ad226af2b0be733aa00fe6dcb74d23acd8d4e272aa5d265af095e509",
+      "summary.json": "17e9eb238a3b0b0d38f6af191228ac45377fa8857343e82850bb356dc8a4d169",
+      "actual.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e",
+      "input.hex": "662befcd9c868a000cadae2d600e8c142fb6fb6c3dcfe5a1b4d17ea60de12442",
+      "expected.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e"
+    },
+    "ws/stream": {
+      "schedule.csv": "15a7af2435b49ef207b472e105d88d59a4840c38fada87bd99f73d140efaaadf",
+      "timing.csv": "aa0d9dc879f73e2ac5df3e868ab6679f20a6db1bd0e9865a7122d96541f82d9e",
+      "summary.json": "a2e6f9dc2bff1d52926156d75772e9a55cd4b073ad4b91d5a5f1abd25a7cb335",
+      "actual.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e",
+      "input.hex": "662befcd9c868a000cadae2d600e8c142fb6fb6c3dcfe5a1b4d17ea60de12442",
+      "expected.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e"
+    },
+    "ws/resident": {
+      "schedule.csv": "0cef3ef8068e2cc5679694558e5744080666bf2c4ace8e8b76de60f8edb61487",
+      "timing.csv": "bf3c83471a4002f8565da4cb38e50d758bbad246f1443be6990dbabf2c80dd50",
+      "summary.json": "7df7aacf0f07ccf6b2d740073bd29faec6dad03d3164a691336fb67cb86d5d42",
+      "actual.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e",
+      "input.hex": "662befcd9c868a000cadae2d600e8c142fb6fb6c3dcfe5a1b4d17ea60de12442",
+      "expected.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e"
+    }
+  },
+  "probe_fix_scope": "Exact textual normalization proves only WS observer wires moved to top scope, OS constants and Verilator visibility annotations added; benchmark outputs and cycle traces were rerun and remain byte-identical.",
+  "earlier_verilator_attempts": {
+    "os": {
+      "directory": "results/20261118_121205_os_verilator_seed20261117_14422",
+      "classification": "Elaboration failure in hierarchical observation, no numerical run claimed",
+      "errors": [
+        "%Error: tb/tb_attention.sv:19:49: Can't find definition of 'ws_row_load' in dotted variable/method: 'dut.array_impl.ws_row_load'",
+        "%Error: tb/tb_attention.sv:20:49: Can't find definition of 'ws_load_row' in dotted variable/method: 'dut.array_impl.ws_load_row'",
+        "%Error: Exiting due to 2 error(s)"
+      ]
+    },
+    "ws": {
+      "directory": "results/20261118_121205_ws_verilator_seed20261117_14427",
+      "classification": "Elaboration failure in hierarchical observation, no numerical run claimed",
+      "errors": [
+        "%Error: tb/tb_attention.sv:19:49: Can't find definition of 'ws_row_load' in dotted variable/method: 'dut.array_impl.ws_row_load'",
+        "%Error: tb/tb_attention.sv:20:49: Can't find definition of 'ws_load_row' in dotted variable/method: 'dut.array_impl.ws_load_row'",
+        "%Error: Exiting due to 2 error(s)"
+      ]
+    }
+  },
+  "script_sha256": "b88b637d4a5db91fe335822e2e3dfb85147b55f7dd15a0562bf0f9f13b273420"
+}

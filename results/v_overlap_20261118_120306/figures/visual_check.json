@@ -1,0 +1,125 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-11-18T12:17:32.288468+08:00",
+  "visual_inspection": {
+    "png_originals": true,
+    "pdf_rendered_at_width_1680": true,
+    "svg_rendered_at_width_1680": true,
+    "findings": "All four groups readable; no clipped text, legend collisions, missing symbols or incorrect output endpoints observed. Stage and weight colors agree across both figures."
+  },
+  "source_hashes_unchanged_after_export": true,
+  "svg_structure": {
+    "timeline_resident": {
+      "text_elements": 62,
+      "image_elements": 0
+    },
+    "timeline_stream": {
+      "text_elements": 94,
+      "image_elements": 0
+    }
+  },
+  "render_commands": [
+    "pdftoppm -scale-to-x 1680 -scale-to-y -1 -png -singlefile timeline_NAME.pdf qa/timeline_NAME_pdf",
+    "rsvg-convert -w 1680 -o qa/timeline_NAME_svg.png timeline_NAME.svg"
+  ],
+  "tools": {
+    "pdftoppm": "pdftoppm version 26.02.0\nCopyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC",
+    "rsvg_convert": "rsvg-convert version 2.62.3\n\nlibraries used:\n  cairo 1.18.6\n  pango 1.58.0\n  harfbuzz 14.6.0\n  fontconfig 2.18.3"
+  },
+  "final_source_binding": {
+    "status": "PASS",
+    "checked_at": "2026-11-18T12:22:13.875867+08:00",
+    "figure_source_files_checked": 17,
+    "all_plot_source_hashes_match_final_canonical_benchmarks": true,
+    "exports_checked": 6,
+    "all_export_hashes_unchanged": true,
+    "figures_regenerated": false,
+    "reason": "Final RTL probe-scope adjustment was re-benchmarked. All plotted CSV/summary/comparison bytes are unchanged, so existing PNG/PDF/SVG and prior visual inspection remain applicable.",
+    "final_rtl_hash_manifest": "after_sha256.json",
+    "final_rtl_hash_manifest_sha256": "efd385a3265240b253af9719e945c8c65c0d5674fd7051d680df48e8b4b3e312",
+    "final_rtl_sha256": {
+      "rtl/attention_fp16.sv": "83d0d0d5352f941457e1d602ccdf6ff3dd72190b1c7532532e34f6b690991567",
+      "rtl/exp_fp16.hex": "d9ce10bac86d996ca8dfeea7a3acde04b83c83c754d5ec9a8cfe159da9a8f378",
+      "rtl/files.f": "7cb2ca4d61eb65882b52b1b95e3a4de6a9ed218d78f64600cc8f20b59f0b1b3c",
+      "rtl/fp16_ops.sv": "f4f1ae84be8e24266fcb2cf641bbd3871e035e2e0bbea360188619c355b7dd6d",
+      "rtl/fp16_pe.sv": "ebde2fdbc0506a1e9871d91e01d56ab3877c87f83ed2c72d9432a34b3a6770b1",
+      "rtl/fp16_ws_pe.sv": "f18e1f919cdc8cf9baf6f2c0ec18318528e168cf56eb1c58625679bcf4d2133e",
+      "rtl/softmax_fp16.sv": "3db94f4d429cab133410a3335616ce304d1a1177d66a017d67077bcd575b205e",
+      "rtl/systolic_array.sv": "900a679494bf4010464d77bf4ac6ac9c72eff14acc66501d415dc1700693c03a",
+      "rtl/ws_systolic_array.sv": "b9826baef4675e6019fb597c8efa183cf82ec93efbd7a4047e63e3191936e698"
+    },
+    "archived_and_working_rtl_match": true,
+    "final_benchmark_script_sha256": "badcc4e2bf8eb946d32d70eea2f5736dde78ccc6e33e7e6243c370ed8993ddb6",
+    "final_benchmark_tb_sha256": "a75292bbd5524ae88c4c406a5c9991347341b85abfe8bfe8b8772e733b0ec19b",
+    "comparison_sha256": "3e0c5285db9f598a0a93d9b36ca0f94008772929f9958b84d83f37c8d5bd0b02",
+    "comparison_matches_pre_probe": true,
+    "rechecked_benchmarks": {
+      "os": {
+        "manifest": "benchmarks/after_os/manifest.json",
+        "manifest_sha256": "bbd74f51f51cd19b744c7feacfbbafda64fa98d2a821e3460ae67790c3367b07",
+        "status": "PASS",
+        "started": "2026-11-18T12:18:40.542067+08:00",
+        "finished": "2026-11-18T12:20:20.222007+08:00",
+        "compiled_source_files_checked": 22,
+        "fixture_sha256": "585d5f8a7baf431899d09b241b36cf930419714879982c1e044b686bc02747c8",
+        "modes": {
+          "resident": {
+            "unchanged_from_pre_probe": true,
+            "file_sha256": {
+              "schedule.csv": "cd5d1d52e7f7a3895fffb22cdbefbd5edc161478ed946a76c83627f3b0adc763",
+              "summary.json": "17e9eb238a3b0b0d38f6af191228ac45377fa8857343e82850bb356dc8a4d169",
+              "timing.csv": "1fa01821ad226af2b0be733aa00fe6dcb74d23acd8d4e272aa5d265af095e509",
+              "actual.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e"
+            },
+            "frames": 4,
+            "output_words": 1024
+          },
+          "stream": {
+            "unchanged_from_pre_probe": true,
+            "file_sha256": {
+              "schedule.csv": "3d53e07a5f4639e76cdd599b2e75fa8506e3b6347cc41ed3bc78c462e4f7e2ad",
+              "summary.json": "fd0594be6a2fcbddb39ed0359feb37e0b16713b2b4a5dff1c06efe004653c137",
+              "timing.csv": "5fc620c0f86b0d6f946a3940ff7d5871e3e5c559a18ceab171d21d97fc8ec907",
+              "actual.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e"
+            },
+            "frames": 4,
+            "output_words": 1024
+          }
+        }
+      },
+      "ws": {
+        "manifest": "benchmarks/after_ws/manifest.json",
+        "manifest_sha256": "27ffea39dfa4dd449c9d6b786545437aadb9dd803ad05737039e681a86ab1268",
+        "status": "PASS",
+        "started": "2026-11-18T12:18:40.542098+08:00",
+        "finished": "2026-11-18T12:20:12.172076+08:00",
+        "compiled_source_files_checked": 22,
+        "fixture_sha256": "585d5f8a7baf431899d09b241b36cf930419714879982c1e044b686bc02747c8",
+        "modes": {
+          "resident": {
+            "unchanged_from_pre_probe": true,
+            "file_sha256": {
+              "schedule.csv": "0cef3ef8068e2cc5679694558e5744080666bf2c4ace8e8b76de60f8edb61487",
+              "summary.json": "7df7aacf0f07ccf6b2d740073bd29faec6dad03d3164a691336fb67cb86d5d42",
+              "timing.csv": "bf3c83471a4002f8565da4cb38e50d758bbad246f1443be6990dbabf2c80dd50",
+              "actual.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e"
+            },
+            "frames": 4,
+            "output_words": 1024
+          },
+          "stream": {
+            "unchanged_from_pre_probe": true,
+            "file_sha256": {
+              "schedule.csv": "15a7af2435b49ef207b472e105d88d59a4840c38fada87bd99f73d140efaaadf",
+              "summary.json": "a2e6f9dc2bff1d52926156d75772e9a55cd4b073ad4b91d5a5f1abd25a7cb335",
+              "timing.csv": "aa0d9dc879f73e2ac5df3e868ab6679f20a6db1bd0e9865a7122d96541f82d9e",
+              "actual.hex": "d72982e39bd89682c3bff6e6ca28dd315ec6766e6e9b74167cc32a67583efc3e"
+            },
+            "frames": 4,
+            "output_words": 1024
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,3 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/ws_direct_disabled2_20261118/tb_array_ws.vvp', '+A=a.hex', '+B=b.hex', '+EXPECTED=expected.hex', '+COUNT=8']
+PASS array WS N=2 K=2 frames=8 outputs=32 direct_outputs=0 held_cycles=16 direct_step_writes=0 direct_hold_writes=0 timed_writeback/resident/clear/reset/invalid
+tb/tb_array_ws.sv:280: $finish called at 1330000 (1ps)

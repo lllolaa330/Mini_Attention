@@ -1,0 +1,1 @@
+COMMAND: ['iverilog', '-g2012', '-s', 'tb', '-o', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/online_softmax16_20261118_145909/test.vvp', '-f', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/online_softmax16_20261118_145909/files.f', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/online_softmax16_20261118_145909/tb.sv']

@@ -1,0 +1,14 @@
+{
+  "command": [
+    "/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/qkv_row16_verilator_20261118_03/obj_tb_attention/tb_attention",
+    "+INPUT=input.hex",
+    "+EXPECTED=expected.hex",
+    "+EXPECTED_P=expected_p.hex",
+    "+OUTPUT=actual.txt",
+    "+SEED=20261117",
+    "+STALLS=0"
+  ],
+  "cwd": "/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/qkv_row16_20261118_m8jjyw1p/timing/ready",
+  "returncode": 0,
+  "date": "2026-11-18T16:03:16.204722+08:00"
+}

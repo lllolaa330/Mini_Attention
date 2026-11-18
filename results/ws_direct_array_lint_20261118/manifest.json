@@ -1,0 +1,42 @@
+{
+  "created_at": "2026-11-18T12:08:16.367738+08:00",
+  "commands": [
+    [
+      "verilator",
+      "--version"
+    ],
+    [
+      "verilator",
+      "--lint-only",
+      "--Wall",
+      "--top-module",
+      "ws_systolic_array",
+      "-GN=16",
+      "-GDIRECT_V=1'b1",
+      "-Wno-fatal",
+      "-f",
+      "rtl/files.f"
+    ],
+    [
+      "verilator",
+      "--lint-only",
+      "--Wall",
+      "--top-module",
+      "ws_systolic_array",
+      "-GN=16",
+      "-GDIRECT_V=1'b1",
+      "scripts/verilator_lint.vlt",
+      "-f",
+      "rtl/files.f"
+    ]
+  ],
+  "sources_sha256": {
+    "rtl/fp16_ws_pe.sv": "f18e1f919cdc8cf9baf6f2c0ec18318528e168cf56eb1c58625679bcf4d2133e",
+    "rtl/ws_systolic_array.sv": "b9826baef4675e6019fb597c8efa183cf82ec93efbd7a4047e63e3191936e698",
+    "tb/tb_array_ws.sv": "b17869d03822d8d4ba9d41ade65cd430ef022d122bb9ca6d8b6f4cad865f2a6c"
+  },
+  "version_exit": 0,
+  "unfiltered_exit": 0,
+  "strict_exit": 0,
+  "status": "PASS"
+}

@@ -1,0 +1,3 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/online_softmax16_20261118_145909/test.vvp']
+ONLINE SOFTMAX PASS rows=128 words=2048 longest_consecutive_rows=16
+/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/online_softmax16_20261118_145909/tb.sv:70: $finish called at 3730000 (1ps)

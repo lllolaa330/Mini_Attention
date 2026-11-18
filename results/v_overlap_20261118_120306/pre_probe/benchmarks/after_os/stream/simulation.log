@@ -1,0 +1,3 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/v_overlap_20261118_120306/benchmarks/after_os/bench.vvp', '+RESIDENT=0']
+BENCH PASS frames=4 beats=124 words=1024 done=4
+/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/v_overlap_20261118_120306/tb_overlap_bench.sv:151: $finish called at 30950000 (1ps)

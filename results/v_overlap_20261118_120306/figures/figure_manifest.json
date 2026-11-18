@@ -1,0 +1,69 @@
+{
+  "status": "PASS",
+  "python": "3.13.13",
+  "matplotlib": "3.11.1",
+  "font": "DejaVu Sans",
+  "png_dpi_requested": 350,
+  "source_sha256": {
+    "benchmarks/comparison.json": "3e0c5285db9f598a0a93d9b36ca0f94008772929f9958b84d83f37c8d5bd0b02",
+    "benchmarks/before_os/resident/schedule.csv": "667be4036b8baa445bf2402a37ed2984f65214820b0d2764499c66faeabadfc9",
+    "benchmarks/before_os/resident/summary.json": "17e9eb238a3b0b0d38f6af191228ac45377fa8857343e82850bb356dc8a4d169",
+    "benchmarks/after_os/resident/schedule.csv": "cd5d1d52e7f7a3895fffb22cdbefbd5edc161478ed946a76c83627f3b0adc763",
+    "benchmarks/after_os/resident/summary.json": "17e9eb238a3b0b0d38f6af191228ac45377fa8857343e82850bb356dc8a4d169",
+    "benchmarks/before_ws/resident/schedule.csv": "9d863c2fb7946b4e00e33e03eba2c245a338db21bf537c075fafbc6fa58b71b6",
+    "benchmarks/before_ws/resident/summary.json": "d8e31145a35d8e1823b30845695d673765a606c855bea789e54f7d12e1bd8eb0",
+    "benchmarks/after_ws/resident/schedule.csv": "0cef3ef8068e2cc5679694558e5744080666bf2c4ace8e8b76de60f8edb61487",
+    "benchmarks/after_ws/resident/summary.json": "7df7aacf0f07ccf6b2d740073bd29faec6dad03d3164a691336fb67cb86d5d42",
+    "benchmarks/before_os/stream/schedule.csv": "870a2d4b678639e4880055347399160108901f2450eda9cd30a9232e91058a3c",
+    "benchmarks/before_os/stream/summary.json": "5bd7807b646a8284b9aa645ba2baa98e9264b2751c4ac6a16faa9a7f3ed03811",
+    "benchmarks/after_os/stream/schedule.csv": "3d53e07a5f4639e76cdd599b2e75fa8506e3b6347cc41ed3bc78c462e4f7e2ad",
+    "benchmarks/after_os/stream/summary.json": "fd0594be6a2fcbddb39ed0359feb37e0b16713b2b4a5dff1c06efe004653c137",
+    "benchmarks/before_ws/stream/schedule.csv": "c4cde7de7beed39063f71c6340c9c639b8284208085ff794fc248da8b9cd7035",
+    "benchmarks/before_ws/stream/summary.json": "f11db865071f0db701eabfec59f4169996a16e944ecefc01f1ae27594e989e58",
+    "benchmarks/after_ws/stream/schedule.csv": "15a7af2435b49ef207b472e105d88d59a4840c38fada87bd99f73d140efaaadf",
+    "benchmarks/after_ws/stream/summary.json": "a2e6f9dc2bff1d52926156d75772e9a55cd4b073ad4b91d5a5f1abd25a7cb335"
+  },
+  "script_sha256": "c955dae1a7181e78056421f254676073cbb070389a0b2ca0c5941f7c47384e11",
+  "outputs": {
+    "timeline_resident.png": {
+      "sha256": "8256139453fef98f5610aa294f54eaf3bcae5976d9d5eb99dcb710c61692f376",
+      "bytes": 568614,
+      "pixels": [
+        5880,
+        3080
+      ],
+      "dpi": [
+        350.012,
+        350.012
+      ]
+    },
+    "timeline_resident.pdf": {
+      "sha256": "d3938b3dbdf5b70b3e3c7e6f796387dd6888b320b1d8df298ab65c4cae43007e",
+      "bytes": 37139
+    },
+    "timeline_resident.svg": {
+      "sha256": "75d0ccfa58e0bacde2eb9cfd1ef8d98eb3022080be58d8df4650525a93867e77",
+      "bytes": 30586
+    },
+    "timeline_stream.png": {
+      "sha256": "2e0de9bf0792f6b4a610512432434247a31981abc581ed31bc3f6378bd2e2700",
+      "bytes": 754626,
+      "pixels": [
+        5880,
+        4340
+      ],
+      "dpi": [
+        350.012,
+        350.012
+      ]
+    },
+    "timeline_stream.pdf": {
+      "sha256": "18d475e416ecd6a4ec72403ff77aedb31a97d10a721acf7b1f1bb8bcf3aa3305",
+      "bytes": 42743
+    },
+    "timeline_stream.svg": {
+      "sha256": "41ba10ec45898ab1ed3c3d82ae33d4f21e9ac852a600709eb3019e6ce16ee745",
+      "bytes": 67259
+    }
+  }
+}

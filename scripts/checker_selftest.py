@@ -21,6 +21,8 @@ def main():
     if manifest['status'] != 'PASS': raise ValueError('Need a passing run')
     for name in ('input.hex','exp_fp16.hex'):
         shutil.copyfile(source/name,out/name)
+    if (source/'expected_p.hex').exists():
+        shutil.copyfile(source/'expected_p.hex',out/'expected_p.hex')
     words=(source/'expected.hex').read_text().splitlines()
     words[0]=f'{int(words[0],16)^1:04x}'
     (out/'expected.hex').write_text('\n'.join(words)+'\n')
