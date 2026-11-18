@@ -1,0 +1,28 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/pingpong_baseline_20261118_112657/baseline_os_02/tb_stream.vvp']
+FRAME 0 first_in=2 first_out=882 last_out=1137 latency=1136 input_ii=0
+FRAME 1 first_in=1138 first_out=2018 last_out=2273 latency=1136 input_ii=1136
+FRAME 2 first_in=2274 first_out=3154 last_out=3409 latency=1136 input_ii=1136
+FRAME 3 first_in=3410 first_out=4290 last_out=4545 latency=1136 input_ii=1136
+FRAME 4 first_in=4546 first_out=5426 last_out=5681 latency=1136 input_ii=1136
+FRAME 5 first_in=5682 first_out=6562 last_out=6817 latency=1136 input_ii=1136
+FRAME 6 first_in=6818 first_out=7698 last_out=7953 latency=1136 input_ii=1136
+FRAME 7 first_in=7954 first_out=8834 last_out=9089 latency=1136 input_ii=1136
+FRAME 8 first_in=9090 first_out=9971 last_out=10226 latency=1137 input_ii=1136
+FRAME 9 first_in=10227 first_out=11108 last_out=11363 latency=1137 input_ii=1137
+FRAME 10 first_in=11364 first_out=12244 last_out=12499 latency=1136 input_ii=1137
+FRAME 11 first_in=12500 first_out=13381 last_out=13636 latency=1137 input_ii=1136
+FRAME 12 first_in=13637 first_out=14517 last_out=14772 latency=1136 input_ii=1137
+FRAME 13 first_in=14773 first_out=15653 last_out=15908 latency=1136 input_ii=1136
+FRAME 14 first_in=15909 first_out=16789 last_out=17044 latency=1136 input_ii=1136
+FRAME 15 first_in=17045 first_out=17925 last_out=18180 latency=1136 input_ii=1136
+FRAME 16 first_in=18181 first_out=19062 last_out=19317 latency=1137 input_ii=1136
+FRAME 17 first_in=19318 first_out=20199 last_out=20454 latency=1137 input_ii=1137
+FRAME 18 first_in=20455 first_out=21336 last_out=21591 latency=1137 input_ii=1137
+FRAME 19 first_in=21592 first_out=22473 last_out=22728 latency=1137 input_ii=1137
+FRAME 20 first_in=22729 first_out=23610 last_out=23865 latency=1137 input_ii=1137
+FRAME 21 first_in=23866 first_out=24747 last_out=25002 latency=1137 input_ii=1137
+FRAME 22 first_in=25003 first_out=25884 last_out=26139 latency=1137 input_ii=1137
+FRAME 23 first_in=26140 first_out=27021 last_out=27276 latency=1137 input_ii=1137
+FRAME 24 first_in=27277 first_out=28158 last_out=28413 latency=1137 input_ii=1137
+STREAM PASS frames=25 outputs=6400
+/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/pingpong_baseline_20261118_112657/tb_stream.sv:72: $finish called at 284250000 (1ps)

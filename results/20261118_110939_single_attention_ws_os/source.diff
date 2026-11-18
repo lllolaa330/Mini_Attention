@@ -1,0 +1,1105 @@
+diff --git a/EXPERIMENTS.md b/EXPERIMENTS.md
+index e820a39..69edd46 100644
+--- a/EXPERIMENTS.md
++++ b/EXPERIMENTS.md
+@@ -1,5 +1,35 @@
+ # 验证记录
+ 
++## 2026-11-18 可选的 OS / WS 阵列
++
++基于本地 16 行并行 Softmax，在同一个顶层用 `USE_WS` 展开一种 16×16 阵列。下列两次端到端测试使用 Icarus 12.0、Python 3.9.6、种子 20261117、17 个定向输入和 8 个随机输入。两份输入文件和软件期望文件逐字节相同。
++
++| 运行命令 | 结果 | 原始证据 |
++|---|---|---|
++| `make test` | OS 通过，39 帧，9,984 个 FP16 输出，15 次复位 | [逐帧统计](results/20261118_090958_os_iverilog_seed20261117_75209/summary.json) |
++| `make test DATAFLOW=ws ARGS=--waves` | WS 通过，41 帧，10,496 个 FP16 输出，17 次复位 | [逐帧统计](results/20261118_090858_ws_iverilog_seed20261117_69194/summary.json) · [仿真日志](results/20261118_090858_ws_iverilog_seed20261117_69194/simulation.log) |
++| `make array DATAFLOW=ws` 与 `make array DATAFLOW=ws ARGS="--size 2"` | 16×16 的 8 组矩阵共 2,048 个输出，2×2 共 32 个输出。逐拍检查权重、结果出现的具体时刻、暂停保持及复位 | [16×16 日志](results/array_ws16_20261118_091047_iverilog/array.log) · [2×2 日志](results/array_ws2_20261118_090956_iverilog/array.log) |
++| `make lint DATAFLOW=os` 与 `make lint DATAFLOW=ws` | Verilator 5.044 严格 RTL lint 均通过 | [OS 日志](results/lint_os_20261118_090858/strict.log) · [WS 日志](results/lint_ws_20261118_090858/strict.log) |
++
++比较两个运行的 `actual.txt` 前四列（运行号、用例号、输出索引、FP16 字），WS 的前 9,984 条与 OS 完全相同。WS 另有两帧用于检验装权中途复位的恢复。两模式最大逐帧 RMSE 均为 0.00113698，最大逐元素绝对误差均为 0.00379072。首两帧从第一个输入握手到最后一个输出握手均无停顿，分别测得 OS 1,136 拍和 WS 1,170 拍。差值对应两轮各 16 拍装权加 1 拍写回。
++
++WS 的本地 `attention.vcd` 与仿真日志在同一目录。约 36.045 µs 处为第三帧 QKᵀ 计算，全 2 输入时，第 0、1 行第 0 列 PE 的权重都是 `0x4000`（2），有效部分和分别为 `0x4400`（4）和 `0x4800`（8）。VCD 和编译二进制按项目约定被 Git 忽略。
++
++并行启动阵列单测时发现两个 Python 进程会同时链接共享的 SoftFloat 库。修复位于软件构建入口，对缓存加进程锁，并在同目录链接成功后原子替换动态库。上述带 8 个随机输入的运行使用相同 RTL 和算术，早于构建锁修复。在 macOS 上，修复后的 4 个进程从同一空缓存首次构建通过，另 4 个并发模型单测进程均通过 7 项测试。[并发验证及复现命令](results/softfloat_concurrency_20261118_01/run/summary.json)
++
++在最终源码上同时启动 `make quick` 和 `make quick DATAFLOW=ws`，OS 通过 31 帧、7,936 字，WS 通过 33 帧、8,448 字。两份运行清单中的全部源码哈希均与最终工作区一致。OS 的 `actual.txt` 与加入 WS 前的 08:46 基线完全相同，包括每个输出的握手周期。[OS quick](results/20261118_091205_os_iverilog_seed20261117_89691/summary.json) · [WS quick](results/20261118_091205_ws_iverilog_seed20261117_89690/summary.json)
++
++## 2026-11-18 并行 Softmax 的 quick 回归
++
++测试基于 `726ae6f` 及本地的 16 行并行修改。每行分母用四层相邻配对加法树计算，每个节点舍入至 binary16。测试平台观察第 0 行 Softmax 的状态来注入全局复位。每条除法通道在自己的完成周期保存商，顶层在行完成时写回全部 16 列。
++
++| 操作 | 结果与证据 |
++|---|---|
++| 修复前运行 `make quick` | Icarus 在展开测试平台时报告两个旧实例路径绑定错误。[编译日志](results/20261118_084440_iverilog_seed20261117_47845/tb_attention_compile.log) |
++| 检查此前的 case 9 失败 | `identity_transpose_probe` 第 0 行，顺序求和与树形求和的分母分别为 `0x475c` 和 `0x475d`，对应的 `Y[0,1]` 分别为 `0x2a0c` 和 `0x2a0b`。已加入模型回归。[旧版失败日志](results/20261117_210947_iverilog_seed20261117_71066/simulation.log) |
++| 运行 `make lint` | Verilator 5.044 对当前 RTL 的严格检查通过。[严格检查日志](results/lint_20261118_084632/strict.log) |
++| 修复后运行 `make quick` | Icarus 12.0、Python 3.9.6，种子 20261117，随机帧数 0。7 项模型单测通过。17 个定向帧和 14 个复位恢复帧共 7,936 个输出逐位一致。相对独立 float64 参考，最大逐帧 RMSE 为 0.0009765625，最大逐元素绝对误差为 0.00149980。15 次复位，13,192 个输入气泡周期，2,598 个输出背压周期。[运行清单](results/20261118_084637_iverilog_seed20261117_57290/manifest.json) · [逐帧结果](results/20261118_084637_iverilog_seed20261117_57290/summary.json) · [仿真日志](results/20261118_084637_iverilog_seed20261117_57290/simulation.log) |
++
+ ## 2026-11-17：Mac/Surfer 紧凑波形入口
+ 
+ 默认 Icarus `--waves` 改为记录顶层、Softmax 和 PE[0,0]/[0,1]/[1,0]/[15,15] 的一层信号；`--waves-full` 保留递归全量跟踪。Verilator 不采用该层次筛选，README 和参数帮助已注明。RTL、ROM、软件数值模型均未修改。
+diff --git a/HANDOFF.md b/HANDOFF.md
+index c23b7a4..e65052b 100644
+--- a/HANDOFF.md
++++ b/HANDOFF.md
+@@ -1,26 +1,26 @@
+ # 当前交接
+ 
+-更新：2026-11-17，Asia/Shanghai。
++更新于 2026-11-18，Asia/Shanghai。
+ 
+-当前正在逐步指导用户在 Mac 的 VS Code/Surfer 查看波形。Surfer 已由用户安装，WaveTrace 工作区禁用。已生成并验证 `results/compact_wave_check_20261117/attention.vcd`（约 18 MiB，默认 Icarus 的紧凑范围）；下一步让用户打开该文件，再添加 clk/rst_n、dut.state、feed_step 和代表 PE 的 valid/acc。前两个用例是全零，观察数据变化应跳到第三帧或后续非零用例。波形入口改动只在本地，尚未提交/推送；详细验证见 EXPERIMENTS.md 最新一节。
++本地工作区可用 `attention_fp16.USE_WS` 在展开时选择 OS（默认）或 WS，两个模式共用 16 行并行 Softmax 和软件模型。`make quick` 跑 OS，`make quick DATAFLOW=ws` 跑 WS。查看 WS 波形可加 `ARGS=--waves`，在 `dut.array_impl.array_core.rows[0].cols[0].pe` 观察 `weight`、`a_in`、`psum_out` 和 `psum_valid_out`。
+ 
+ ## 已完成
+ 
+-- 新建独立 Mini_Attention 项目，16×16、256 个 FP16 FMA PE 的输出驻留阵列，复用计算 QKᵀ 和 PV。
++- 每种配置使用 16×16、256 个 FP16 FMA PE，复用计算 QKᵀ 和 PV。OS 在 PE 内累加。WS 第一轮装 Kᵀ，第二轮装 V，部分和逐级向下传。
+ - 全 FP16 稳定 Softmax、指数 ROM、迭代浮点除法、FP16 概率缓存和 ready/valid 输入输出。
+ - Berkeley SoftFloat 逐位模型、独立 float64 数学参考、单命令自检仿真、算术/阵列/协议/复位/负向验证器测试。
+-- 最终 Icarus 和 Verilator 各通过 94 帧、24,064 个输出；位模式、误差和逐帧周期一致。详细数值、命令和版本见 EXPERIMENTS.md。
++- 旧串行版本的 Icarus 和 Verilator 各通过 94 帧、24,064 个输出；位模式、误差和逐帧周期一致。并行版本的运行记录见 EXPERIMENTS.md 的 11 月 18 日条目。
+ - 依赖随仓库分发，许可证和兼容性修改见 THIRD_PARTY.md；未混入旧定点设计、课程 PDF、凭据或编译缓存。
+ 
+ ## 使用入口
+ 
+ `make quick` / `make test` / `make test SIM=verilator`。`make arithmetic`、`make array`、`make lint` 分别执行算术、阵列和静态检查。每次保存独立 results 目录。完整数值契约在 PROJECT.md，复用协议/验证边界在 docs/verification.md。
+ 
+-所有边界数值 binary16，FMA 每次单舍入 RNE；支持次正规数。每轮阵列 46 步；当前组合 FMA 无内部流水，物理时序未经综合确认。Softmax 按行按列序累加，先将归一化结果存为 FP16 P，再执行 PV；改变累加或舍入次序必须更新逐位模型并重新验证。
++所有边界数值为 binary16，FMA 每次按 RNE 单次舍入，支持次正规数。每轮 OS 运行 46 拍，WS 先装权 16 拍再运行 47 拍（含写回）。每行 Softmax 用四层 FP16 加法树求分母，再将 16 路归一化结果存为 FP16 P。收齐全部行后，顶层复用同一个阵列执行 PV。
+ 
+ ## 后续
+ 
+-若要比较第二设计，先确定 FPGA 器件或 ASIC 工艺/库，再综合当前 baseline。浮点流水线、并行 Softmax、存储映射和精度变化都需要单独记录变量与同条件对比。当前没有已知功能仿真失败，没有尚在运行的验证任务。
++本轮修复在本地工作区，尚未提交或推送。并行版本的综合、时序和功耗待验证。
+ 
+ 已发布到 [lllolaa330/Mini_Attention](https://github.com/lllolaa330/Mini_Attention)，main 分支，私有仓库；初次实现提交 `34559ae87ed8d4639dcc17d0e723d62e25c99ec3`。随后补齐上游测试构建配置归档，实际最新提交以 Git remote/HEAD 为准。
+ 
+diff --git a/Makefile b/Makefile
+index 040fe98..9a9d25b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,16 +1,17 @@
+ PYTHON ?= python3
+ SIM ?= iverilog
++DATAFLOW ?= os
+ RANDOM ?= 8
+ SEED ?= 20261117
+ STALLS ?= 1
+ ARGS ?=
+ .PHONY: test quick regression model lut-check arithmetic array lint
+ test:
+-	$(PYTHON) scripts/run.py --sim $(SIM) --random $(RANDOM) --seed $(SEED) --stalls $(STALLS) $(ARGS)
++	$(PYTHON) scripts/run.py --sim $(SIM) --dataflow $(DATAFLOW) --random $(RANDOM) --seed $(SEED) --stalls $(STALLS) $(ARGS)
+ quick:
+-	$(PYTHON) scripts/run.py --sim $(SIM) --random 0 $(ARGS)
++	$(PYTHON) scripts/run.py --sim $(SIM) --dataflow $(DATAFLOW) --random 0 $(ARGS)
+ regression:
+-	$(PYTHON) scripts/run.py --sim $(SIM) --random 64 --seed $(SEED) $(ARGS)
++	$(PYTHON) scripts/run.py --sim $(SIM) --dataflow $(DATAFLOW) --random 64 --seed $(SEED) $(ARGS)
+ model:
+ 	$(PYTHON) -m unittest discover -s tests -v
+ lut-check:
+@@ -18,6 +19,6 @@ lut-check:
+ arithmetic:
+ 	$(PYTHON) scripts/run_arithmetic.py --sim $(SIM) $(ARGS)
+ array:
+-	$(PYTHON) scripts/run_array.py --sim $(SIM) $(ARGS)
++	$(PYTHON) scripts/run_array.py --sim $(SIM) --dataflow $(DATAFLOW) $(ARGS)
+ lint:
+-	$(PYTHON) scripts/lint.py $(ARGS)
++	$(PYTHON) scripts/lint.py --dataflow $(DATAFLOW) $(ARGS)
+diff --git a/PROJECT.md b/PROJECT.md
+index 7d1bda0..faedccc 100644
+--- a/PROJECT.md
++++ b/PROJECT.md
+@@ -23,7 +23,7 @@ IEEE 浮点运算器为保证正确舍入而使用扩展尾数、guard/round/sti
+ 1. `m = max(S[i,0], ..., S[i,15])`，按数值比较，而非无符号编码比较。
+ 2. `delta[j] = SUB16(S[i,j], m)`。
+ 3. `E[j] = EXP16(delta[j])`，指数 ROM 接受该 binary16 差值并输出舍入后的 binary16。
+-4. `d = +0`，按 `j=0..15` 顺序执行 `d = ADD16(d,E[j])`。
++4. 用四层平衡加法树求分母。第一层从 `E[0..15]` 开始，相邻两项配对，即 `next[t] = ADD16(level[2*t], level[2*t+1])`。对每层结果重复相同配对，项数依次变为 8、4、2、1。每个节点单独按 RNE 舍入至 FP16，最后一个节点的输出即分母 `d`。
+ 5. `P[i,j] = DIV16(E[j],d)`，显式存储 FP16 概率矩阵。
+ 
+ 对每个 `i,j`：
+@@ -32,9 +32,9 @@ IEEE 浮点运算器为保证正确舍入而使用扩展尾数、guard/round/sti
+ 2. `k = 0..15`，依次 `acc = FMA16(P[i,k], V[k,j], acc)`。
+ 3. `Y[i,j] = acc`。
+ 
+-每次点积均为顺序 FMA，不使用加法树重排；分母也不使用加法树。浮点算术不满足结合律，交换以上顺序或把归一化移动到 PV 之后会改变逐位结果。独立 float64 参考直接计算数学注意力，不复现这些舍入点。
++QKᵀ 和 PV 中的点积均按 k 递增执行 FMA。旧版串行 Softmax 按列从左到右累加分母；同一行指数值在新旧两种顺序下可能舍入到不同的 FP16 分母和输出。独立 float64 参考直接计算数学注意力。
+ 
+-数学上的 QK 点积范围为 [-64,64]、缩放分数为 [-16,16]、减最大值后为 [-32,0]。至少一个指数为 1，顺序 FP16 分母在 [1,16]，除法不会除零。FP16 概率行和不保证逐位等于 1，输出也不应采用精确实数凸组合的严格边界来替代误差检查。
++数学上的 QK 点积范围为 [-64,64]、缩放分数为 [-16,16]、减最大值后为 [-32,0]。至少一个指数为 1，该 FP16 加法树的分母在 [1,16]，除法不会除零。FP16 概率行和不保证逐位等于 1，输出也不应采用精确实数凸组合的严格边界来替代误差检查。
+ 
+ ## 3. 指数 ROM
+ 
+@@ -47,7 +47,9 @@ ROM 的索引是非正 binary16 输入的绝对值编码 `delta[14:0]`，不是
+ 
+ ROM 文本文件需要随 RTL 一同交付；综合工具应从工程根目录解析初始化文件路径。`$readmemh` 是 ROM 初始化，具体 FPGA/ASIC 的 ROM 映射尚需目标工具验证。
+ 
+-## 4. 输出驻留阵列
++## 4. 阵列数据流
++
++### 输出驻留（OS）
+ 
+ 256 个 PE 排列为 16×16，每个 PE 有一份 FP16 `acc`。A 操作数向右、B 操作数向下逐 PE 传递；每个有效逻辑步只在两侧输入均有效时更新该 PE 的累加值。无效项保持 `acc`，而不是执行一次零乘加。
+ 
+@@ -62,23 +64,40 @@ ROM 文本文件需要随 RTL 一同交付；综合工具应从工程根目录
+ 
+ `clear` 高于 `step`，同时清除累加值和链路 valid；`step=0` 保持链路和累加器。全局低有效异步复位中止整个任务。
+ 
++### 权重驻留（WS）
++
++顶层以 `USE_WS=0` 选择 OS，以 `USE_WS=1` 选择 WS。展开时只实例化一种阵列，两次 GEMM 共用它。设 C=AB，WS 的物理坐标是 PE[k,j]。计算开始前，用 16 拍从上边界按 k=15 到 0 依次送入 B 的一行并向下移位。装满后，每个 PE 的 FP16 权重寄存器持有 B[k,j]。
++
++| 乘法 | PE[k,j] 驻留的 B[k,j] | 左边界第 k 行在计算步 t 输入 |
++|---|---|---|
++| QKᵀ | K[j,k] | Q[t−k,k] |
++| PV | V[k,j] | P[t−k,k] |
++
++设输出行 i=t−k，只有 i 在 [0,15] 内时才送有效数据。A 向右传，在步 i+k+j 到达 PE[k,j]。部分和从顶部的 FP16 +0 开始，每拍向下传一行，同时消耗同一输出的下一项 k。底行在步 i+15+j 锁存 C[i,j]，对应列在下一拍将它写入结果缓存。首个输出在 t=16 写回，最后一个在 t=46 写回，每轮共 16 个装权拍和 47 个计算/收集拍。两轮分别重装 Kᵀ 和 V，每帧比 OS 多 34 个阵列调度周期，均单独计清零。
++
++例如，第一轮计算 C[0,1] 时，t=1 的 PE[0,1] 读 Q[0,0]、K[1,0] 和 +0。t=2 的 PE[1,1] 将这份部分和与 Q[0,1]、K[1,1] 做 FMA，直到 t=16 的 PE[15,1] 完成。t=17 写回 C[0,1]。权重在这些计算拍中保持，直到下次装权或复位。
++
+ ## 5. 顶层调度和缓存
+ 
+ ```mermaid
+ flowchart LR
+     LOAD[装载 Q / K / V] --> C1[清阵列]
+-    C1 --> QK[QKᵀ 46 步]
+-    QK --> SM[逐行缩放与 Softmax]
++    C1 -->|OS| QK[QKᵀ]
++    C1 -->|WS| WK[装 Kᵀ 权重]
++    WK --> QK
++    QK --> SM[16 行并行缩放与 Softmax]
+     SM --> PM[P 矩阵缓存]
+     PM --> C2[清阵列]
+-    C2 --> PV[PV 46 步]
++    C2 -->|OS| PV[PV]
++    C2 -->|WS| WV[装 V 权重]
++    WV --> PV
+     PV --> OUT[行优先输出 256 字]
+     OUT --> LOAD
+ ```
+ 
+-两次乘法共享同一个阵列。第一轮计算完后，PE 保留 QK 结果供 Softmax 逐行读取；所有 P 写好后才清空阵列进入第二轮。第二轮 PE 保留 Y，直到逐元素输出结束。
++两次乘法共享同一个阵列。第一轮结束后，16 个行单元同时读取各自的 16 个 QKᵀ 结果。每行发起 16 路并行除法，在各路 `done` 有效时保存对应的概率。行内结果收齐后向顶层报告该行完成，顶层将该行写入 P 缓存。16 行全部写好后再清空阵列进入第二轮。OS 在 PE 的累加寄存器中保留 Y，WS 在结果缓存中保留 Y，供顶层按行输出。
+ 
+-Q/K/P 在第一轮或第二轮由不同矩阵行并行读出，V 由不同矩阵列并行读出；边界峰值各 16 个 FP16 字/步。源代码当前使用数组和异步读选择，不能据此声称映射为特定 BRAM 结构或端口数量。Q/K/V 合计 1,536 byte、P 512 byte、PE 累加状态 512 byte；这些数字不含操作数链路寄存器、控制、ROM 和 Softmax 工作区。
++OS 在计算阶段由两个边界分别送入至多 16 个 FP16 字。WS 在装权阶段从顶部送入 16 个权重，在计算阶段由左侧送入至多 16 个 FP16 字。源代码当前使用数组和异步读选择，不能据此声称映射为特定 BRAM 结构或端口数量。Q/K/V 合计 1,536 byte，P 占 512 byte。OS 的 PE 累加器合计 512 byte。WS 的权重、逐级部分和和结果缓存各有 256 个 FP16 字。这些数字未计 A 链路、控制、ROM 和 Softmax 工作区。
+ 
+ ## 6. 外部握手
+ 
+diff --git a/README.md b/README.md
+index f6e6b03..15f222c 100644
+--- a/README.md
++++ b/README.md
+@@ -1,8 +1,8 @@
+ # Mini_Attention
+ 
+-**16×16 全 FP16 Output Stationary 脉动阵列注意力 baseline，包含 Softmax 和逐位自检仿真。**
++**16×16 全 FP16 注意力脉动阵列，支持输出驻留（OS）和权重驻留（WS），包含 Softmax 和逐位自检。**
+ 
+-计算 `Y = Softmax(QKᵀ / 4)V`，Q、K、V、Y 均为 16×16。256 个 PE 各保存一个 FP16 累加值；同一阵列先执行 QKᵀ，再执行 PV。Softmax 单元逐行复用浮点乘法、减法、加法、指数 ROM 和迭代除法器。输入输出及每次算术结果均为 IEEE binary16，RNE 舍入并支持次正规数。
++计算 `Y = Softmax(QKᵀ / 4)V`，Q、K、V、Y 均为 16×16。每种配置均用同一个 256 PE 阵列先执行 QKᵀ，再执行 PV。OS 将部分和保存在 PE，WS 将右矩阵元素保存在 PE。16 个 Softmax 单元并行处理 16 行。每行用四层 FP16 加法树计算分母，再用 16 个迭代除法器并行求概率。输入输出及每次算术结果均为 IEEE binary16，RNE 舍入并支持次正规数。
+ 
+ 本项目为自建课程基线。RTL 仿真结果与实际综合、时序和功耗是不同验证层级；已执行结果、版本和原始证据见 [EXPERIMENTS.md](EXPERIMENTS.md)，当前交接见 [HANDOFF.md](HANDOFF.md)。
+ 
+@@ -13,25 +13,30 @@
+ 在仓库根目录执行：
+ 
+ ```sh
+-make quick                       # 较小规模完整仿真
++make quick                       # OS（默认）
++make quick DATAFLOW=ws           # WS，使用相同的 FP16 软件模型
++make quick DATAFLOW=ws ARGS=--waves  # 在 Evidence 目录生成 WS 波形
+ make test                        # 定向 + 随机输入、协议/复位自检
+ make test SIM=verilator           # 第二种仿真器
+ make model                       # 软件模型检查
+ make lut-check                   # 指数 ROM 全表检查
+ make arithmetic                  # FMA / 加减 / 乘 / 除与 SoftFloat 比较
+-python3 scripts/run_array.py --size 16   # 阵列错拍、hold、clear 和复位
++make array DATAFLOW=ws           # 单独检查 WS 阵列
++make lint DATAFLOW=ws            # 检查 WS 的 RTL 展开配置
+ ```
+ 
+-更改参数及输出路径：
++顶层参数 `USE_WS` 在编译或综合时选择阵列，只展开一种结构。已有顶层实例默认使用 OS。选择 WS 可写作 `attention_fp16 #(.USE_WS(1'b1)) dut (...);`。
++
++直接调用 Python 时可选择模式并指定输出目录。
+ 
+ ```sh
+-python3 scripts/run.py --sim iverilog --random 64 --seed 20261117 \
++python3 scripts/run.py --sim iverilog --dataflow ws --random 64 --seed 20261117 \
+   --outdir results/my_new_run --timeout 600
+ ```
+ 
+ `--outdir` 必须是不存在的目录，防止覆盖历史证据。不传时自动生成唯一目录。输入包括各自行优先的 Q、K、V 共 768 个 binary16 编码；默认用例由 `model/vectors.py` 生成。使用 `--vectors cases.json` 可注入自定义输入，每项包含 `name`、`category`、`words`（768 个整数编码）。
+ 
+-Mac/VS Code 波形入门：安装 Surfer 扩展后执行 `make quick ARGS="--waves"`，在终端最后显示的 Evidence 目录打开 `attention.vcd`。默认 Icarus 仿真记录顶层控制、Softmax 以及 PE[0,0]、[0,1]、[1,0]、[15,15] 的本地接口和累加值，便于查看错拍传播。使用 `--waves-full` 可递归记录全部浮点内部信号，文件会显著变大。Verilator 忽略 `$dumpvars` 的层次深度/选择，使用它运行 `--waves` 时仍为完整跟踪。波形和编译缓存不纳入 Git。
++Mac/VS Code 波形入门：安装 Surfer 扩展后执行 `make quick ARGS="--waves"`，在终端最后显示的 Evidence 目录打开 `attention.vcd`。默认 Icarus 仿真记录顶层控制、第 0 行 Softmax（`dut.parallel_softmax[0].sm`）以及 PE[0,0]、[0,1]、[1,0]、[15,15] 的本地接口。展开 `dut.array_impl.array_core.rows[0].cols[0].pe`，在 OS 下观察 `acc`，在 WS 下观察 `weight`、`a_in`、`psum_out` 和 `psum_valid_out`。使用 `--waves-full` 可递归记录全部浮点内部信号，文件会显著变大。Verilator 忽略 `$dumpvars` 的层次深度/选择，使用它运行 `--waves` 时仍为完整跟踪。波形和编译缓存不纳入 Git。
+ 
+ 对刚刚在本机跑通的目录，还可翻转一位期望值，检查 scoreboard 确实拒绝错误：
+ 
+@@ -49,8 +54,10 @@ python3 scripts/checker_selftest.py --run results/my_new_run \
+ | [rtl/attention_fp16.sv](rtl/attention_fp16.sv) | 顶层输入缓存、两轮阵列调度、P 缓存、输出握手 |
+ | [rtl/systolic_array.sv](rtl/systolic_array.sv) | 16×16 邻接互连和边界输入 |
+ | [rtl/fp16_pe.sv](rtl/fp16_pe.sv) | FP16 FMA、累加驻留、操作数和 valid 转发 |
++| [rtl/ws_systolic_array.sv](rtl/ws_systolic_array.sv) | WS 装权、部分和链路及阵列底部写回 |
++| [rtl/fp16_ws_pe.sv](rtl/fp16_ws_pe.sv) | WS 的驻留权重寄存器与 FP16 FMA |
+ | [rtl/fp16_ops.sv](rtl/fp16_ops.sv) | HardFloat binary16 包装：FMA、加减、乘、除 |
+-| [rtl/softmax_fp16.sv](rtl/softmax_fp16.sv) | 缩放、减行最大值、exp、分母累加、逐元素归一化 |
++| [rtl/softmax_fp16.sv](rtl/softmax_fp16.sv) | 单行缩放、减行最大值、exp、树形求和、并行归一化 |
+ | [rtl/exp_fp16.hex](rtl/exp_fp16.hex) | 正确舍入的 FP16 指数 ROM 内容 |
+ | [rtl/files.f](rtl/files.f) | RTL 和第三方浮点源文件清单 |
+ | [model/attention.py](model/attention.py) | SoftFloat 逐位模型与独立 float64 数学参考 |
+@@ -61,9 +68,13 @@ python3 scripts/checker_selftest.py --run results/my_new_run \
+ 
+ ## 阵列时序
+ 
+-左侧第 i 行延迟 i 步，上侧第 j 列延迟 j 步。相同内积索引 k 在 `t=k+i+j` 相遇；每轮 16 项点积需要 46 个有效逻辑步。当前 FMA 是组合电路，每步更新一次 FP16 累加值。完整任务还包括 768 字装载、清零、16 行 Softmax、256 字输出及握手停顿。
++| 每次 16×16 矩阵乘 | OS | WS |
++|---|---|---|
++| PE 内驻留值 | 输出 C[i,j] 的部分和 | 右矩阵元素 B[k,j] |
++| 启动与计算 | 清零后运行 46 拍 | 清零后装权 16 拍，运行 47 拍（含最后的写回） |
++| 结果位置 | 256 个 PE 的累加器 | 阵列底部按列写入 16×16 结果缓存 |
+ 
+-**46 步不是完整任务时延，也不是任何目标器件已经闭合时序的证明。** 输入数组使用异步读，ROM 和数组在目标平台上的存储映射需要综合确认。本项目没有在说明中假定某个最高频率、DSP/BRAM 数量或功耗。
++两种实现的每个输出都从 FP16 的 +0 开始，按 k 递增做 16 次融合乘加。完整帧另计输入、清零、Softmax、输出及握手停顿。仿真周期与综合频率、面积、功耗需要分别测量。
+ 
+ ## 验证标准
+ 
+diff --git a/docs/verification.md b/docs/verification.md
+index 42868f6..a2690e0 100644
+--- a/docs/verification.md
++++ b/docs/verification.md
+@@ -13,7 +13,7 @@
+ 
+ `make arithmetic` 对 FMA、add、sub、mul、div 运行 SoftFloat 生成的定向和随机向量。包括正负零、次正规数边界、极值、舍入及除法复位中止恢复。非法注意力输入导致的 NaN 算术用例只比较 NaN 分类，其他向量比较精确 bit pattern；因此不可把该单测描述为 NaN payload 的逐位一致性认证。完整注意力仅接受有限 [-2,2] 输入，所有输出均要求严格逐位一致且有限。
+ 
+-`python3 scripts/run_array.py --size 2` 和 `--size 16` 使用相同长度 16 的内积，检查：
++OS 阵列单测可选 `--size 2` 或 `--size 16`，内积长度均为 16，检查：
+ 
+ - 边界错拍和邻接传递，输出与顺序 SoftFloat FMA 比较。
+ - `step=0` 的保持；恢复后数据配对和累加结果仍正确。
+@@ -21,13 +21,15 @@
+ - 无效但带有干扰数据的链路不更新累加值。
+ - 多个矩阵依次执行，不遗留前一轮结果。
+ 
++WS 通过 `make array DATAFLOW=ws` 单独验证。WS 的 2×2 和 16×16 阵列分别映射 2 项和 16 项内积。每轮先逆序装入右矩阵，再按错拍次序输入左矩阵，由 SoftFloat 顺序 FMA 计算期望结果。
++
+ 这不是形式化证明，覆盖范围由归档向量确定。
+ 
+ ## 端到端仿真
+ 
+ `scripts/run.py` 编译 `rtl/files.f` 中的真实 RTL，testbench 驱动 binary16 数据流并逐字检查 256 个输出。每次输入/输出在时钟上升沿握手，testbench 在下降沿驱动；计数在下降沿更新，以避开激励、采样和 NBA 更新之间的竞争。
+ 
+-默认平台覆盖 8 个顶层 FSM 状态和 5 个 Softmax 工作状态的中止复位，连同启动复位共 14 次。每次恢复后装载完整新帧并检查全部输出，检测旧缓存和旧控制的影响。还验证随机输入气泡、Q/K/V 边界气泡、输出背压、首末输出长停顿、连续帧、out_last、done 脉宽、busy/in_ready 一致性和超时。即使主任务选 `--stalls 0`，复位恢复用例仍包含气泡和背压。
++测试平台在顶层 FSM 的 8 个状态各注入一次中止复位，再以第 0 行 Softmax 为观察点，在 `SCALE`、`EXP`、`SUM`、`DIV_START`、`DIV_WAIT`、`FINISH` 各注入一次全局复位。加上启动复位，OS 共 15 次。WS 还会在装 Kᵀ 和装 V 的中途各复位一次，共 17 次。WS 的这两次恢复帧追加在两模式的公共用例之后，可按运行序号和输出索引直接比对公共帧。每次恢复后装载完整新帧并检查全部输出，检测旧缓存和旧控制的影响。还验证随机输入气泡、Q/K/V 边界气泡、输出背压、首末输出长停顿、连续帧、out_last、done 脉宽、busy/in_ready 一致性和超时。即使主任务选 `--stalls 0`，复位恢复用例仍包含气泡和背压。
+ 
+ `actual.txt` 是仿真器捕获的输出；脚本再独立检查输出计数、顺序、帧/元素索引、逐位相等及有限性，随后逐帧计算 RMSE 和最大绝对误差。每帧必须同时满足 RMSE ≤ 0.06 和最大绝对误差 ≤ 0.20。平均误差不能掩盖失败帧。
+ 
+@@ -46,7 +48,7 @@
+ | `per_frame.csv` / `summary.json` | 逐帧误差和汇总 |
+ | 编译、模型、ROM 日志 | 执行命令及工具原始输出 |
+ 
+-新运行不得覆盖旧目录；失败运行也保留日志。运行清单的 SHA-256 是源码快照身份，后续修订时需要核对。编译缓存和波形被 Git 忽略；新克隆后的复现需要重新编译。
++各次运行使用独立目录，并保留失败日志。`results/release_iverilog_seed20261117` 和 `results/compact_wave_check_20261117` 使用旧版串行 Softmax，其期望值和复位次数对应旧版实现。核对任一运行对应的 RTL 和模型版本时，以 manifest 中的源码 SHA-256 为准。编译缓存和波形被 Git 忽略；新克隆后的复现需要重新编译。
+ 
+ ## 验证不覆盖的事项
+ 
+diff --git a/model/attention.py b/model/attention.py
+index 4ebecbb..e947735 100644
+--- a/model/attention.py
++++ b/model/attention.py
+@@ -39,6 +39,22 @@ def exp16(x):
+     return exp_table()[mag] if mag < 0x4c56 else 0
+ 
+ 
++def sum16_balanced(values, add=None):
++    """16 leaves -> 8 -> 4 -> 2 -> 1, with binary16 RNE at each node.
++
++    Matches GEN_SUM_L1/L2/L3 and add_final in softmax_fp16. Pairing is
++    adjacent in the original column order; no reassociation is permitted.
++    """
++    if len(values) != 16:
++        raise ValueError('Balanced Softmax reduction requires exactly 16 leaves')
++    if add is None:
++        add = ops()['add']
++    level = list(values)
++    while len(level) > 1:
++        level = [add(level[j], level[j+1]) for j in range(0, len(level), 2)]
++    return level[0]
++
++
+ def bit_model(words):
+     validate(words)
+     op = ops()
+@@ -53,9 +69,7 @@ def bit_model(words):
+             scores.append(op['mul'](acc, 0x3400))
+         maximum = max(scores, key=decode)
+         weights = [exp16(op['sub'](s, maximum)) for s in scores]
+-        den = 0
+-        for w in weights:
+-            den = op['add'](den, w)
++        den = sum16_balanced(weights, op['add'])
+         assert 1 <= decode(den) <= 16
+         probabilities = [op['div'](w, den) for w in weights]
+         for j in range(N):
+diff --git a/model/softfloat.py b/model/softfloat.py
+index 8f8527d..5aee788 100644
+--- a/model/softfloat.py
++++ b/model/softfloat.py
+@@ -1,11 +1,13 @@
+ """Binary16 IEEE arithmetic via pinned Berkeley SoftFloat (not host FP emulation)."""
+ import ctypes
++import fcntl
+ import os
+ from pathlib import Path
+ import platform
+ import shutil
+ import subprocess
+ import sys
++import tempfile
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+ BUILD = ROOT / 'build' / 'softfloat'
+@@ -17,19 +19,33 @@ def build():
+         raise RuntimeError('Bundled SoftFloat build currently requires little-endian host')
+     BUILD.mkdir(parents=True, exist_ok=True)
+     lib = BUILD / ('libhalf.dylib' if sys.platform == 'darwin' else 'libhalf.so')
+-    for filename in ('Makefile', 'platform.h'):
+-        shutil.copyfile(ROOT / 'scripts' / 'softfloat_build' / filename, BUILD / filename)
+     args = ['make', '-s', '-j', '4', '-C', str(BUILD), 'SOURCE_DIR=../../third_party/softfloat_source',
+             'COMPILE_C=cc -c -fPIC -Werror-implicit-function-declaration -DSOFTFLOAT_FAST_INT64 '
+             '-DSOFTFLOAT_ROUND_ODD -DINLINE_LEVEL=5 -DSOFTFLOAT_FAST_DIV32TO16 '
+             '-DSOFTFLOAT_FAST_DIV64TO32 -I. -I../../third_party/softfloat_source/8086-SSE '
+             '-I../../third_party/softfloat_source/include -O2 -o $@']
+-    with (BUILD / 'build.log').open('w') as log:
+-        subprocess.run(args, stdout=log, stderr=subprocess.STDOUT, check=True)
+-        subprocess.run(['cc', '-dynamiclib' if sys.platform == 'darwin' else '-shared', '-fPIC',
+-                        '-I', str(ROOT/'third_party/softfloat_source/include'),
+-                        str(ROOT/'model/softfloat_bridge.c'), str(BUILD/'softfloat.a'), '-o', str(lib)],
+-                       stdout=log, stderr=subprocess.STDOUT, check=True)
++    # OS/WS regressions share this build directory. Serialize template writes,
++    # make, archive updates, and linking across processes on macOS/Linux.
++    with (BUILD / 'build.lock').open('a') as lock:
++        fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
++        for filename in ('Makefile', 'platform.h'):
++            shutil.copyfile(ROOT / 'scripts' / 'softfloat_build' / filename, BUILD / filename)
++        fd, name = tempfile.mkstemp(prefix='.libhalf-', suffix=lib.suffix, dir=BUILD)
++        os.close(fd)
++        temporary_lib = Path(name)
++        try:
++            with (BUILD / 'build.log').open('w') as log:
++                subprocess.run(args, stdout=log, stderr=subprocess.STDOUT, check=True)
++                subprocess.run(['cc', '-dynamiclib' if sys.platform == 'darwin' else '-shared', '-fPIC',
++                                '-I', str(ROOT/'third_party/softfloat_source/include'),
++                                str(ROOT/'model/softfloat_bridge.c'), str(BUILD/'softfloat.a'), '-o', str(temporary_lib)],
++                               stdout=log, stderr=subprocess.STDOUT, check=True)
++            # Replacing the path leaves already loaded library inodes intact;
++            # readers see either the old complete library or the new one.
++            os.replace(temporary_lib, lib)
++        finally:
++            if temporary_lib.exists():
++                temporary_lib.unlink()
+     return lib
+ 
+ 
+diff --git a/rtl/attention_fp16.sv b/rtl/attention_fp16.sv
+index 87a1712..453da89 100644
+--- a/rtl/attention_fp16.sv
++++ b/rtl/attention_fp16.sv
+@@ -1,7 +1,8 @@
+ `timescale 1ns/1ps
+-// Two matrix passes share one 16x16 output-stationary array.
++// QK transpose and PV share one 16x16 array in the selected dataflow.
+ module attention_fp16 #(
+-    parameter EXP_FILE = "rtl/exp_fp16.hex"
++    parameter EXP_FILE = "rtl/exp_fp16.hex",
++    parameter bit USE_WS = 1'b0
+ ) (
+     input wire clk, rst_n,
+     input wire in_valid,
+@@ -14,57 +15,99 @@ module attention_fp16 #(
+     output reg done
+ );
+     localparam LOAD=0, CLEAR_QK=1, RUN_QK=2, SM_START=3,
+-               SM_WAIT=4, CLEAR_PV=5, RUN_PV=6, EMIT=7;
+-    reg [2:0] state;
++               SM_WAIT=4, CLEAR_PV=5, RUN_PV=6, EMIT=7,
++               LOAD_W_QK=8, LOAD_W_PV=9;
++    // WS captures the registered bottom-row result one step after its last FMA.
++    localparam [5:0] LAST_STEP = USE_WS ? 6'd46 : 6'd45;
++    reg [3:0] state;
+     reg [9:0] load_count;
+     reg [5:0] feed_step;
+-    reg [3:0] sm_row;
+     reg [7:0] out_index;
+     reg [15:0] q_mem [0:255], k_mem [0:255], v_mem [0:255], p_mem [0:255];
+-    reg [15:0] a_edge [0:15], b_edge [0:15];
+-    reg [15:0] a_valid, b_valid;
+     wire [15:0] accum [0:15][0:15];
+-    wire [15:0] row_scores [0:15], row_probabilities [0:15];
+-    wire sm_done;
++    wire [15:0] sm_probabilities [0:15][0:15];
++    wire [15:0] sm_done;
++    reg [15:0] sm_done_mask;
+ 
+-    systolic_array #(.N(16)) array_core (
+-        .clk(clk), .rst_n(rst_n), .clear(state == CLEAR_QK || state == CLEAR_PV),
+-        .step(state == RUN_QK || state == RUN_PV),
+-        .a_edge(a_edge), .b_edge(b_edge), .a_valid(a_valid), .b_valid(b_valid), .accum(accum)
+-    );
+-    genvar j;
+-    generate for (j=0; j<16; j=j+1) begin: row_select
+-        assign row_scores[j] = accum[sm_row][j];
+-    end endgenerate
+-    softmax_fp16 #(.EXP_FILE(EXP_FILE)) sm (
+-        .clk(clk), .rst_n(rst_n), .start(state == SM_START),
+-        .raw_scores(row_scores), .probabilities(row_probabilities), .done(sm_done)
+-    );
++    wire array_clear = (state == CLEAR_QK || state == CLEAR_PV);
++    wire array_step = (state == RUN_QK || state == RUN_PV);
+ 
+-    integer lane, k;
+-    always @* begin
+-        a_valid = 0;
+-        b_valid = 0;
+-        k = 0;
+-        for (lane=0; lane<16; lane=lane+1) begin
+-            a_edge[lane] = 0;
+-            b_edge[lane] = 0;
+-            k = int'(feed_step) - lane;
+-            if ((k >= 0) && (k < 16)) begin
+-                if (state == RUN_QK) begin
+-                    a_edge[lane] = q_mem[lane*16+k];
+-                    b_edge[lane] = k_mem[lane*16+k];
+-                    a_valid[lane] = 1'b1;
+-                    b_valid[lane] = 1'b1;
+-                end else if (state == RUN_PV) begin
+-                    a_edge[lane] = p_mem[lane*16+k];
+-                    b_edge[lane] = v_mem[k*16+lane];
+-                    a_valid[lane] = 1'b1;
+-                    b_valid[lane] = 1'b1;
+-                end
++    wire [15:0] edge_valid;
++    wire [3:0] edge_index [0:15];
++    genvar lane;
++    generate
++        for (lane=0; lane<16; lane=lane+1) begin : skew
++            // On both dataflows lane l sees index t-l. Wrapped negatives exceed 15.
++            wire [5:0] offset = feed_step - 6'(lane);
++            assign edge_index[lane] = offset[3:0];
++            assign edge_valid[lane] = array_step && offset < 6'd16;
++        end
++
++        if (USE_WS) begin : array_impl
++            wire load_weights = (state == LOAD_W_QK || state == LOAD_W_PV);
++            wire [3:0] weight_k = 4'd15 - feed_step[3:0];
++            wire [15:0] weight_edge [0:15], a_edge [0:15];
++
++            for (lane=0; lane<16; lane=lane+1) begin : edges
++                // Load bottom k first. One shift per cycle puts B[k,j] in PE[k,j].
++                assign weight_edge[lane] = state == LOAD_W_QK
++                    ? k_mem[lane*16 + int'(weight_k)] : v_mem[int'(weight_k)*16 + lane];
++
++                // At step t, physical row k receives A[i,k] where i = t-k.
++                wire [3:0] input_row = edge_index[lane];
++                assign a_edge[lane] = edge_valid[lane]
++                    ? (state == RUN_QK ? q_mem[int'(input_row)*16 + lane]
++                                       : p_mem[int'(input_row)*16 + lane])
++                    : 16'h0000;
++            end
++
++            ws_systolic_array #(.N(16)) array_core (
++                .clk(clk), .rst_n(rst_n), .clear(array_clear), .load_weights(load_weights),
++                .step(array_step), .weight_edge(weight_edge), .a_edge(a_edge),
++                .a_valid(edge_valid), .accum(accum)
++            );
++        end else begin : array_impl
++            wire [15:0] a_edge [0:15], b_edge [0:15];
++            for (lane=0; lane<16; lane=lane+1) begin : edges
++                // At step t, lane l sends the inner term k = t-l.
++                wire [3:0] k = edge_index[lane];
++                assign a_edge[lane] = edge_valid[lane]
++                    ? (state == RUN_QK ? q_mem[lane*16 + int'(k)] : p_mem[lane*16 + int'(k)])
++                    : 16'h0000;
++                assign b_edge[lane] = edge_valid[lane]
++                    ? (state == RUN_QK ? k_mem[lane*16 + int'(k)] : v_mem[int'(k)*16 + lane])
++                    : 16'h0000;
+             end
++
++            systolic_array #(.N(16)) array_core (
++                .clk(clk), .rst_n(rst_n), .clear(array_clear), .step(array_step),
++                .a_edge(a_edge), .b_edge(b_edge), .a_valid(edge_valid), .b_valid(edge_valid),
++                .accum(accum)
++            );
+         end
+-    end
++    endgenerate
++
++    genvar i,j;
++    generate
++        for (i=0; i<16; i=i+1) begin: parallel_softmax
++            wire [15:0] row_scores [0:15];
++            wire [15:0] row_probabilities [0:15];
++            for (j=0; j<16; j=j+1) begin: connect_row
++                assign row_scores[j] = accum[i][j];
++                assign sm_probabilities[i][j] = row_probabilities[j];
++            end
++            softmax_fp16 #(
++                .EXP_FILE(EXP_FILE)
++            ) sm (
++                .clk(clk),
++                .rst_n(rst_n),
++                .start(state == SM_START),
++                .raw_scores(row_scores),
++                .probabilities(row_probabilities),
++                .done(sm_done[i])
++            );
++        end
++    endgenerate
+ 
+     assign in_ready = rst_n && state == LOAD;
+     assign out_valid = rst_n && state == EMIT;
+@@ -72,14 +115,14 @@ module attention_fp16 #(
+     assign out_last = out_valid && out_index == 255;
+     assign busy = rst_n && ((state != LOAD) || (load_count != 0));
+ 
+-    integer col;
++    integer row, col;
+     always @(posedge clk or negedge rst_n) begin
+         if (!rst_n) begin
+             state <= LOAD;
+             load_count <= 0;
+             feed_step <= 0;
+-            sm_row <= 0;
+             out_index <= 0;
++            sm_done_mask <= 0;
+             done <= 0;
+         end else begin
+             done <= 0;
+@@ -94,21 +137,37 @@ module attention_fp16 #(
+                     if (load_count == 767) begin load_count <= 0; state <= CLEAR_QK; end
+                     else load_count <= load_count + 1'b1;
+                 end
+-                CLEAR_QK: begin feed_step <= 0; sm_row <= 0; state <= RUN_QK; end
++                CLEAR_QK: begin feed_step <= 0; state <= USE_WS ? LOAD_W_QK : RUN_QK; end
++                LOAD_W_QK, LOAD_W_PV: begin
++                    if (feed_step == 15) begin
++                        feed_step <= 0;
++                        state <= state == LOAD_W_QK ? RUN_QK : RUN_PV;
++                    end else feed_step <= feed_step + 1'b1;
++                end
+                 RUN_QK: begin
+-                    if (feed_step == 45) state <= SM_START;
++                    if (feed_step == LAST_STEP) state <= SM_START;
+                     else feed_step <= feed_step + 1'b1;
+                 end
+-                SM_START: state <= SM_WAIT;
+-                SM_WAIT: if (sm_done) begin
+-                    for (col=0; col<16; col=col+1)
+-                        p_mem[int'(sm_row)*16+col] <= row_probabilities[col];
+-                    if (sm_row == 15) state <= CLEAR_PV;
+-                    else begin sm_row <= sm_row + 1'b1; state <= SM_START; end
++                SM_START: begin
++                  sm_done_mask <= 0;
++                    state <= SM_WAIT;
++                end
++                SM_WAIT: begin
++                    for (row=0; row<16; row=row+1) begin
++                        if (sm_done[row]) begin
++                            sm_done_mask[row] <= 1'b1;
++                            for (col=0; col<16; col=col+1) begin
++                                p_mem[row*16+col] <= sm_probabilities[row][col];
++                            end
++                        end
++                    end
++                    if(&(sm_done_mask | sm_done)) begin
++                        state <= CLEAR_PV;
++                    end
+                 end
+-                CLEAR_PV: begin feed_step <= 0; state <= RUN_PV; end
++                CLEAR_PV: begin feed_step <= 0; state <= USE_WS ? LOAD_W_PV : RUN_PV; end
+                 RUN_PV: begin
+-                    if (feed_step == 45) begin out_index <= 0; state <= EMIT; end
++                    if (feed_step == LAST_STEP) begin out_index <= 0; state <= EMIT; end
+                     else feed_step <= feed_step + 1'b1;
+                 end
+                 EMIT: if (out_ready) begin
+diff --git a/rtl/files.f b/rtl/files.f
+index e2f50c2..e961553 100644
+--- a/rtl/files.f
++++ b/rtl/files.f
+@@ -13,5 +13,7 @@ third_party/HardFloat-1/source/divSqrtRecFN_small.v
+ rtl/fp16_ops.sv
+ rtl/fp16_pe.sv
+ rtl/systolic_array.sv
++rtl/fp16_ws_pe.sv
++rtl/ws_systolic_array.sv
+ rtl/softmax_fp16.sv
+ rtl/attention_fp16.sv
+diff --git a/rtl/fp16_ops.sv b/rtl/fp16_ops.sv
+index f9562d9..2766f3c 100644
+--- a/rtl/fp16_ops.sv
++++ b/rtl/fp16_ops.sv
+@@ -1,6 +1,9 @@
++// 4 个 FP16（半精度浮点数）运算模块, 调用了 Berkeley HardFloat 库中的运算单元
+ // IEEE binary16 arithmetic. HardFloat Release 1, expWidth=5, sigWidth=11.
+ // All operations use round-to-nearest, ties-to-even and tininess after rounding.
+-// Recoded values are only combinational operator internals, never array state.
++// 外部使用标准 IEEE FP16，内部使用 HardFloat 特有的 recFN 格式。
++// recFN 仅用于组合运算器内部，不用于阵列中的状态存储。
++// y = a * b + c
+ module fp16_fma (
+     input wire [15:0] a, b, c,
+     output wire [15:0] y
+@@ -16,6 +19,7 @@ module fp16_fma (
+     recFNToFN #(5,11) cy (.in(yr), .out(y));
+ endmodule
+ 
++// y = a +/- b
+ module fp16_addsub (
+     input wire sub,
+     input wire [15:0] a, b,
+@@ -31,6 +35,7 @@ module fp16_addsub (
+     recFNToFN #(5,11) cy (.in(yr), .out(y));
+ endmodule
+ 
++// y = a * b
+ module fp16_mul (
+     input wire [15:0] a, b,
+     output wire [15:0] y
+@@ -44,8 +49,9 @@ module fp16_mul (
+     recFNToFN #(5,11) cy (.in(yr), .out(y));
+ endmodule
+ 
++// y = a / b 时序逻辑
+ // A request is accepted on start && ready. done and y identify the result;
+-// y is only guaranteed while done is asserted. The consumer must capture it.
++// 只有在 done=1 时，才保证 y 有效。下游模块必须及时保存结果。
+ module fp16_div (
+     input wire clk, rst_n, start,
+     input wire [15:0] a, b,
+diff --git a/rtl/fp16_pe.sv b/rtl/fp16_pe.sv
+index 1287ee1..5e18afb 100644
+--- a/rtl/fp16_pe.sv
++++ b/rtl/fp16_pe.sv
+@@ -1,6 +1,6 @@
+ // Output-stationary PE: two operands move, one FP16 partial sum stays local.
+-// The baseline FMA is combinational. step advances one complete MAC/forward
+-// operation; no pipelined feedback and no unverified frequency are assumed.
++// The baseline FMA is combinational. step advances one complete MAC/forward operation;
++// no pipelined feedback and no unverified frequency are assumed.
+ module fp16_pe (
+     input wire clk, rst_n, clear, step,
+     input wire [15:0] a_in, b_in,
+diff --git a/rtl/softmax_fp16.sv b/rtl/softmax_fp16.sv
+index 0049bdc..ac092d0 100644
+--- a/rtl/softmax_fp16.sv
++++ b/rtl/softmax_fp16.sv
+@@ -32,7 +32,7 @@ module softmax_fp16 #(
+     reg [15:0] div_done_seen;
+     wire [15:0] div_ready_all;
+     wire [15:0] div_done_all;
+-    wire        all_div_ready, all_div_done;
++    wire        all_div_ready;
+     wire        div_start_all;
+ 
+     // 0x4C56 represents FP16 17.34375.
+@@ -158,7 +158,6 @@ module softmax_fp16 #(
+     endgenerate
+ 
+     assign all_div_ready = &div_ready_all; // 归约与
+-    assign all_div_done = &div_done_all;
+     assign div_start_all =(state == DIV_START) && all_div_ready;
+ 
+     // Finite values, plus the initial -infinity sentinel. Signed zeros compare equal.
+@@ -213,10 +212,14 @@ module softmax_fp16 #(
+                     end
+                 end
+                 DIV_WAIT: begin
++                    // Division latency is data-dependent; capture each lane only
++                    // while its done pulse guarantees that quotient_all is valid.
++                    for(integer j = 0; j < 16; j = j + 1) begin
++                        if (div_done_all[j])
++                            probabilities[j] <= quotient_all[j];
++                    end
+                     div_done_seen <= div_done_seen | div_done_all;
+                     if(&(div_done_seen | div_done_all)) begin
+-                        for(integer j = 0; j < 16; j = j + 1)
+-                            probabilities[j] <= quotient_all[j];
+                         state <= FINISH;
+                     end
+                 end
+diff --git a/rtl/systolic_array.sv b/rtl/systolic_array.sv
+index c28fc15..b7822c3 100644
+--- a/rtl/systolic_array.sv
++++ b/rtl/systolic_array.sv
+@@ -4,7 +4,7 @@
+ // During step=0 operands, validity, and accumulators all hold. clear overrides
+ // step and must precede each independent GEMM. Results hold until next clear.
+ module systolic_array #(parameter integer N = 16) (
+-    input wire clk, rst_n, clear, step,
++    input wire clk, rst_n, clear, step, // step=0 不进行脉动 step=1 进行脉动
+     input wire [15:0] a_edge [0:N-1],
+     input wire [15:0] b_edge [0:N-1],
+     input wire [N-1:0] a_valid, b_valid,
+diff --git a/scripts/lint.py b/scripts/lint.py
+index 028645f..328e028 100644
+--- a/scripts/lint.py
++++ b/scripts/lint.py
+@@ -13,12 +13,15 @@ ROOT=Path(__file__).resolve().parents[1]
+ def main():
+     p=argparse.ArgumentParser(description=__doc__)
+     p.add_argument('--outdir',type=Path)
++    p.add_argument('--dataflow',choices=['os','ws'],default='os')
+     args=p.parse_args()
+     now=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))
+-    run=(args.outdir or ROOT/'results'/('lint_'+now.strftime('%Y%m%d_%H%M%S'))).resolve()
++    run=(args.outdir or ROOT/'results'/('lint_'+args.dataflow+'_'+now.strftime('%Y%m%d_%H%M%S'))).resolve()
+     run.mkdir(parents=True,exist_ok=False)
+-    cmd=['verilator','--lint-only','--Wall','--top-module','attention_fp16']
+-    manifest={'status':'RUNNING','created_at':now.isoformat(),'sources_sha256':{}}
++    use_ws = int(args.dataflow == 'ws')
++    cmd=['verilator','--lint-only','--Wall','--top-module','attention_fp16',f"-GUSE_WS=1'b{use_ws}"]
++    manifest={'status':'RUNNING','created_at':now.isoformat(),'dataflow':args.dataflow,
++              'use_ws':use_ws,'sources_sha256':{}}
+     for base in ('rtl','third_party/HardFloat-1','scripts'):
+         for path in sorted((ROOT/base).rglob('*')):
+             if path.is_file() and path.suffix in ('.sv','.v','.vi','.f','.vlt','.py'):
+diff --git a/scripts/run.py b/scripts/run.py
+index 19c0dbb..0f96632 100644
+--- a/scripts/run.py
++++ b/scripts/run.py
+@@ -40,16 +40,20 @@ def command(cmd, log, timeout=180, cwd=ROOT):
+             raise
+ 
+ 
+-def compile_tb(args, run, name, parameter, value):
++def compile_tb(args, run, name, parameter, value, extra_parameters=None):
+     src = RTL + [f'tb/{name}.sv']
++    parameters = {parameter: value} if parameter else {}
++    parameters.update(extra_parameters or {})
+     if args.sim == 'iverilog':
+         exe = run / f'{name}.vvp'
+-        command(['iverilog', '-g2012', '-Wall', '-s', name, *([f'-P{name}.{parameter}={value}'] if parameter else []),
++        command(['iverilog', '-g2012', '-Wall', '-s', name,
++                 *[f'-P{name}.{key}={val}' for key, val in parameters.items()],
+                  '-o', exe] + src, run / f'{name}_compile.log', args.timeout)
+         return ['vvp', exe]
+     obj = run / f'obj_{name}'
+     cmd = ['verilator', '--binary', '--timing', '--assert', '-j', '2',
+-           '-Wno-fatal', '--top-module', name, *([f'-G{parameter}={value}'] if parameter else []), '--Mdir', obj,
++           '-Wno-fatal', '--top-module', name,
++           *[f'-G{key}={val}' for key, val in parameters.items()], '--Mdir', obj,
+            '-o', name]
+     if args.waves:
+         cmd += ['--trace']
+@@ -60,10 +64,14 @@ def compile_tb(args, run, name, parameter, value):
+ def main():
+     parser = argparse.ArgumentParser(description=__doc__)
+     parser.add_argument('--sim', choices=['iverilog', 'verilator'], default='iverilog')
++    parser.add_argument('--dataflow', choices=['os', 'ws'], default='os',
++                        help='Output stationary (default) or weight stationary array; identical FP16 numeric model')
+     parser.add_argument('--random', type=int, default=8, dest='random_count')
+     parser.add_argument('--seed', type=int, default=20261117)
+     parser.add_argument('--stalls', type=int, choices=[0, 1], default=1,
+                         help='Main regression stalls; reset recovery always includes stalls')
++    parser.add_argument('--single-frame', action='store_true',
++                        help='Run only the first input vector, without reset-recovery tests (use --stalls 0 for clean waves)')
+     parser.add_argument('--outdir', type=Path, help='New directory; must not already exist')
+     parser.add_argument('--waves', action='store_true', help='Write VCD (Icarus: controls, Softmax, four PEs; Verilator: full trace)')
+     parser.add_argument('--waves-full', action='store_true', help='Write full recursive VCD, including floating-point internals (large)')
+@@ -78,11 +86,13 @@ def main():
+         if not shutil.which(tool):
+             parser.error(f'Missing executable: {tool}; see README.md installation section')
+     tag = dt.datetime.now(dt.timezone(dt.timedelta(hours=8))).strftime('%Y%m%d_%H%M%S')
+-    run = (args.outdir or ROOT / 'results' / f'{tag}_{args.sim}_seed{args.seed}_{os.getpid()}').resolve()
++    run = (args.outdir or ROOT / 'results' / f'{tag}_{args.dataflow}_{args.sim}_seed{args.seed}_{os.getpid()}').resolve()
+     run.mkdir(parents=True, exist_ok=False)
+     started = time.monotonic()
+     manifest = {'status': 'RUNNING', 'command': sys.argv, 'seed': args.seed,
+                 'random_count': args.random_count, 'stalls': args.stalls, 'simulator': args.sim,
++                'dataflow': args.dataflow, 'use_ws': int(args.dataflow == 'ws'),
++                'single_frame': args.single_frame,
+                 'started_at': dt.datetime.now(dt.timezone(dt.timedelta(hours=8))).isoformat(),
+                 'python': sys.version, 'sources_sha256': {}}
+     for pattern in ('rtl/*', 'tb/*.sv', 'model/*.py', 'model/*.c', 'scripts/*.py', 'scripts/softfloat_build/*', 'tests/*.py', 'third_party/HardFloat-1/**/*', 'third_party/softfloat_source/**/*', 'third_party/SOFTFLOAT_LICENSE.txt'):
+@@ -112,6 +122,8 @@ def main():
+                 case.setdefault('category', 'custom')
+         else:
+             cases = make_cases(args.seed, args.random_count)
++        if args.single_frame:
++            cases = cases[:1]
+         for case in cases:
+             case['expected'] = bit_model(case['words'])
+             case['float64_reference'] = reference(case['words'])
+@@ -119,7 +131,9 @@ def main():
+         (run / 'input.hex').write_text(''.join(f'{h:04x}\n' for c in cases for h in c['words']))
+         (run / 'expected.hex').write_text(''.join(f'{h:04x}\n' for c in cases for h in c['expected']))
+         shutil.copyfile(ROOT/'rtl/exp_fp16.hex', run/'exp_fp16.hex')
+-        exe = compile_tb(args, run, 'tb_attention', 'CASES', len(cases))
++        exe = compile_tb(args, run, 'tb_attention', 'CASES', len(cases),
++                         extra_parameters={'USE_WS': "1'b1" if args.dataflow == 'ws' else "1'b0",
++                                           'SINGLE_FRAME': "1'b1" if args.single_frame else "1'b0"})
+         cmd = exe + ['+INPUT=input.hex', '+EXPECTED=expected.hex',
+                      '+OUTPUT=actual.txt', f'+SEED={args.seed}', f'+STALLS={args.stalls}']
+         if args.waves:
+@@ -130,7 +144,12 @@ def main():
+         log = (run / 'simulation.log').read_text()
+         if 'TB PASS' not in log:
+             raise RuntimeError('Simulation ended without TB PASS')
+-        expected_runs = list(range(len(cases))) + [(phase+7) % len(cases) for phase in range(8)] + [(phase+11) % len(cases) for phase in range(1,6)]
++        expected_runs = list(range(len(cases)))
++        if not args.single_frame:
++            expected_runs += [(phase+7) % len(cases) for phase in range(8)] + [(phase+11) % len(cases) for phase in range(1,7)]
++        if args.dataflow == 'ws' and not args.single_frame:
++            # Append WS-specific preload reset recoveries after the shared suite.
++            expected_runs += [(phase+7) % len(cases) for phase in (8,9)]
+         captures = [[] for _ in expected_runs]
+         previous_run = 0
+         last_cycle = -1
+@@ -165,11 +184,17 @@ def main():
+         coverage = re.search(r'COVERAGE frames=(\d+) resets=(\d+) input_bubbles=(\d+) output_stall_cycles=(\d+) no_stall_cycles=(\d+)', log)
+         if not coverage:
+             raise RuntimeError('Missing coverage summary')
++        coverage_values = dict(zip(['frames', 'resets', 'input_bubbles', 'output_stall_cycles', 'no_stall_cycles'],
++                                   map(int, coverage.groups())))
++        expected_resets = 1 if args.single_frame else (17 if args.dataflow == 'ws' else 15)
++        if coverage_values['frames'] != len(expected_runs) or coverage_values['resets'] != expected_resets:
++            raise RuntimeError(f'Unexpected coverage counts: {coverage_values}')
+         summary = {'status': 'PASS', 'frames': len(report), 'outputs': 256*len(report),
++                   'dataflow': args.dataflow, 'use_ws': int(args.dataflow == 'ws'),
+                    'max_frame_rmse': max(r['rmse'] for r in report),
+                    'max_abs_error': max(r['max_abs_error'] for r in report),
+                    'limits': {'rmse': 0.06, 'max_abs_error': 0.20},
+-                   'coverage': dict(zip(['frames', 'resets', 'input_bubbles', 'output_stall_cycles', 'no_stall_cycles'], map(int, coverage.groups()))),
++                   'coverage': coverage_values,
+                    'per_frame': report}
+         write_json(run / 'summary.json', summary)
+         with (run / 'per_frame.csv').open('w', newline='') as stream:
+diff --git a/scripts/run_array.py b/scripts/run_array.py
+index 5042dfa..41df59c 100644
+--- a/scripts/run_array.py
++++ b/scripts/run_array.py
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env python3
+-"""Unit-check OS neighbor timing, hold/valid/clear/reset against SoftFloat."""
++"""Check array timing and FP16 results against sequential SoftFloat FMA."""
+ import argparse
+ import datetime
+ import hashlib
+@@ -21,6 +21,7 @@ def encode(x):
+ def main():
+     p=argparse.ArgumentParser(description=__doc__)
+     p.add_argument('--sim',choices=['iverilog','verilator'],default='iverilog')
++    p.add_argument('--dataflow', choices=['os', 'ws'], default='os')
+     p.add_argument('--size',type=int,default=16,choices=[2,16])
+     p.add_argument('--outdir',type=Path)
+     p.add_argument('--seed',type=int,default=20261117)
+@@ -28,9 +29,11 @@ def main():
+     args=p.parse_args(); args.waves=False
+     now=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))
+     stamp=now.strftime('%Y%m%d_%H%M%S')
+-    run=(args.outdir or ROOT/'results'/f'array{args.size}_{stamp}_{args.sim}').resolve()
++    name = f'array{args.size}' if args.dataflow == 'os' else f'array_ws{args.size}'
++    run=(args.outdir or ROOT/'results'/f'{name}_{stamp}_{args.sim}').resolve()
+     run.mkdir(parents=True,exist_ok=False)
+-    n,k=args.size,16
++    n = args.size
++    k = n if args.dataflow == 'ws' else 16
+     rng=random.Random(args.seed)
+     fma=ops()['fma']
+     matrices=[]
+@@ -59,7 +62,9 @@ def main():
+         (run/filename).write_text(''.join(f'{w:04x}\n' for w in words))
+     manifest={'status':'RUNNING','created_at':now.isoformat(),'seed':args.seed,'array_size':n,'dot_length':k,
+               'frames':len(matrices),'outputs':len(evec),'commands':sys.argv,
+-              'logical_steps_per_gemm':k+2*(n-1),'sources_sha256':{}}
++              'dataflow': args.dataflow, 'simulator': args.sim,
++              'logical_steps_per_gemm':3*n-1 if args.dataflow == 'ws' else k+2*(n-1),
++              'weight_load_cycles_per_gemm': n if args.dataflow == 'ws' else 0, 'sources_sha256':{}}
+     for base in ('rtl','tb','model','scripts','third_party/HardFloat-1','third_party/softfloat_source'):
+         for path in sorted((ROOT/base).rglob('*')):
+             if path.is_file() and path.suffix in ('.sv','.v','.vi','.c','.h','.py','.f'):
+@@ -67,7 +72,8 @@ def main():
+     write_json(run/'manifest.json',manifest)
+     try:
+         command([args.sim,'--version'] if args.sim=='verilator' else ['iverilog','-V'],run/'tool_version.log',60)
+-        exe=compile_tb(args,run,'tb_array','N',n)
++        bench = 'tb_array_ws' if args.dataflow == 'ws' else 'tb_array'
++        exe=compile_tb(args,run,bench,'N',n)
+         command(exe+['+A=a.hex','+B=b.hex','+EXPECTED=expected.hex',f'+COUNT={len(matrices)}'],
+                 run/'array.log',args.timeout,cwd=run)
+         if 'PASS array' not in (run/'array.log').read_text(): raise RuntimeError('Array PASS missing')
+diff --git a/tb/tb_attention.sv b/tb/tb_attention.sv
+index 5a4a296..0e21361 100644
+--- a/tb/tb_attention.sv
++++ b/tb/tb_attention.sv
+@@ -1,13 +1,15 @@
+ `timescale 1ns/1ps
+ module tb_attention;
+     parameter integer CASES = 25;
++    parameter bit USE_WS = 1'b0;
++    parameter bit SINGLE_FRAME = 1'b0;
+     logic clk = 0;
+     always #5 clk = ~clk;
+     logic rst_n = 1, in_valid = 0, out_ready = 0;
+     logic [15:0] in_data = 0;
+     wire in_ready, out_valid, out_last, busy, done;
+     wire [15:0] out_data;
+-    attention_fp16 #(.EXP_FILE("exp_fp16.hex")) dut (.*);
++    attention_fp16 #(.EXP_FILE("exp_fp16.hex"), .USE_WS(USE_WS)) dut (.*);
+     logic [15:0] inputs [0:CASES*768-1];
+     logic [15:0] expected [0:CASES*256-1];
+     string input_path, expected_path, output_path, wave_path;
+@@ -34,7 +36,7 @@ module tb_attention;
+ 
+     // Sample at posedge before NBA; drive at negedge, inspect registered done after NBA.
+     always @(posedge clk) begin
+-        if (cycle > (CASES+16)*100000)
++        if (cycle > (CASES+18)*100000)
+             $fatal(1, "WATCHDOG cycle=%0d state=%0d", cycle, dut.state);
+         if (!rst_n) begin
+             previous_stall = 0; previous_done = 0;
+@@ -161,6 +163,8 @@ module tb_attention;
+                 end
+                 if (phase == 2 || phase == 6) repeat (13) @(negedge clk);
+                 if (phase == 7) repeat (31) @(negedge clk);
++                // The WS preload lasts 16 cycles; abort with partial weights stored.
++                if (phase == 8 || phase == 9) repeat (7) @(negedge clk);
+             end
+             if (integer'(dut.state) != phase) $fatal(1, "Reset phase drifted: wanted=%0d actual=%0d", phase, dut.state);
+             reset_dut();
+@@ -176,11 +180,13 @@ module tb_attention;
+             out_ready = 0;
+             load_frame(3 % CASES, 768, 0);
+             timeout = 0;
+-            while (!(integer'(dut.state) == 4 && integer'(dut.sm.state) == phase)) begin
++            while (!(dut.state == dut.SM_WAIT && integer'(dut.parallel_softmax[0].sm.state) == phase)) begin
+                 @(negedge clk); timeout = timeout+1;
+                 if (timeout > 100000) $fatal(1, "Softmax reset phase unreachable: %0d", phase);
+             end
+-            if (phase == 4) repeat (3) @(negedge clk);
++            if (phase == integer'(dut.parallel_softmax[0].sm.DIV_WAIT)) repeat (3) @(negedge clk);
++            if (integer'(dut.parallel_softmax[0].sm.state) != phase)
++                $fatal(1, "Softmax reset phase drifted: wanted=%0d actual=%0d", phase, dut.parallel_softmax[0].sm.state);
+             reset_dut();
+             $display("SOFTMAX RESET PASS phase=%0d", phase);
+             run_frame((phase+11) % CASES, 1);
+@@ -204,28 +210,40 @@ module tb_attention;
+                 // Depth 1 excludes the large combinational HardFloat internals.
+                 $dumpvars(1, tb_attention);
+                 $dumpvars(1, tb_attention.dut);
+-                $dumpvars(1, tb_attention.dut.sm);
+-                $dumpvars(1, tb_attention.dut.array_core.rows[0].cols[0].pe);
+-                $dumpvars(1, tb_attention.dut.array_core.rows[0].cols[1].pe);
+-                $dumpvars(1, tb_attention.dut.array_core.rows[1].cols[0].pe);
+-                $dumpvars(1, tb_attention.dut.array_core.rows[15].cols[15].pe);
++                $dumpvars(1, tb_attention.dut.parallel_softmax[0].sm);
++                $dumpvars(1, tb_attention.dut.array_impl.array_core.rows[0].cols[0].pe);
++                $dumpvars(1, tb_attention.dut.array_impl.array_core.rows[0].cols[1].pe);
++                $dumpvars(1, tb_attention.dut.array_impl.array_core.rows[1].cols[0].pe);
++                $dumpvars(1, tb_attention.dut.array_impl.array_core.rows[15].cols[15].pe);
+             end
+         end
+         $readmemh(input_path, inputs); $readmemh(expected_path, expected);
+         fd = $fopen(output_path, "w");
+         if (fd == 0) $fatal(1, "Cannot open output capture");
++        if (SINGLE_FRAME && CASES != 1) $fatal(1, "Single-frame mode requires CASES=1");
+         reset_dut();
+         // First two tasks are back-to-back with no stalls, no inter-frame reset.
+         for (i = 0; i < CASES; i = i + 1) run_frame(i, i < 2 ? 0 : stall_mode);
+         // One reset in every FSM state, with full post-reset frame validation.
+-        for (i = 0; i < 8; i = i + 1) abort_at_phase(i);
+-        for (i = 1; i <= 5; i = i + 1) abort_softmax(i);
++        if (!SINGLE_FRAME) begin
++            for (i = 0; i < 8; i = i + 1) abort_at_phase(i);
++            for (i = dut.parallel_softmax[0].sm.SCALE; i <= dut.parallel_softmax[0].sm.FINISH; i = i + 1)
++                abort_softmax(i);
++        // Keep all shared cases in their original order, then exercise both
++        // WS-only weight-preload states with a complete recovery frame each.
++            if (USE_WS) begin
++                abort_at_phase(8);
++                abort_at_phase(9);
++            end
++        end
+         @(negedge clk); out_ready = 1; in_valid = 0;
+         repeat (20) begin
+             @(posedge clk); #1;
+             if (out_valid || done || busy) $fatal(1, "Extra output or activity after task completion");
+         end
+-        if (input_bubbles == 0 || stalled_outputs == 0 || reset_count != 14)
++        if (SINGLE_FRAME && (completed != 1 || reset_count != 1))
++            $fatal(1, "Expected one complete frame and startup reset only");
++        if (!SINGLE_FRAME && (input_bubbles == 0 || stalled_outputs == 0 || reset_count != (USE_WS ? 17 : 15)))
+             $fatal(1, "Required protocol coverage not reached");
+         $display("COVERAGE frames=%0d resets=%0d input_bubbles=%0d output_stall_cycles=%0d no_stall_cycles=%0d",
+                  completed, reset_count, input_bubbles, stalled_outputs, no_stall_cycles);
+diff --git a/tests/test_model.py b/tests/test_model.py
+index f9de284..873eda8 100644
+--- a/tests/test_model.py
++++ b/tests/test_model.py
+@@ -1,7 +1,8 @@
+ import unittest
+ import math
+-from model.attention import bit_model, decode, encode, exp16, exp_table, reference, validate
++from model.attention import bit_model, decode, encode, exp16, exp_table, reference, sum16_balanced, validate
+ from model.softfloat import ops
++from model.vectors import make_cases
+ 
+ 
+ class TestModel(unittest.TestCase):
+@@ -31,6 +32,49 @@ class TestModel(unittest.TestCase):
+             self.assertEqual(word, encode(math.exp(-decode(mag))), hex(mag))
+         self.assertEqual(encode(math.exp(-decode(0x4c56))), 0)
+ 
++    def test_balanced_sum_rounding_contract(self):
++        # Serial addition loses every half-ulp increment to ties-to-even.
++        # The RTL tree combines small terms before adding to the larger one.
++        values = [0x3c00] + [0x1000]*15  # 1 followed by fifteen 2^-11 terms
++        sequential = 0
++        for value in values:
++            sequential = ops()['add'](sequential, value)
++        self.assertEqual(sequential, 0x3c00)
++        self.assertEqual(sum16_balanced(values), 0x3c07)
++        with self.assertRaises(ValueError):
++            sum16_balanced(values[:15])
++
++    def test_parallel_softmax_regression_case9(self):
++        # Former mismatch: identity_transpose_probe, row0,col1.
++        # Derive the row independently to expose the changed denominator.
++        case = make_cases(random_count=0)[9]
++        self.assertEqual(case['name'], 'identity_transpose_probe')
++        q, k, v = [case['words'][a:a+256] for a in (0,256,512)]
++        op = ops()
++        scores = []
++        for j in range(16):
++            acc = 0
++            for t in range(16):
++                acc = op['fma'](q[t], k[j*16+t], acc)
++            scores.append(op['mul'](acc, 0x3400))
++        maximum = max(scores, key=decode)
++        weights = [exp16(op['sub'](s, maximum)) for s in scores]
++        serial = 0
++        for w in weights:
++            serial = op['add'](serial, w)
++        tree = sum16_balanced(weights)
++        self.assertEqual(serial, 0x475c)  # 7.359375
++        self.assertEqual(tree, 0x475d)    # 7.36328125
++        outputs = []
++        for denominator in (serial, tree):
++            y = 0
++            for t in range(16):
++                p = op['div'](weights[t], denominator)
++                y = op['fma'](p, v[t*16+1], y)
++            outputs.append(y)
++        self.assertEqual(outputs, [0x2a0c, 0x2a0b])
++        self.assertEqual(bit_model(case['words'])[1], 0x2a0b)
++
+     def test_invalid_inputs(self):
+         for words in ([0], [0x7c00]*768, [0x7e00]*768, [0x4001]*768):
+             with self.assertRaises(ValueError): validate(words)

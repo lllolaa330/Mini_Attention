@@ -1,0 +1,2 @@
+run,case,name,category,cycles,mode,bit_exact,finite,rmse,max_abs_error,passed
+0,0,random_uniform_001,random,1171,0,True,True,0.0006682487948267032,0.002498995012721439,True

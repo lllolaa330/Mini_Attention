@@ -1,0 +1,53 @@
+{
+  "status": "PASS",
+  "time": "2026-11-18T11:33:27.108006+08:00",
+  "variant": "current",
+  "dataflow": "os",
+  "output_format": "diagonal_16lane",
+  "command": [
+    "results/pingpong_baseline_20261118_112657/measure.py",
+    "--variant",
+    "current",
+    "--dataflow",
+    "os",
+    "--outdir",
+    "results/pingpong_baseline_20261118_112657/current_os_02"
+  ],
+  "fixtures": {
+    "seed": 20261117,
+    "directed": 17,
+    "random": 8,
+    "frames": 25,
+    "input_sha256": "08be9078e9aeb0afad8fae46baa2ba73ea1627888ff1f225ab092c96f8570007",
+    "expected_sha256": "e2f69d7dc3db9e12c8fa14e135569ac2c32b91596cb18dee346790b573d3f80d",
+    "cases_sha256": "6b72207b4cb49444575b5ff4554ba2e66e6dae3f1443e901a2c958739b6da5d2",
+    "model_sha256": {
+      "model/__init__.py": "f58d0a36f004b372420c579c658b1398c26601cf7325864c17045f9568bc7948",
+      "model/attention.py": "96aea0b2f329de62abeeb156f214c9fdf2a3152bd9abfdfd38e8899755914798",
+      "model/softfloat.py": "f9375e9892448fbc7902155c75f522ce11d0604a294c165f0ac72d32740e67fc",
+      "model/softfloat_bridge.c": "b3d1514b04b04599df22a27dc6c0ed6f0b7f45eb96659e95582e61c64ddfe2b5",
+      "model/vectors.py": "36a95309e845901a3e8fd24c84e1cccd218601691fbcff27b82b587421248df5"
+    }
+  },
+  "compiled_source_sha256": {
+    "third_party/HardFloat-1/source/HardFloat_primitives.v": "5a1d0823a066395eda8191b3a556c414e6120b8085ff43ce383980d84af47f9f",
+    "third_party/HardFloat-1/source/HardFloat_rawFN.v": "353cad0b733c601f5c2449dc75f1ddefa34dc5c2466ac82540302303899fe355",
+    "third_party/HardFloat-1/source/8086-SSE/HardFloat_specialize.v": "5978254ad3781165833345616e4c1c3447cac4a1d8fb73689c2def15f71f52e3",
+    "third_party/HardFloat-1/source/isSigNaNRecFN.v": "77e37250ec9c18c4484c23eda48bfcf7df8dec1a3d3b2c1a1e5804386a25de8b",
+    "third_party/HardFloat-1/source/fNToRecFN.v": "7aca940370a4ecf1b52774cec62e90252d090f20a4acd5f577cf88565266426c",
+    "third_party/HardFloat-1/source/recFNToFN.v": "62d42a8f004f00f9a688c5e45302ceff22148313b3602840e5d05a13e9391e96",
+    "third_party/HardFloat-1/source/mulAddRecFN.v": "268c38c2433e66337900a4ad67daf393ffa6f4aaa43552728bc786a83604008b",
+    "third_party/HardFloat-1/source/addRecFN.v": "15fb5387ab0deff63670ed144189e9f263c61ffc909d06697974c49d11ba5dc3",
+    "third_party/HardFloat-1/source/mulRecFN.v": "5a6a263dcde9f38f0fabef87ceb41e1bdff63c46d151c7c65e404467354bee43",
+    "third_party/HardFloat-1/source/divSqrtRecFN_small.v": "f5198209a176110237e09a60075a4d9d152034292e12bb10011943f876625ce5",
+    "rtl/fp16_ops.sv": "f4f1ae84be8e24266fcb2cf641bbd3871e035e2e0bbea360188619c355b7dd6d",
+    "rtl/fp16_pe.sv": "ebde2fdbc0506a1e9871d91e01d56ab3877c87f83ed2c72d9432a34b3a6770b1",
+    "rtl/systolic_array.sv": "900a679494bf4010464d77bf4ac6ac9c72eff14acc66501d415dc1700693c03a",
+    "rtl/fp16_ws_pe.sv": "7e06d4ebde19d83cc0e25a4eed0e8a94679f8e4dc9cc6db9f76ac2435df36c23",
+    "rtl/ws_systolic_array.sv": "c66819754f1468449412b5e6257fa9287f7ba266de6fde44dacb342ffc495815",
+    "rtl/softmax_fp16.sv": "3db94f4d429cab133410a3335616ce304d1a1177d66a017d67077bcd575b205e",
+    "rtl/attention_fp16.sv": "1f42637c1ca0df477431282b83e39a1c31d6d36bd6555c901cb6fd73cfa92f20",
+    "results/pingpong_baseline_20261118_112657/tb_stream_wide.sv": "5a5cfb57a2a0d4af0e4aba0ee1dc0de2229e14bafab4e4350719810f2c41d2d4"
+  },
+  "baseline_top_sha256": "3e6e29ae198159ee4c374b3e7f77f98c5ea5900b0a61b888ed6b59e8d359d354"
+}

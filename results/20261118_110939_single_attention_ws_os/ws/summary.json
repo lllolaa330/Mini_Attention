@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "frames": 1,
+  "outputs": 256,
+  "dataflow": "ws",
+  "use_ws": 1,
+  "max_frame_rmse": 0.0006682487948267032,
+  "max_abs_error": 0.002498995012721439,
+  "limits": {
+    "rmse": 0.06,
+    "max_abs_error": 0.2
+  },
+  "coverage": {
+    "frames": 1,
+    "resets": 1,
+    "input_bubbles": 0,
+    "output_stall_cycles": 0,
+    "no_stall_cycles": 1171
+  },
+  "per_frame": [
+    {
+      "run": 0,
+      "case": 0,
+      "name": "random_uniform_001",
+      "category": "random",
+      "bit_exact": true,
+      "finite": true,
+      "rmse": 0.0006682487948267032,
+      "max_abs_error": 0.002498995012721439,
+      "passed": true,
+      "cycles": 1171,
+      "mode": 0
+    }
+  ]
+}

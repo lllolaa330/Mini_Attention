@@ -1,0 +1,6 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/20261118_110939_single_attention_ws_os/ws/tb_attention.vvp', '+INPUT=input.hex', '+EXPECTED=expected.hex', '+OUTPUT=actual.txt', '+SEED=20261117', '+STALLS=0', '+WAVE=attention.vcd']
+VCD info: dumpfile attention.vcd opened for output.
+FRAME PASS run=0 case=0 cycles=1171 mode=0
+COVERAGE frames=1 resets=1 input_bubbles=0 output_stall_cycles=0 no_stall_cycles=1171
+TB PASS
+tb/tb_attention.sv:250: $finish called at 11936000 (1ps)

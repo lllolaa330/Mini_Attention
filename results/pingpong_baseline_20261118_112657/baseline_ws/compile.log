@@ -1,0 +1,3 @@
+COMMAND: ['iverilog', '-g2012', '-s', 'tb_stream', '-Ptb_stream.CASES=25', '-Ptb_stream.USE_WS=1', '-f', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/pingpong_baseline_20261118_112657/baseline_ws/compile.f', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/pingpong_baseline_20261118_112657/tb_stream.sv', '-o', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/pingpong_baseline_20261118_112657/baseline_ws/tb_stream.vvp']
+-o: No such file or directory
+Preprocessor failed with 1 errors.

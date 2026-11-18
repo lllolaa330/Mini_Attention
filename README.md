@@ -1,8 +1,10 @@
 # Mini_Attention
 
-**16×16 全 FP16 Output Stationary 脉动阵列注意力 baseline，包含 Softmax 和逐位自检仿真。**
+**16×16 全 FP16 注意力脉动阵列，支持输出驻留（OS）和权重驻留（WS），包含 Softmax 和逐位自检。**
 
-计算 `Y = Softmax(QKᵀ / 4)V`，Q、K、V、Y 均为 16×16。256 个 PE 各保存一个 FP16 累加值；同一阵列先执行 QKᵀ，再执行 PV。Softmax 单元逐行复用浮点乘法、减法、加法、指数 ROM 和迭代除法器。输入输出及每次算术结果均为 IEEE binary16，RNE 舍入并支持次正规数。
+计算 `Y = Softmax(QKᵀ / 4)V`，Q、K、V、Y 均为 16×16。每种配置均用同一个 256 PE 阵列先执行 QKᵀ，再执行 PV。OS 将部分和保存在 PE，WS 将右矩阵元素保存在 PE。16 个 Softmax 单元并行处理 16 行。每行用四层 FP16 加法树计算分母，再用 16 个迭代除法器并行求概率。输入输出及每次算术结果均为 IEEE binary16，RNE 舍入并支持次正规数。
+
+输入仍以每拍一个 FP16 字传输。Q 和 K 收齐即启动 QKᵀ，Softmax 与后续 V 的接收可重叠。双缓冲支持同时接收下一帧。**输出接口现为 16 列并行**：`out_data[255:0]`、`out_lane_valid[15:0]` 和整组 ready/valid。第 j 路携带第 j 列，每帧 31 次握手共 256 个 FP16 字。旧的 16-bit 行优先接收端需按新接口适配。[时序及还原方法](PROJECT.md#6-外部握手与-16-路输出)
 
 本项目为自建课程基线。RTL 仿真结果与实际综合、时序和功耗是不同验证层级；已执行结果、版本和原始证据见 [EXPERIMENTS.md](EXPERIMENTS.md)，当前交接见 [HANDOFF.md](HANDOFF.md)。
 
@@ -13,25 +15,32 @@
 在仓库根目录执行：
 
 ```sh
-make quick                       # 较小规模完整仿真
+make quick                       # OS（默认）
+make quick DATAFLOW=ws           # WS，使用相同的 FP16 软件模型
+make quick DATAFLOW=ws ARGS=--waves  # 在 Evidence 目录生成 WS 波形
 make test                        # 定向 + 随机输入、协议/复位自检
 make test SIM=verilator           # 第二种仿真器
 make model                       # 软件模型检查
 make lut-check                   # 指数 ROM 全表检查
 make arithmetic                  # FMA / 加减 / 乘 / 除与 SoftFloat 比较
-python3 scripts/run_array.py --size 16   # 阵列错拍、hold、clear 和复位
+make array DATAFLOW=ws           # 单独检查 WS 阵列
+make lint DATAFLOW=ws            # 检查 WS 的 RTL 展开配置
 ```
 
-更改参数及输出路径：
+顶层参数 `USE_WS` 在编译或综合时选择阵列，只展开一种结构。已有顶层实例默认使用 OS。选择 WS 可写作 `attention_fp16 #(.USE_WS(1'b1)) dut (...);`。
+
+直接调用 Python 时可选择模式并指定输出目录。
 
 ```sh
-python3 scripts/run.py --sim iverilog --random 64 --seed 20261117 \
+python3 scripts/run.py --sim iverilog --dataflow ws --random 64 --seed 20261117 \
   --outdir results/my_new_run --timeout 600
 ```
 
 `--outdir` 必须是不存在的目录，防止覆盖历史证据。不传时自动生成唯一目录。输入包括各自行优先的 Q、K、V 共 768 个 binary16 编码；默认用例由 `model/vectors.py` 生成。使用 `--vectors cases.json` 可注入自定义输入，每项包含 `name`、`category`、`words`（768 个整数编码）。
 
-Mac/VS Code 波形入门：安装 Surfer 扩展后执行 `make quick ARGS="--waves"`，在终端最后显示的 Evidence 目录打开 `attention.vcd`。默认 Icarus 仿真记录顶层控制、Softmax 以及 PE[0,0]、[0,1]、[1,0]、[15,15] 的本地接口和累加值，便于查看错拍传播。使用 `--waves-full` 可递归记录全部浮点内部信号，文件会显著变大。Verilator 忽略 `$dumpvars` 的层次深度/选择，使用它运行 `--waves` 时仍为完整跟踪。波形和编译缓存不纳入 Git。
+Mac/VS Code 波形入门：安装 Surfer 扩展后执行 `make quick ARGS="--waves"`，在终端最后显示的 Evidence 目录打开 `attention.vcd`。默认 Icarus 仿真记录顶层控制、第 0 行 Softmax（`dut.parallel_softmax[0].sm`）以及 PE[0,0]、[0,1]、[1,0]、[15,15] 的本地接口。展开 `dut.array_impl.array_core.rows[0].cols[0].pe`，在 OS 下观察 `acc`，在 WS 下观察 `weight`、`a_in`、`psum_out` 和 `psum_valid_out`。使用 `--waves-full` 可递归记录全部浮点内部信号，文件会显著变大。Verilator 忽略 `$dumpvars` 的层次深度/选择，使用它运行 `--waves` 时仍为完整跟踪。波形和编译缓存不纳入 Git。
+
+只看一次 Attention 时，加 `--single-frame --stalls 0 --waves`：仅运行输入列表的第一帧，保留启动复位、完整 256 字输出自检和结束后空闲检查，不追加中途复位恢复测试。用 `--vectors` 指定有变化的输入；未指定时，默认列表第一帧为全零。标量接口版本的同输入 OS / WS 历史波形与复现命令见 [单帧运行目录](results/20261118_110939_single_attention_ws_os/README.md)。默认回归仍执行全部协议与复位测试。
 
 对刚刚在本机跑通的目录，还可翻转一位期望值，检查 scoreboard 确实拒绝错误：
 
@@ -49,8 +58,10 @@ python3 scripts/checker_selftest.py --run results/my_new_run \
 | [rtl/attention_fp16.sv](rtl/attention_fp16.sv) | 顶层输入缓存、两轮阵列调度、P 缓存、输出握手 |
 | [rtl/systolic_array.sv](rtl/systolic_array.sv) | 16×16 邻接互连和边界输入 |
 | [rtl/fp16_pe.sv](rtl/fp16_pe.sv) | FP16 FMA、累加驻留、操作数和 valid 转发 |
+| [rtl/ws_systolic_array.sv](rtl/ws_systolic_array.sv) | WS 装权、部分和链路及阵列底部写回 |
+| [rtl/fp16_ws_pe.sv](rtl/fp16_ws_pe.sv) | WS 的驻留权重寄存器与 FP16 FMA |
 | [rtl/fp16_ops.sv](rtl/fp16_ops.sv) | HardFloat binary16 包装：FMA、加减、乘、除 |
-| [rtl/softmax_fp16.sv](rtl/softmax_fp16.sv) | 缩放、减行最大值、exp、分母累加、逐元素归一化 |
+| [rtl/softmax_fp16.sv](rtl/softmax_fp16.sv) | 单行缩放、减行最大值、exp、树形求和、并行归一化 |
 | [rtl/exp_fp16.hex](rtl/exp_fp16.hex) | 正确舍入的 FP16 指数 ROM 内容 |
 | [rtl/files.f](rtl/files.f) | RTL 和第三方浮点源文件清单 |
 | [model/attention.py](model/attention.py) | SoftFloat 逐位模型与独立 float64 数学参考 |
@@ -61,9 +72,13 @@ python3 scripts/checker_selftest.py --run results/my_new_run \
 
 ## 阵列时序
 
-左侧第 i 行延迟 i 步，上侧第 j 列延迟 j 步。相同内积索引 k 在 `t=k+i+j` 相遇；每轮 16 项点积需要 46 个有效逻辑步。当前 FMA 是组合电路，每步更新一次 FP16 累加值。完整任务还包括 768 字装载、清零、16 行 Softmax、256 字输出及握手停顿。
+| 每次 16×16 矩阵乘 | OS | WS |
+|---|---|---|
+| PE 内驻留值 | 输出 C[i,j] 的部分和 | 右矩阵元素 B[k,j] |
+| 启动与计算 | 清零后运行 46 拍 | 清零后装权 16 拍，运行 47 拍（含最后的写回） |
+| 结果位置 | 256 个 PE 的累加器 | 阵列底部按列写入 16×16 结果缓存 |
 
-**46 步不是完整任务时延，也不是任何目标器件已经闭合时序的证明。** 输入数组使用异步读，ROM 和数组在目标平台上的存储映射需要综合确认。本项目没有在说明中假定某个最高频率、DSP/BRAM 数量或功耗。
+两种实现的每个输出都从 FP16 的 +0 开始，按 k 递增做 16 次融合乘加。整帧测量包括输入、清零、Softmax、输出及握手停顿，各阶段允许重叠。仿真周期与综合频率、面积、功耗需要分别测量。
 
 ## 验证标准
 

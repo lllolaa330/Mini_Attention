@@ -1,0 +1,3 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/array_ws16_20261118_091047_iverilog/tb_array_ws.vvp', '+A=a.hex', '+B=b.hex', '+EXPECTED=expected.hex', '+COUNT=8']
+PASS array WS N=16 K=16 frames=8 outputs=2048 held_cycles=160 timed_writeback/resident/clear/reset/invalid
+tb/tb_array_ws.sv:152: $finish called at 10610000 (1ps)

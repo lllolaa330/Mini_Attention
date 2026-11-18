@@ -1,6 +1,9 @@
+// 4 个 FP16（半精度浮点数）运算模块, 调用了 Berkeley HardFloat 库中的运算单元
 // IEEE binary16 arithmetic. HardFloat Release 1, expWidth=5, sigWidth=11.
 // All operations use round-to-nearest, ties-to-even and tininess after rounding.
-// Recoded values are only combinational operator internals, never array state.
+// 外部使用标准 IEEE FP16，内部使用 HardFloat 特有的 recFN 格式。
+// recFN 仅用于组合运算器内部，不用于阵列中的状态存储。
+// y = a * b + c
 module fp16_fma (
     input wire [15:0] a, b, c,
     output wire [15:0] y
@@ -16,6 +19,7 @@ module fp16_fma (
     recFNToFN #(5,11) cy (.in(yr), .out(y));
 endmodule
 
+// y = a +/- b
 module fp16_addsub (
     input wire sub,
     input wire [15:0] a, b,
@@ -31,6 +35,7 @@ module fp16_addsub (
     recFNToFN #(5,11) cy (.in(yr), .out(y));
 endmodule
 
+// y = a * b
 module fp16_mul (
     input wire [15:0] a, b,
     output wire [15:0] y
@@ -44,8 +49,9 @@ module fp16_mul (
     recFNToFN #(5,11) cy (.in(yr), .out(y));
 endmodule
 
+// y = a / b 时序逻辑
 // A request is accepted on start && ready. done and y identify the result;
-// y is only guaranteed while done is asserted. The consumer must capture it.
+// 只有在 done=1 时，才保证 y 有效。下游模块必须及时保存结果。
 module fp16_div (
     input wire clk, rst_n, start,
     input wire [15:0] a, b,

@@ -1,0 +1,16 @@
+{
+  "seed": 20261117,
+  "directed": 17,
+  "random": 8,
+  "frames": 25,
+  "input_sha256": "08be9078e9aeb0afad8fae46baa2ba73ea1627888ff1f225ab092c96f8570007",
+  "expected_sha256": "e2f69d7dc3db9e12c8fa14e135569ac2c32b91596cb18dee346790b573d3f80d",
+  "cases_sha256": "6b72207b4cb49444575b5ff4554ba2e66e6dae3f1443e901a2c958739b6da5d2",
+  "model_sha256": {
+    "model/__init__.py": "f58d0a36f004b372420c579c658b1398c26601cf7325864c17045f9568bc7948",
+    "model/attention.py": "96aea0b2f329de62abeeb156f214c9fdf2a3152bd9abfdfd38e8899755914798",
+    "model/softfloat.py": "f9375e9892448fbc7902155c75f522ce11d0604a294c165f0ac72d32740e67fc",
+    "model/softfloat_bridge.c": "b3d1514b04b04599df22a27dc6c0ed6f0b7f45eb96659e95582e61c64ddfe2b5",
+    "model/vectors.py": "36a95309e845901a3e8fd24c84e1cccd218601691fbcff27b82b587421248df5"
+  }
+}

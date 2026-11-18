@@ -1,0 +1,84 @@
+{
+  "same_25_input_frames": true,
+  "same_all_6400_output_bits": true,
+  "input_sha256": "08be9078e9aeb0afad8fae46baa2ba73ea1627888ff1f225ab092c96f8570007",
+  "output_sha256": "e2f69d7dc3db9e12c8fa14e135569ac2c32b91596cb18dee346790b573d3f80d",
+  "condition": "source continuously valid, sink always ready, 1 FP16 input per cycle",
+  "scope": "Cycle simulation only; changed output interface from scalar row-major to 16-lane diagonals, plus ping-pong/overlapped scheduling. No isolated attribution or Fmax/PPA claim.",
+  "runs": {
+    "baseline_os": {
+      "frames": 25,
+      "outputs": 6400,
+      "bit_exact": true,
+      "latency_min": 1136,
+      "latency_max": 1137,
+      "input_ii_min": 1136,
+      "input_ii_max": 1137,
+      "input_ii_mean": 1136.4583333333333,
+      "first_output_ii_min": 1136,
+      "first_output_ii_max": 1137,
+      "first_output_ii_mean": 1136.5,
+      "mean_useful_fma_occupancy": 0.028157653528872596,
+      "evidence": "baseline_os_02"
+    },
+    "baseline_ws": {
+      "frames": 25,
+      "outputs": 6400,
+      "bit_exact": true,
+      "latency_min": 1170,
+      "latency_max": 1171,
+      "input_ii_min": 1170,
+      "input_ii_max": 1171,
+      "input_ii_mean": 1170.4583333333333,
+      "first_output_ii_min": 1170,
+      "first_output_ii_max": 1171,
+      "first_output_ii_mean": 1170.5,
+      "mean_useful_fma_occupancy": 0.02733971734719305,
+      "evidence": "baseline_ws_02"
+    },
+    "current_os": {
+      "frames": 25,
+      "outputs": 6400,
+      "bit_exact": true,
+      "latency_min": 816,
+      "latency_max": 816,
+      "input_ii_min": 768,
+      "input_ii_max": 768,
+      "input_ii_mean": 768.0,
+      "first_output_ii_min": 768,
+      "first_output_ii_max": 768,
+      "first_output_ii_mean": 768.0,
+      "mean_useful_fma_occupancy": 0.041666666666666664,
+      "evidence": "current_os_02"
+    },
+    "current_ws": {
+      "frames": 25,
+      "outputs": 6400,
+      "bit_exact": true,
+      "latency_min": 833,
+      "latency_max": 833,
+      "input_ii_min": 768,
+      "input_ii_max": 768,
+      "input_ii_mean": 768.0,
+      "first_output_ii_min": 768,
+      "first_output_ii_max": 768,
+      "first_output_ii_mean": 768.0,
+      "mean_useful_fma_occupancy": 0.041666666666666664,
+      "evidence": "current_ws_02"
+    }
+  },
+  "changes": {
+    "os": {
+      "mean_input_ii_speedup": 1.479763454861111,
+      "latency_reduction_cycles_min": 320,
+      "latency_reduction_cycles_max": 321,
+      "input_rate_bound_met": true
+    },
+    "ws": {
+      "mean_input_ii_speedup": 1.5240342881944444,
+      "latency_reduction_cycles_min": 337,
+      "latency_reduction_cycles_max": 338,
+      "input_rate_bound_met": true
+    }
+  }
+}

@@ -39,6 +39,22 @@ def exp16(x):
     return exp_table()[mag] if mag < 0x4c56 else 0
 
 
+def sum16_balanced(values, add=None):
+    """16 leaves -> 8 -> 4 -> 2 -> 1, with binary16 RNE at each node.
+
+    Matches GEN_SUM_L1/L2/L3 and add_final in softmax_fp16. Pairing is
+    adjacent in the original column order; no reassociation is permitted.
+    """
+    if len(values) != 16:
+        raise ValueError('Balanced Softmax reduction requires exactly 16 leaves')
+    if add is None:
+        add = ops()['add']
+    level = list(values)
+    while len(level) > 1:
+        level = [add(level[j], level[j+1]) for j in range(0, len(level), 2)]
+    return level[0]
+
+
 def bit_model(words):
     validate(words)
     op = ops()
@@ -53,9 +69,7 @@ def bit_model(words):
             scores.append(op['mul'](acc, 0x3400))
         maximum = max(scores, key=decode)
         weights = [exp16(op['sub'](s, maximum)) for s in scores]
-        den = 0
-        for w in weights:
-            den = op['add'](den, w)
+        den = sum16_balanced(weights, op['add'])
         assert 1 <= decode(den) <= 16
         probabilities = [op['div'](w, den) for w in weights]
         for j in range(N):

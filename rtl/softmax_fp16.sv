@@ -32,7 +32,7 @@ module softmax_fp16 #(
     reg [15:0] div_done_seen;
     wire [15:0] div_ready_all;
     wire [15:0] div_done_all;
-    wire        all_div_ready, all_div_done;
+    wire        all_div_ready;
     wire        div_start_all;
 
     // 0x4C56 represents FP16 17.34375.
@@ -158,7 +158,6 @@ module softmax_fp16 #(
     endgenerate
 
     assign all_div_ready = &div_ready_all; // 归约与
-    assign all_div_done = &div_done_all;
     assign div_start_all =(state == DIV_START) && all_div_ready;
 
     // Finite values, plus the initial -infinity sentinel. Signed zeros compare equal.
@@ -213,10 +212,14 @@ module softmax_fp16 #(
                     end
                 end
                 DIV_WAIT: begin
+                    // Division latency is data-dependent; capture each lane only
+                    // while its done pulse guarantees that quotient_all is valid.
+                    for(integer j = 0; j < 16; j = j + 1) begin
+                        if (div_done_all[j])
+                            probabilities[j] <= quotient_all[j];
+                    end
                     div_done_seen <= div_done_seen | div_done_all;
                     if(&(div_done_seen | div_done_all)) begin
-                        for(integer j = 0; j < 16; j = j + 1)
-                            probabilities[j] <= quotient_all[j];
                         state <= FINISH;
                     end
                 end

@@ -1,0 +1,2 @@
+COMMAND: ['/Applications/Xcode.app/Contents/Developer/usr/bin/python3', 'scripts/gen_exp.py', '--check']
+EXP ROM PASS: 19542 entries, Decimal 80/110 digits agree; cutoff 0x4c56

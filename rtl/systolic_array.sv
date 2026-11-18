@@ -4,7 +4,7 @@
 // During step=0 operands, validity, and accumulators all hold. clear overrides
 // step and must precede each independent GEMM. Results hold until next clear.
 module systolic_array #(parameter integer N = 16) (
-    input wire clk, rst_n, clear, step,
+    input wire clk, rst_n, clear, step, // step=0 不进行脉动 step=1 进行脉动
     input wire [15:0] a_edge [0:N-1],
     input wire [15:0] b_edge [0:N-1],
     input wire [N-1:0] a_valid, b_valid,

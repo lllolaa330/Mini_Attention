@@ -1,0 +1,53 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/20261118_091205_ws_iverilog_seed20261117_89690/tb_attention.vvp', '+INPUT=input.hex', '+EXPECTED=expected.hex', '+OUTPUT=actual.txt', '+SEED=20261117', '+STALLS=1']
+FRAME PASS run=0 case=0 cycles=1170 mode=0
+FRAME PASS run=1 case=1 cycles=1170 mode=0
+FRAME PASS run=2 case=2 cycles=1725 mode=1
+FRAME PASS run=3 case=3 cycles=1742 mode=1
+FRAME PASS run=4 case=4 cycles=1682 mode=1
+FRAME PASS run=5 case=5 cycles=1649 mode=1
+FRAME PASS run=6 case=6 cycles=1604 mode=1
+FRAME PASS run=7 case=7 cycles=1673 mode=1
+FRAME PASS run=8 case=8 cycles=1782 mode=1
+FRAME PASS run=9 case=9 cycles=1717 mode=1
+FRAME PASS run=10 case=10 cycles=1694 mode=1
+FRAME PASS run=11 case=11 cycles=1728 mode=1
+FRAME PASS run=12 case=12 cycles=1726 mode=1
+FRAME PASS run=13 case=13 cycles=1688 mode=1
+FRAME PASS run=14 case=14 cycles=1724 mode=1
+FRAME PASS run=15 case=15 cycles=1669 mode=1
+FRAME PASS run=16 case=16 cycles=1746 mode=1
+RESET PASS phase=0
+FRAME PASS run=17 case=7 cycles=1682 mode=1
+RESET PASS phase=1
+FRAME PASS run=18 case=8 cycles=1701 mode=1
+RESET PASS phase=2
+FRAME PASS run=19 case=9 cycles=1791 mode=1
+RESET PASS phase=3
+FRAME PASS run=20 case=10 cycles=1715 mode=1
+RESET PASS phase=4
+FRAME PASS run=21 case=11 cycles=1678 mode=1
+RESET PASS phase=5
+FRAME PASS run=22 case=12 cycles=1776 mode=1
+RESET PASS phase=6
+FRAME PASS run=23 case=13 cycles=1707 mode=1
+RESET PASS phase=7
+FRAME PASS run=24 case=14 cycles=1862 mode=1
+SOFTMAX RESET PASS phase=1
+FRAME PASS run=25 case=12 cycles=1769 mode=1
+SOFTMAX RESET PASS phase=2
+FRAME PASS run=26 case=13 cycles=1806 mode=1
+SOFTMAX RESET PASS phase=3
+FRAME PASS run=27 case=14 cycles=1708 mode=1
+SOFTMAX RESET PASS phase=4
+FRAME PASS run=28 case=15 cycles=1671 mode=1
+SOFTMAX RESET PASS phase=5
+FRAME PASS run=29 case=16 cycles=1744 mode=1
+SOFTMAX RESET PASS phase=6
+FRAME PASS run=30 case=0 cycles=1798 mode=1
+RESET PASS phase=8
+FRAME PASS run=31 case=15 cycles=1655 mode=1
+RESET PASS phase=9
+FRAME PASS run=32 case=16 cycles=1755 mode=1
+COVERAGE frames=33 resets=17 input_bubbles=14342 output_stall_cycles=2792 no_stall_cycles=1170
+TB PASS
+tb/tb_attention.sv:244: $finish called at 683966000 (1ps)

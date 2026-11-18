@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Unit-check OS neighbor timing, hold/valid/clear/reset against SoftFloat."""
+"""Check array timing and FP16 results against sequential SoftFloat FMA."""
 import argparse
 import datetime
 import hashlib
@@ -21,6 +21,7 @@ def encode(x):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--sim',choices=['iverilog','verilator'],default='iverilog')
+    p.add_argument('--dataflow', choices=['os', 'ws'], default='os')
     p.add_argument('--size',type=int,default=16,choices=[2,16])
     p.add_argument('--outdir',type=Path)
     p.add_argument('--seed',type=int,default=20261117)
@@ -28,9 +29,11 @@ def main():
     args=p.parse_args(); args.waves=False
     now=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))
     stamp=now.strftime('%Y%m%d_%H%M%S')
-    run=(args.outdir or ROOT/'results'/f'array{args.size}_{stamp}_{args.sim}').resolve()
+    name = f'array{args.size}' if args.dataflow == 'os' else f'array_ws{args.size}'
+    run=(args.outdir or ROOT/'results'/f'{name}_{stamp}_{args.sim}').resolve()
     run.mkdir(parents=True,exist_ok=False)
-    n,k=args.size,16
+    n = args.size
+    k = n if args.dataflow == 'ws' else 16
     rng=random.Random(args.seed)
     fma=ops()['fma']
     matrices=[]
@@ -59,7 +62,9 @@ def main():
         (run/filename).write_text(''.join(f'{w:04x}\n' for w in words))
     manifest={'status':'RUNNING','created_at':now.isoformat(),'seed':args.seed,'array_size':n,'dot_length':k,
               'frames':len(matrices),'outputs':len(evec),'commands':sys.argv,
-              'logical_steps_per_gemm':k+2*(n-1),'sources_sha256':{}}
+              'dataflow': args.dataflow, 'simulator': args.sim,
+              'logical_steps_per_gemm':3*n-1 if args.dataflow == 'ws' else k+2*(n-1),
+              'weight_load_cycles_per_gemm': n if args.dataflow == 'ws' else 0, 'sources_sha256':{}}
     for base in ('rtl','tb','model','scripts','third_party/HardFloat-1','third_party/softfloat_source'):
         for path in sorted((ROOT/base).rglob('*')):
             if path.is_file() and path.suffix in ('.sv','.v','.vi','.c','.h','.py','.f'):
@@ -67,7 +72,8 @@ def main():
     write_json(run/'manifest.json',manifest)
     try:
         command([args.sim,'--version'] if args.sim=='verilator' else ['iverilog','-V'],run/'tool_version.log',60)
-        exe=compile_tb(args,run,'tb_array','N',n)
+        bench = 'tb_array_ws' if args.dataflow == 'ws' else 'tb_array'
+        exe=compile_tb(args,run,bench,'N',n)
         command(exe+['+A=a.hex','+B=b.hex','+EXPECTED=expected.hex',f'+COUNT={len(matrices)}'],
                 run/'array.log',args.timeout,cwd=run)
         if 'PASS array' not in (run/'array.log').read_text(): raise RuntimeError('Array PASS missing')

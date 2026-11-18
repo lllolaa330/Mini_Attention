@@ -1,0 +1,8 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/20261118_113905_os_iverilog_seed20261117_76992/tb_attention.vvp', '+INPUT=input.hex', '+EXPECTED=expected.hex', '+OUTPUT=actual.txt', '+SEED=20261117', '+STALLS=0', '+WAVE=attention.vcd']
+VCD info: dumpfile attention.vcd opened for output.
+BATCH START first_run=0 count=1 kind=main
+FRAME PASS run=0 case=0 cycles=816 mode=0 first_in=3 first_out=788 last_out=818
+COVERAGE frames=1 resets=1 input_bubbles=0 output_stall_cycles=0 no_stall_cycles=816
+STREAM_COVERAGE input_blocked=0 overlap_v_qk=46 overlap_v_sm=19 next_input_output=0 first_output_pv=1 long_stall_cycles=0 queued_resets=0 top_reset_mask=0 softmax_reset_mask=0
+TB PASS
+tb/tb_attention.sv:400: $finish called at 8406000 (1ps)

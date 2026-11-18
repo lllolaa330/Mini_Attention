@@ -1,0 +1,5 @@
+COMMAND: ['/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/20261118_113740_ws_verilator_seed20261117_72625/obj_tb_attention/tb_attention', '+INPUT=input.hex', '+EXPECTED=expected.hex', '+OUTPUT=actual.txt', '+STALLS=0']
+BATCH START first_run=0 count=25 kind=main
+[8055000] %Fatal: tb_attention.sv:113: Assertion failed in tb_attention.monitor: BIT MISMATCH run=0 case=0 row=0 col=0 got=0000 expected=0001 state=6
+%Error: tb/tb_attention.sv:113: Verilog $stop
+Aborting...

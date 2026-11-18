@@ -1,0 +1,2 @@
+run,case,name,batch,category,mode,first_in_cycle,first_out_cycle,last_out_cycle,first_output_latency_cycles,cycles,input_ii_cycles,output_beats,bit_exact,finite,rmse,max_abs_error,passed
+0,0,random_uniform_001,main,random,0,3,788,818,786,816,,31,True,True,0.0006682487948267032,0.002498995012721439,True

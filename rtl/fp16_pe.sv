@@ -1,6 +1,6 @@
 // Output-stationary PE: two operands move, one FP16 partial sum stays local.
-// The baseline FMA is combinational. step advances one complete MAC/forward
-// operation; no pipelined feedback and no unverified frequency are assumed.
+// The baseline FMA is combinational. step advances one complete MAC/forward operation;
+// no pipelined feedback and no unverified frequency are assumed.
 module fp16_pe (
     input wire clk, rst_n, clear, step,
     input wire [15:0] a_in, b_in,

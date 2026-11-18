@@ -1,0 +1,111 @@
+{
+  "ws": {
+    "inputs": 768,
+    "outputs": 256,
+    "done_rises": 1,
+    "reset_assertions": 1,
+    "stages": [
+      {
+        "time_ns": 2.0,
+        "state": "LOAD"
+      },
+      {
+        "time_ns": 7705.0,
+        "state": "CLEAR_QK"
+      },
+      {
+        "time_ns": 7715.0,
+        "state": "LOAD_W_QK"
+      },
+      {
+        "time_ns": 7875.0,
+        "state": "RUN_QK"
+      },
+      {
+        "time_ns": 8345.0,
+        "state": "SM_START"
+      },
+      {
+        "time_ns": 8355.0,
+        "state": "SM_WAIT"
+      },
+      {
+        "time_ns": 8535.0,
+        "state": "CLEAR_PV"
+      },
+      {
+        "time_ns": 8545.0,
+        "state": "LOAD_W_PV"
+      },
+      {
+        "time_ns": 8705.0,
+        "state": "RUN_PV"
+      },
+      {
+        "time_ns": 9175.0,
+        "state": "EMIT"
+      },
+      {
+        "time_ns": 11735.0,
+        "state": "LOAD"
+      }
+    ],
+    "end_time_ns": 11936.0,
+    "size_bytes": 179568,
+    "sha256": "04e1a4321b89d65842877d09422b6ed46b209c41b2768c0e1fbd0b5d4527b7fa",
+    "cycles": 1171,
+    "rmse": 0.0006682487948267032,
+    "max_abs_error": 0.002498995012721439
+  },
+  "os": {
+    "inputs": 768,
+    "outputs": 256,
+    "done_rises": 1,
+    "reset_assertions": 1,
+    "stages": [
+      {
+        "time_ns": 2.0,
+        "state": "LOAD"
+      },
+      {
+        "time_ns": 7705.0,
+        "state": "CLEAR_QK"
+      },
+      {
+        "time_ns": 7715.0,
+        "state": "RUN_QK"
+      },
+      {
+        "time_ns": 8175.0,
+        "state": "SM_START"
+      },
+      {
+        "time_ns": 8185.0,
+        "state": "SM_WAIT"
+      },
+      {
+        "time_ns": 8365.0,
+        "state": "CLEAR_PV"
+      },
+      {
+        "time_ns": 8375.0,
+        "state": "RUN_PV"
+      },
+      {
+        "time_ns": 8835.0,
+        "state": "EMIT"
+      },
+      {
+        "time_ns": 11395.0,
+        "state": "LOAD"
+      }
+    ],
+    "end_time_ns": 11596.0,
+    "size_bytes": 174362,
+    "sha256": "1676432d1d054d6cef3d4c02575d7a47c2b45b88f60e880392a3e61b449fc6aa",
+    "cycles": 1137,
+    "rmse": 0.0006682487948267032,
+    "max_abs_error": 0.002498995012721439
+  },
+  "same_input_and_output_bits": true
+}
