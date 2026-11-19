@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "seed": 20261118,
+  "command": [
+    "scripts/run_scope_array.py"
+  ],
+  "sources_sha256": {
+    "rtl/scope_standard_pe.sv": "5af4cd264a1bd940ce265bf8f18c9fbfa882b485dc54ca1da7bbcf84fa75848a",
+    "rtl/scope_left_pe.sv": "eef38f53c1d01fe2c2e7a29f83be06663c21d51f5fd9d973dd9c20fb618feb5a",
+    "rtl/scope_right_pe.sv": "5119ec8390d6fbd2723b74384fe59c50f043947fd22e0d637f72e95d3dd7e884",
+    "rtl/scope_array.sv": "5c9e59d9813a6a2d5a4425227c7b2dc4bef83531cf7f1212e57fdae05829e284",
+    "tb/tb_scope_array.sv": "24f54002d96164661b7aec37adef01cc8742a1ccc036d8123cbb245c37d88ffe",
+    "rtl/scope_exp_coeffs.svh": "cf161fcb8f04b2890fcf52e399906a3f2b724e07ca6119271e6e234e497f4327",
+    "rtl/fp16_ops.sv": "f4f1ae84be8e24266fcb2cf641bbd3871e035e2e0bbea360188619c355b7dd6d",
+    "rtl/files.f": "13ad7e2eca2e2c8fe7a5a8c66463cbfb22ce8299907ab968401051fca362fea6",
+    "model/scope_attention.py": "d4f97e05224a57182162f3f7dc76d461379bff3c5dee78c992efd149d4e07dd1",
+    "scripts/run_scope_array.py": "3660e9586d884804f838bdc329c56352699a250cddc7600e46c844e45407d4e3"
+  },
+  "iverilog": "Icarus Verilog version 12.0 (stable) ()",
+  "verilator": "Verilator 5.044 2026-01-01 rev vUNKNOWN-built20260101"
+}

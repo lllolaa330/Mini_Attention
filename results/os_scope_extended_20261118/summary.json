@@ -1,0 +1,32 @@
+{
+  "os-scope": {
+    "frames": 101,
+    "y_words": 25856,
+    "max_rmse": 0.019636460470576947,
+    "max_abs": 0.0702930739236114,
+    "steady_ii_samples": [
+      52,
+      52,
+      52,
+      52,
+      52,
+      52
+    ],
+    "steady_ii_cycles": 52,
+    "frames_per_cycle": 0.019230769230769232,
+    "simulated_frames_per_s": 1923076.923076923,
+    "first_result_cycles": 169,
+    "first_frame_cycles": 199,
+    "first_frame_us": 1.99,
+    "batch_cycles": 771,
+    "design": "os-scope",
+    "coverage": {
+      "Y": 25856,
+      "P": 25856,
+      "bubbles": 920,
+      "stalls": 920,
+      "resets": 4
+    },
+    "status": "PASS"
+  }
+}

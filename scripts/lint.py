@@ -13,17 +13,27 @@ ROOT=Path(__file__).resolve().parents[1]
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--outdir',type=Path)
-    p.add_argument('--dataflow',choices=['os'],default='os')
+    p.add_argument('--dataflow',choices=['os','scope','os-scope'],default='os')
+    p.add_argument('--strips',choices=[1,2],type=int,default=2)
     args=p.parse_args()
     now=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))
     run=(args.outdir or ROOT/'results'/('lint_'+args.dataflow+'_'+now.strftime('%Y%m%d_%H%M%S'))).resolve()
     run.mkdir(parents=True,exist_ok=False)
-    cmd=['verilator','--lint-only','--Wall','--top-module','attention_fp16']
+    scope=args.dataflow=='scope'
+    designs={'os':('attention_fp16','rtl/files.f','online_os16'),
+             'scope':('scope_attention_fp16','rtl/scope_files.f','scope_ws16'),
+             'os-scope':('os_scope_attention_fp16','rtl/os_scope_files.f','scope_os16')}
+    top,filelist,architecture=designs[args.dataflow]
+    cmd=['verilator','--lint-only','--Wall','--top-module',top]
+    if scope:
+        cmd.append(f'-GSTRIPS={args.strips}')
     manifest={'status':'RUNNING','created_at':now.isoformat(),'dataflow':args.dataflow,
-              'architecture':'online_os16','sources_sha256':{}}
+              'architecture':architecture,'sources_sha256':{}}
+    if scope:
+        manifest['strips']=args.strips
     for base in ('rtl','third_party/HardFloat-1','scripts'):
         for path in sorted((ROOT/base).rglob('*')):
-            if path.is_file() and path.suffix in ('.sv','.v','.vi','.f','.vlt','.py'):
+            if path.is_file() and path.suffix in ('.sv','.svh','.v','.vi','.f','.vlt','.py'):
                 manifest['sources_sha256'][str(path.relative_to(ROOT))]=hashlib.sha256(path.read_bytes()).hexdigest()
     def execute(argv,name):
         with (run/name).open('w') as log:
@@ -31,8 +41,8 @@ def main():
             return subprocess.run(argv,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT).returncode
     try:
         execute(['verilator','--version'],'tool_version.log')
-        raw=execute(cmd+['-Wno-fatal','-f','rtl/files.f'],'unfiltered.log')
-        rc=execute(cmd+['scripts/verilator_lint.vlt','-f','rtl/files.f'],'strict.log')
+        raw=execute(cmd+['-Wno-fatal','-f',filelist],'unfiltered.log')
+        rc=execute(cmd+['scripts/verilator_lint.vlt','-f',filelist],'strict.log')
         manifest.update(unfiltered_exit=raw,strict_exit=rc,status='PASS' if rc==0 else 'FAIL')
         if rc:
             print((run/'strict.log').read_text(),file=sys.stderr)

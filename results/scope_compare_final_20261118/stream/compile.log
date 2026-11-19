@@ -1,0 +1,1 @@
+COMMAND: ['iverilog', '-g2012', '-s', 'tb_scope_compare', '-o', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/scope_compare_final_20261118/stream/tb.vvp', '-Ptb_scope_compare.CASES=23', '-Ptb_scope_compare.PERF_FRAMES=12', '-DSTREAM', '-f', 'rtl/files.f', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/tb/tb_scope_compare.sv']

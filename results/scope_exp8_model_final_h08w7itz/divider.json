@@ -1,0 +1,34 @@
+{
+  "name": "SCNA denominator minimum division",
+  "numerators_hex": "0000..3bfe",
+  "divisors_hex": [
+    "3bfe",
+    "3bff",
+    "3c00"
+  ],
+  "count": 46077,
+  "result": "PROB DIV PASS cases=46077 consecutive=97\n/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/tb/tb_prob_div.sv:47: $finish called at 465546000 (1ps)",
+  "commands": [
+    [
+      "iverilog",
+      "-g2012",
+      "-s",
+      "tb_prob_div",
+      "-o",
+      "test.vvp",
+      "/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/rtl/fp16_prob_div.sv",
+      "/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/tb/tb_prob_div.sv"
+    ],
+    [
+      "vvp",
+      "test.vvp",
+      "+COUNT=46077"
+    ]
+  ],
+  "vectors_sha256": "111187d822897b4a40c22afc8e0ef8d5ee5d5fb45bc0571ea7bc874f49bd9684",
+  "source_sha256": {
+    "rtl/fp16_prob_div.sv": "19ee0b06a2af5abf6d28fef7b6eab2a35a652278771b02331b7ab6ac4e37b351",
+    "tb/tb_prob_div.sv": "7610701fcfda2bc993d4980478fbb5592f039269149c583db16352124f0b50bb"
+  },
+  "golden": "Berkeley SoftFloat f16_div, round_near_even"
+}

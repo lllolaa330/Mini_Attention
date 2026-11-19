@@ -1,0 +1,1 @@
+COMMAND ['iverilog', '-g2012', '-s', 'tb_reset_queued', '-o', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/os_scope_full_reset_20261118_39bfsBzN/verified/tb.vvp', '-f', 'rtl/os_scope_files.f', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/os_scope_full_reset_20261118_39bfsBzN/tb_reset_queued.sv']

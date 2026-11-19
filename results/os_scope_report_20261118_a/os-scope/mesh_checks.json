@@ -1,0 +1,109 @@
+{
+  "status": "PASS",
+  "batches": [
+    {
+      "stress": false,
+      "frames": 12,
+      "fma_events": {
+        "qk": 49152,
+        "pv": 49152,
+        "exp": 49152
+      },
+      "launch_cycles": [
+        36,
+        88,
+        140,
+        192,
+        244,
+        296,
+        348,
+        400,
+        452,
+        504,
+        556,
+        608
+      ],
+      "launch_intervals": [
+        52,
+        52,
+        52,
+        52,
+        52,
+        52,
+        52,
+        52,
+        52,
+        52,
+        52
+      ],
+      "row_p_commits": 192,
+      "simultaneous_qk_exp_pv_cycles": 330,
+      "output_blocked_mesh_frozen_cycles": 0,
+      "longest_output_hold": 0
+    },
+    {
+      "stress": true,
+      "frames": 23,
+      "fma_events": {
+        "qk": 94208,
+        "pv": 94208,
+        "exp": 94208
+      },
+      "launch_cycles": [
+        1105,
+        1209,
+        1391,
+        1507,
+        1559,
+        1616,
+        1674,
+        2049,
+        2105,
+        2161,
+        2219,
+        2282,
+        2339,
+        2393,
+        2448,
+        2506,
+        2560,
+        2619,
+        2674,
+        2784,
+        2845,
+        2899,
+        2952
+      ],
+      "launch_intervals": [
+        104,
+        182,
+        116,
+        52,
+        57,
+        58,
+        375,
+        56,
+        56,
+        58,
+        63,
+        57,
+        54,
+        55,
+        58,
+        54,
+        59,
+        55,
+        110,
+        61,
+        54,
+        53
+      ],
+      "row_p_commits": 368,
+      "simultaneous_qk_exp_pv_cycles": 640,
+      "output_blocked_mesh_frozen_cycles": 624,
+      "longest_output_hold": 321
+    }
+  ],
+  "first_p_write_logical_age": 69,
+  "first_pv_mac_logical_age": 120
+}

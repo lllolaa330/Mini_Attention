@@ -1,0 +1,58 @@
+{
+  "status": "PASS",
+  "scope": "CPU SoftFloat + exhaustive bounded exp comparison against math.exp. No RTL timing.",
+  "seed": 20261118,
+  "frames": 113,
+  "P_words": 28928,
+  "Y_words": 28928,
+  "fixture_sha256": "a2f0c4face5d7c1f0fd830b39058f57387474c2278344165d7f1d5f7ac5ee0cb",
+  "upstream_checkpoint_sha256": "9d3d346ace40c3b37415127d326834aafa868bfb8da016f0de30299ad8cd071a",
+  "fp16_coefficients": [
+    [
+      "1f19",
+      "2977"
+    ],
+    [
+      "3122",
+      "3133"
+    ],
+    [
+      "2f9a",
+      "31af"
+    ],
+    [
+      "2aa8",
+      "30c6"
+    ],
+    [
+      "340e",
+      "2c41"
+    ],
+    [
+      "26ab",
+      "2eb2"
+    ],
+    [
+      "3273",
+      "2fd9"
+    ],
+    [
+      "2d4e",
+      "318c"
+    ]
+  ],
+  "model_sha256": "c9b4cc5d4f4b76a60de85ee277ffe6ef1a0cec336bd65649132fdb6d821b13f3",
+  "rtl_constants_sha256": "fec1c2fccd9b3ba56a0f4bb147ee3b878e5f597e394c92f0a5f40df947c24e0e",
+  "python": "3.9.6 (default, May 22 2026, 11:13:45) ",
+  "generator_command": "python3 scripts/gen_scope_exp.py --check",
+  "unit_test_command": "python3 -m unittest discover -s tests -p test_scope_model.py -v",
+  "all_representable_minus32_through_negative_zero": {
+    "input_count": 20481,
+    "increasing": true,
+    "max_abs_error": 0.007108366243239739,
+    "x_at_max": -0.26416015625,
+    "exp_zero": 0.9990234375
+  },
+  "max_frame_rmse": 0.020139490647187095,
+  "max_abs_error": 0.07031943591906376
+}

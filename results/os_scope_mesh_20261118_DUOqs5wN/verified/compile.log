@@ -1,0 +1,1 @@
+COMMAND ['iverilog', '-g2012', '-s', 'tb_mesh', '-o', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/os_scope_mesh_20261118_DUOqs5wN/verified/test.vvp', '-f', 'rtl/scope_files.f', 'rtl/os_scope_left_pe.sv', 'rtl/os_scope_right_pe.sv', 'rtl/os_scope_array.sv', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/os_scope_mesh_20261118_DUOqs5wN/tb_mesh.sv']

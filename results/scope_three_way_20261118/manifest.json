@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "args": {
+    "designs": [
+      "scope",
+      "baseline",
+      "stream"
+    ],
+    "outdir": "/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/scope_three_way_20261118",
+    "seed": 20261118,
+    "timeout": 600,
+    "random": 6,
+    "waves": false,
+    "sim": "iverilog",
+    "strips": 2
+  },
+  "seed": 20261118,
+  "period_ns": 10,
+  "simulator": "Icarus Verilog version 12.0 (stable) ()",
+  "clock_note": "10 ns testbench period. Frames/s and us are simulated at that clock; hardware Fmax and power unmeasured.",
+  "interval": "Mean of six retire-to-retire intervals in second traversal of same six clean nonzero frames",
+  "command": [
+    "scripts/run_scope.py",
+    "--designs",
+    "scope",
+    "baseline",
+    "stream",
+    "--outdir",
+    "results/scope_three_way_20261118"
+  ]
+}

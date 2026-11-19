@@ -1,0 +1,4 @@
+COMMAND ['verilator', '--lint-only', '--Wall', '--top-module', 'os_scope_array', 'scripts/verilator_lint.vlt', '-f', 'rtl/scope_files.f', 'rtl/os_scope_left_pe.sv', 'rtl/os_scope_right_pe.sv', 'rtl/os_scope_array.sv']
+- V e r i l a t i o n   R e p o r t: Verilator 5.044 2026-01-01 rev vUNKNOWN-built20260101
+- Verilator: Built from 2.674 MB sources in 43 modules, into 68.662 MB in 82 C++ files needing 0.000 MB
+- Verilator: Walltime 5.041 s (elab=0.100, cvt=4.196, bld=0.000); cpu 5.036 s on 1 threads; alloced 765.750 MB

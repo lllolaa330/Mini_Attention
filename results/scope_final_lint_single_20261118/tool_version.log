@@ -1,0 +1,2 @@
+COMMAND: ['verilator', '--version']
+Verilator 5.044 2026-01-01 rev vUNKNOWN-built20260101

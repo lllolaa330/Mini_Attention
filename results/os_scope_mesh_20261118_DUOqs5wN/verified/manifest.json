@@ -1,0 +1,70 @@
+{
+  "status": "PASS",
+  "design": "one dual-strip 16x16 OS-SCOPE mesh",
+  "frames_after_reset": 6,
+  "seed": 20261118,
+  "physical_elaborated": {
+    "os_scope_left_pe": 128,
+    "os_scope_right_pe": 128,
+    "fp16_fma": 256,
+    "mulAddRecFN": 256
+  },
+  "coverage": {
+    "QK_MAC": 31952,
+    "logical_edges": 508,
+    "exp_results": 1792,
+    "stall_edges": 112,
+    "PV_MAC": 24576
+  },
+  "checked_clock_edges": 622,
+  "value_checks": {
+    "accumulator": 159232,
+    "strip_exp": 9952
+  },
+  "commands": [
+    [
+      "verilator",
+      "--lint-only",
+      "--Wall",
+      "--top-module",
+      "os_scope_array",
+      "scripts/verilator_lint.vlt",
+      "-f",
+      "rtl/scope_files.f",
+      "rtl/os_scope_left_pe.sv",
+      "rtl/os_scope_right_pe.sv",
+      "rtl/os_scope_array.sv"
+    ],
+    [
+      "iverilog",
+      "-g2012",
+      "-s",
+      "tb_mesh",
+      "-o",
+      "/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/os_scope_mesh_20261118_DUOqs5wN/verified/test.vvp",
+      "-f",
+      "rtl/scope_files.f",
+      "rtl/os_scope_left_pe.sv",
+      "rtl/os_scope_right_pe.sv",
+      "rtl/os_scope_array.sv",
+      "/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/os_scope_mesh_20261118_DUOqs5wN/tb_mesh.sv"
+    ],
+    [
+      "vvp",
+      "/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/os_scope_mesh_20261118_DUOqs5wN/verified/test.vvp"
+    ]
+  ],
+  "iverilog": "Icarus Verilog version 12.0 (stable) ()",
+  "verilator": "Verilator 5.044 2026-01-01 rev vUNKNOWN-built20260101",
+  "sources_sha256": {
+    "rtl/os_scope_left_pe.sv": "55ad19a8d87863834a973b4d7df5ada4bb904dfd1eb0b8bd3ea4b83158069431",
+    "rtl/os_scope_right_pe.sv": "876c0ac7fea784ff34c7dabc00bf48c253c6a1f41c1a411c7966c5b7c707d255",
+    "rtl/os_scope_array.sv": "84421f27eedc15755d5079ca1f47ff701923066dcb23ab595623b7adb4708242",
+    "rtl/scope_exp_coeffs.svh": "cf161fcb8f04b2890fcf52e399906a3f2b724e07ca6119271e6e234e497f4327",
+    "rtl/fp16_ops.sv": "f4f1ae84be8e24266fcb2cf641bbd3871e035e2e0bbea360188619c355b7dd6d",
+    "model/scope_attention.py": "d4f97e05224a57182162f3f7dc76d461379bff3c5dee78c992efd149d4e07dd1"
+  },
+  "stimulus_sha256": "a1fd8019857736487d5ac7983a12153196ebeb363af6577fe9dc02cf381b909f",
+  "bench_sha256": "e9ba02d611ac61f670e04998a0ce3d50bd600478ee4fb3a69fe6d5e282b3582f",
+  "script_sha256": "7576805f3f3b02d869cd014e8e6381ba818eef3ecd0b6db54cbb9bc60d8263d3"
+}

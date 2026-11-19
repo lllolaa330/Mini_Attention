@@ -1,0 +1,3 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/scope_array_20261118_205633_41m3snoj/array_2.vvp']
+PASS STRIPS=2 raw_QK=256 Exp=256 PV=256
+tb/tb_scope_array.sv:101: $finish called at 1436000 (1ps)

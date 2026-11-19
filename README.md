@@ -1,6 +1,36 @@
 # Mini_Attention
 
-**用一个 16×16 全 FP16 输出驻留（OS）脉动阵列计算 `Y = Softmax(QKᵀ / 4)V`。**
+**16×16 全 FP16 单头 Attention**，提供 Stream Attention（OS）、SCOPE（WS）和 OS-SCOPE 三个顶层，计算 `Y = Softmax(QKᵀ / 4)V`。
+
+## OS-SCOPE
+
+[OS-SCOPE 顶层](rtl/os_scope_attention_fp16.sv) 在同一个 16×16 OS 阵列上执行 QKᵀ、SCNA-8 指数和 PV。每份指数既用作概率分子，又进入同一行的分母加法树。双条带共有 128 个 Left、128 个 Right，每个 PE 复用一条 FP16 FMA。以本帧第一次 QK 乘加为 t=0，第 0 行 P 在 t=69 写回，PV 在 t=120 启动。在连续供数、下游持续就绪的条件下，相邻帧每 52 拍启动一次。[电路图](docs/os_scna_pe/os_scope_pe.svg) · [详细时序与缓冲](docs/os_scna_pe/schedule.md) · [四版实验简报](docs/SCOPE_Attention_实验简报.pdf)
+
+```sh
+make os-scope                   # 顶层逐位、协议与排程检查
+make os-scope SIM=verilator     # 使用第二种仿真器
+make os-scope ARGS=--waves      # 查看 os-scope/attention.vcd
+make os-scope-lint              # Verilator 严格 lint
+make scope-compare              # 在原生公开端口复测四版
+```
+
+## SCOPE Attention
+
+[SCOPE 顶层](rtl/scope_attention_fp16.sv) 和 Stream 使用相同的 256 位输入输出协议。它在同一块 WS 阵列上依次计算 QKᵀ、SCNA-8 指数和 PV。ACC 保存行最大值、归约分母并归一化。默认双条带每拍接收 16 个指数输入；单条带每拍接收 8 个，并在同一阵列中实例化全部三类 PE。[Standard](rtl/scope_standard_pe.sv) · [Left](rtl/scope_left_pe.sv) · [Right](rtl/scope_right_pe.sv) · [一页实验简报](docs/SCOPE_Attention_实验简报.pdf)
+
+```sh
+make scope                        # SCOPE 顶层，带背压和逐位自检
+make scope STRIPS=1               # 128 Standard + 64 Left + 64 Right
+make scope SIM=verilator
+make scope ARGS=--waves           # 打开结果目录 scope/attention.vcd
+make scope-array                  # 验证两种阵列的 QK、Exp 和 PV
+make scope-lint                   # 顶层严格 lint，可选 STRIPS=1
+make scope-compare                # 用相同输入比较最初基线、Stream、SCOPE 和 OS-SCOPE
+```
+
+`scope-compare` 从本地 Git 历史读取 `34559ae` 和 `7ea651a`。输出目录的 `summary.json` 给出首帧时间、稳态帧间隔、吞吐及数值误差。[SCOPE 数值和调度](PROJECT.md#scope-attention)
+
+## Stream Attention
 
 QKᵀ 的点积沿阵列对角线完成。每行一边保存缩放分数，一边更新在线 Softmax 的最大值和分母。行统计完成后，共享的 16 路 exp/div 同时归一化整行。流水线可以连续 16 拍接收 16 行，依次将每行的 16 个 FP16 概率写入行首缓冲。该行从左向右按 k 送出 P，V 从上边界向下传播，同一批 PE 就地累加 Y。左上方的 PE 可以在右下方仍算本帧 QKᵀ 时开始 PV。跨帧时，各 PE 算完上一帧的 Y 即可接收下一帧 QKᵀ 的首项。
 
@@ -28,7 +58,7 @@ make array                       # OS 矩阵乘单测
 make lint                        # 当前 Attention 顶层的严格静态检查
 ```
 
-Attention 顶层只实例化一个 OS 阵列。旧的 WS 阵列源文件与独立单测保留用于重放以往实验。
+Stream 顶层 `attention_fp16` 只实例化一个 OS 阵列。旧的 WS 阵列源文件与独立单测保留用于重放以往实验。
 
 直接调用 Python 时可选择模式并指定输出目录。
 

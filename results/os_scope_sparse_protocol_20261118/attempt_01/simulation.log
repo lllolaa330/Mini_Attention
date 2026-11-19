@@ -1,0 +1,23 @@
+GAP_START tx=47 cycle=57 duration=271 rx=0
+GAP_END tx=47 cycle=327 rx=0 busy=1
+GAP_START tx=48 cycle=329 duration=640 rx=0
+FRAME 0 0 4 329 442 668
+GAP_END tx=48 cycle=968 rx=31 busy=0
+GAP_START tx=59 cycle=982 duration=163 rx=31
+GAP_END tx=59 cycle=1144 rx=31 busy=1
+GAP_START tx=127 cycle=1223 duration=150 rx=31
+FRAME 1 1 970 1190 1305 1341
+GAP_END tx=127 cycle=1372 rx=62 busy=1
+GAP_START tx=184 cycle=1444 duration=270 rx=62
+FRAME 2 2 1191 1392 1511 1546
+GAP_END tx=184 cycle=1713 rx=93 busy=1
+FRAME 3 3 1394 1722 1739 1773
+GAP_START tx=322 cycle=1869 duration=177 rx=124
+FRAME 4 4 1723 1782 1912 1948
+GAP_END tx=322 cycle=2045 rx=155 busy=1
+FRAME 5 5 1783 1831 2066 2294
+FRAME 6 6 1832 2063 2316 2351
+FRAME 7 7 2064 2117 2425 2457
+FRAME 8 8 2118 2171 2479 2513
+PASS Y=2304 P=2304 bubbles=1736 stalls=620 resets=1
+/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/os_scope_sparse_protocol_20261118/tb_os_scope_sparse.sv:167: $finish called at 25175000 (1ps)

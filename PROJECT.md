@@ -2,6 +2,24 @@
 
 本项目计算 `Y = Softmax(QKᵀ / 4)V`。矩阵均为 16×16，Softmax 按行执行；不包含 Q/K/V 投影、多头拼接、掩码、训练或 KV cache。合法输入为 `[-2,2]` 内的有限 IEEE 754 binary16 值，含正负零和次正规数。
 
+## SCOPE Attention
+
+`scope_attention_fp16` 是 SCOPE 图 9–11 的全 FP16 单 tile 实现。它与下文的 OS Stream 顶层共用输入/输出格式和 FMA 舍入规则，各自有对应的逐位软件模型。SCOPE 的一块 16×16 WS 阵列先装 K 计算 QKᵀ，再把 8 对 SCNA 系数设为驻留操作数计算指数，最后切换为驻留 V 计算 PV。每个 PE 只有一条 FP16 FMA。GEMM 的激活向右、部分和向下；SCNA 时每对 Left/Right 分两步计算 `a = FMA16(x,w,b)` 和 `y = FMA16(1,ReLU(a),y)`，八对纵向串联。指数模式的横向链路可预装 V。[WS 阵列](rtl/scope_array.sv) · [系数来源](third_party/scope/README.md)
+
+ACC 在 QK 输出时计算四分之一缩放和逐行最大值，再把减去最大值的分数送回阵列。指数返回后，相邻元素两两做 FP16 加法，经过四级树得到分母；直接 FP16 除法得到显式 P，再按 k 递增做 PV。这样保留 Mini_Attention 的 FP16 概率边界，与论文图 11 将未归一化指数送入 PV 的顺序有不同的舍入点。SCNA 近似使 `exp(0) = 0x3bfe`。原始数学参考始终为 float64 Attention。[软件位模型](model/scope_attention.py) · [行归约及除法](rtl/scope_row_acc.sv)
+
+默认 `STRIPS=2`，16 路指数输入共用 128 个 Left 和 128 个 Right；`STRIPS=1`，8 路指数共用 64 个 Left 和 64 个 Right，其余 128 个位置为 Standard。两者都使用同一块阵列执行三个阶段。输入双缓冲可并行接收下一帧，当前调度在前帧末组输出握手后启动下一帧的 K 装载。输出背压会冻结 PV 波前和输出标签。
+
+连续供数、无背压时，双条带的 139 拍可从 `state` 逐项核对。启动 1 拍、装 K 并提交 17 拍、QK 阶段 47 拍、提交 SCNA 系数 1 拍、指数阶段 25 拍、提交 V 1 拍、PV 阶段 46 拍、末组输出握手 1 拍。装 SCNA 系数的传输落在 QK 尾部，装 V 的传输落在指数阶段。波形中 `preload_coeff`、`preload_v`、`array_scna` 和 `pv_step` 分别标识这些操作。
+
+## OS-SCOPE 的实现
+
+OS-SCOPE 依次对每一行做缩放和最大值归约、SCNA-8 指数、相邻四级 FP16 加法树、直接 FP16 除法和显式 P 的 PV 点积，舍入位置与上面的 WS SCOPE 相同。两版共用 `model/scope_attention.py` 和 `scope_row_acc`。OS-SCOPE 将双条带放入 OS 网格，A、B 独立过境，只有 GEMM 写本地 `acc`；指数调用该物理 PE 的同一 FMA，写独立的仿射结果或指数部分和。[阵列](rtl/os_scope_array.sv) · [逐坐标排程](docs/os_scna_pe/schedule.md)
+
+顶层按真实发车记录帧的年龄和物理槽。Q/K 双缓冲、V 三缓冲与 P 双缓冲独立寻址；Q/K 在 t=30 最后一次注入后可回收，V 在 t=150 回收。输入遵循 48 拍顺序，V 槽的占用只会挡住新帧的 V 输入。若 t=120 时本帧 V 尚未收齐，或下游阻塞待发的结果组，全阵、行归约和帧年龄同步暂停；输入仍可填充空槽。出队无需下一帧到达，复位会丢弃所有在途事务。公开接口与 Stream 和 WS SCOPE 相同。[顶层控制](rtl/os_scope_attention_fp16.sv)
+
+以下第 1–6 节描述 Stream Attention 的 OS 数据流。
+
 ## 1. 全 FP16 的含义
 
 Q、K、V、P、Y、阵列链路和 PE 累加器均使用 16-bit binary16。Softmax 各次加、减、乘、除及指数输出也回到 binary16。舍入方式统一为 round-to-nearest, ties-to-even（RNE）；不启用 flush-to-zero。

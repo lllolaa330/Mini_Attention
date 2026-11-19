@@ -28,6 +28,10 @@
 - `scripts/softfloat_build/Makefile`、`platform.h` 取自该版本的 `build/Linux-x86_64-GCC/`。运行脚本提供实际 source 路径、编译器和共享库构建参数；构建目录名称不代表在 macOS 上生成 x86 代码。
 - 位模型调用 `f16_mulAdd`、`f16_add`、`f16_sub`、`f16_mul`、`f16_div`，采用与 RTL 相同的 RNE 和次正规数语义。Python/C 桥接层属于本项目。
 
+## SCOPE SCNA-8 系数
+
+SCOPE 顶层用到的 8 对 binary16 权重与偏置由作者公开的 Exp8 checkpoint 融合、舍入得到。论文图 9–11 为 PE 与数据流设计依据。作者产物的固定版本、校验和、许可说明及重建命令见[系数来源记录](third_party/scope/README.md)。
+
 ## 阵列设计参考
 
 本项目脉动阵列实现采用标准输出驻留数据流：操作数向右/向下传播，partial sum 保留在 PE 内，边界按行列索引错拍。设计时查看过 [TRANSFORMER-ATTENTION-ACCELERATOR 的定点 qk_systolic.sv](https://github.com/Abhinav-Avasarala/TRANSFORMER-ATTENTION-ACCELERATOR/blob/3054e9a5324da438a78937049f656abc413c2750/src/qk_systolic.sv)，本仓库未复制该仓库 RTL；本项目的 FP16 算术和 Softmax 数值契约以 PROJECT.md 为准。

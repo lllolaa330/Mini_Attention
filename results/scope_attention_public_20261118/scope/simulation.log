@@ -1,0 +1,2 @@
+COMMAND: ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/scope_attention_public_20261118/scope/tb.vvp']
+Assertion failed: (mem), function compile_array_alias, file array.cc, line 1538.

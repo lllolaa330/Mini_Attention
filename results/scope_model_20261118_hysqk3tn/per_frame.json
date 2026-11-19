@@ -1,0 +1,567 @@
+[
+  {
+    "name": "all_zero",
+    "rmse": 0.0,
+    "max_abs_error": 0.0
+  },
+  {
+    "name": "all_negative_zero",
+    "rmse": 0.0,
+    "max_abs_error": 0.0
+  },
+  {
+    "name": "all_positive_extreme",
+    "rmse": 0.0,
+    "max_abs_error": 0.0
+  },
+  {
+    "name": "all_negative_extreme",
+    "rmse": 0.0,
+    "max_abs_error": 0.0
+  },
+  {
+    "name": "minimum_scores",
+    "rmse": 0.0,
+    "max_abs_error": 0.0
+  },
+  {
+    "name": "checker_cancellation",
+    "rmse": 5.062616992290714e-14,
+    "max_abs_error": 5.062616992290714e-14
+  },
+  {
+    "name": "exact_zero_weighted_sum",
+    "rmse": 0.0,
+    "max_abs_error": 0.0
+  },
+  {
+    "name": "uniform_weights_ramp",
+    "rmse": 0.0,
+    "max_abs_error": 0.0
+  },
+  {
+    "name": "constant_v",
+    "rmse": 0.0,
+    "max_abs_error": 0.0
+  },
+  {
+    "name": "identity_transpose_probe",
+    "rmse": 0.0008234350443414422,
+    "max_abs_error": 0.0013527032150387336
+  },
+  {
+    "name": "sharp_max_gap_32",
+    "rmse": 2.280675766560047e-13,
+    "max_abs_error": 2.282618538629322e-13
+  },
+  {
+    "name": "tied_maxima",
+    "rmse": 0.0,
+    "max_abs_error": 0.0
+  },
+  {
+    "name": "cutoff_-0.0009766",
+    "rmse": 3.6293633944861625e-06,
+    "max_abs_error": 3.6293633944861625e-06
+  },
+  {
+    "name": "cutoff_+0.0000000",
+    "rmse": 3.6011195123641926e-06,
+    "max_abs_error": 3.6011195123641926e-06
+  },
+  {
+    "name": "cutoff_+0.0009766",
+    "rmse": 3.573095424869166e-06,
+    "max_abs_error": 3.573095424869166e-06
+  },
+  {
+    "name": "subnormal_and_signed_zero",
+    "rmse": 8.390177510258944e-08,
+    "max_abs_error": 1.5646219312257888e-07
+  },
+  {
+    "name": "binary16_boundaries",
+    "rmse": 0.006821112685137335,
+    "max_abs_error": 0.02896678804020536
+  },
+  {
+    "name": "random_bits_000",
+    "rmse": 0.0003684261468022998,
+    "max_abs_error": 0.0015651771030461697
+  },
+  {
+    "name": "random_uniform_001",
+    "rmse": 0.0031280981431106736,
+    "max_abs_error": 0.011767879005595505
+  },
+  {
+    "name": "random_extremes_002",
+    "rmse": 0.0184141311583765,
+    "max_abs_error": 0.06307408229199152
+  },
+  {
+    "name": "random_bits_003",
+    "rmse": 0.0003568164650843117,
+    "max_abs_error": 0.0016866858762226815
+  },
+  {
+    "name": "random_uniform_004",
+    "rmse": 0.003220565914758145,
+    "max_abs_error": 0.010080363050093633
+  },
+  {
+    "name": "random_extremes_005",
+    "rmse": 0.01474673910794614,
+    "max_abs_error": 0.038702141180298355
+  },
+  {
+    "name": "random_bits_006",
+    "rmse": 0.00043697165812432265,
+    "max_abs_error": 0.0014255793978036058
+  },
+  {
+    "name": "random_uniform_007",
+    "rmse": 0.0033481978678144434,
+    "max_abs_error": 0.012722806128034114
+  },
+  {
+    "name": "random_extremes_008",
+    "rmse": 0.013752169746246606,
+    "max_abs_error": 0.037765423296955536
+  },
+  {
+    "name": "random_bits_009",
+    "rmse": 0.00033366514719642337,
+    "max_abs_error": 0.0010726118489663844
+  },
+  {
+    "name": "random_uniform_010",
+    "rmse": 0.003041690227403928,
+    "max_abs_error": 0.011445925598602469
+  },
+  {
+    "name": "random_extremes_011",
+    "rmse": 0.017525771525951365,
+    "max_abs_error": 0.04901465161137297
+  },
+  {
+    "name": "random_bits_012",
+    "rmse": 0.00040148631273172344,
+    "max_abs_error": 0.0018888544932447668
+  },
+  {
+    "name": "random_uniform_013",
+    "rmse": 0.00382639501693215,
+    "max_abs_error": 0.013205108915036012
+  },
+  {
+    "name": "random_extremes_014",
+    "rmse": 0.014364456963488521,
+    "max_abs_error": 0.04326879442299236
+  },
+  {
+    "name": "random_bits_015",
+    "rmse": 0.0004897009483771721,
+    "max_abs_error": 0.00182206064497481
+  },
+  {
+    "name": "random_uniform_016",
+    "rmse": 0.002798960118265,
+    "max_abs_error": 0.008141234830041366
+  },
+  {
+    "name": "random_extremes_017",
+    "rmse": 0.01726887265468526,
+    "max_abs_error": 0.06169699104599502
+  },
+  {
+    "name": "random_bits_018",
+    "rmse": 0.0003607412698337241,
+    "max_abs_error": 0.0014483070846139923
+  },
+  {
+    "name": "random_uniform_019",
+    "rmse": 0.002997037995103022,
+    "max_abs_error": 0.010058551131932936
+  },
+  {
+    "name": "random_extremes_020",
+    "rmse": 0.01715255318842289,
+    "max_abs_error": 0.0471095770364256
+  },
+  {
+    "name": "random_bits_021",
+    "rmse": 0.0004165672964500345,
+    "max_abs_error": 0.001623595471105882
+  },
+  {
+    "name": "random_uniform_022",
+    "rmse": 0.002833719570947145,
+    "max_abs_error": 0.009968635201522136
+  },
+  {
+    "name": "random_extremes_023",
+    "rmse": 0.013678577923328978,
+    "max_abs_error": 0.039374409658803566
+  },
+  {
+    "name": "random_bits_024",
+    "rmse": 0.00039101302859276146,
+    "max_abs_error": 0.002091537030168733
+  },
+  {
+    "name": "random_uniform_025",
+    "rmse": 0.0026412111919348683,
+    "max_abs_error": 0.01007636250999211
+  },
+  {
+    "name": "random_extremes_026",
+    "rmse": 0.018858114385495877,
+    "max_abs_error": 0.04827564588850919
+  },
+  {
+    "name": "random_bits_027",
+    "rmse": 0.0005638079836284092,
+    "max_abs_error": 0.0026325145920627624
+  },
+  {
+    "name": "random_uniform_028",
+    "rmse": 0.0030548706603579045,
+    "max_abs_error": 0.009954211466324803
+  },
+  {
+    "name": "random_extremes_029",
+    "rmse": 0.016164907187280676,
+    "max_abs_error": 0.0433916707662243
+  },
+  {
+    "name": "random_bits_030",
+    "rmse": 0.00037411505952000894,
+    "max_abs_error": 0.0016127775996466337
+  },
+  {
+    "name": "random_uniform_031",
+    "rmse": 0.003068989141315938,
+    "max_abs_error": 0.010324913457609552
+  },
+  {
+    "name": "random_extremes_032",
+    "rmse": 0.015555960034999934,
+    "max_abs_error": 0.038770660980737226
+  },
+  {
+    "name": "random_bits_033",
+    "rmse": 0.00036949183049126035,
+    "max_abs_error": 0.0016941990474788685
+  },
+  {
+    "name": "random_uniform_034",
+    "rmse": 0.0029384669926594007,
+    "max_abs_error": 0.011573152892913274
+  },
+  {
+    "name": "random_extremes_035",
+    "rmse": 0.01758237348919448,
+    "max_abs_error": 0.048764899351263935
+  },
+  {
+    "name": "random_bits_036",
+    "rmse": 0.0003809285836412853,
+    "max_abs_error": 0.0015350316440548573
+  },
+  {
+    "name": "random_uniform_037",
+    "rmse": 0.002814871416243365,
+    "max_abs_error": 0.009507237194718021
+  },
+  {
+    "name": "random_extremes_038",
+    "rmse": 0.016715264434571348,
+    "max_abs_error": 0.048950804401778125
+  },
+  {
+    "name": "random_bits_039",
+    "rmse": 0.00036174298911969497,
+    "max_abs_error": 0.0012232779543756393
+  },
+  {
+    "name": "random_uniform_040",
+    "rmse": 0.0029753033791251686,
+    "max_abs_error": 0.010516044813780101
+  },
+  {
+    "name": "random_extremes_041",
+    "rmse": 0.015194298891073925,
+    "max_abs_error": 0.04548338794926887
+  },
+  {
+    "name": "random_bits_042",
+    "rmse": 0.00041902692067982954,
+    "max_abs_error": 0.0015698317613707935
+  },
+  {
+    "name": "random_uniform_043",
+    "rmse": 0.0026560309668836454,
+    "max_abs_error": 0.009619323542153557
+  },
+  {
+    "name": "random_extremes_044",
+    "rmse": 0.01775751595569495,
+    "max_abs_error": 0.039532345700382
+  },
+  {
+    "name": "random_bits_045",
+    "rmse": 0.0004124286632167788,
+    "max_abs_error": 0.0014310494122554696
+  },
+  {
+    "name": "random_uniform_046",
+    "rmse": 0.0032331389147871475,
+    "max_abs_error": 0.011714630261817405
+  },
+  {
+    "name": "random_extremes_047",
+    "rmse": 0.013551125023060748,
+    "max_abs_error": 0.04051046920720247
+  },
+  {
+    "name": "random_bits_048",
+    "rmse": 0.0004165621311164363,
+    "max_abs_error": 0.0017577489280681882
+  },
+  {
+    "name": "random_uniform_049",
+    "rmse": 0.002991682230242908,
+    "max_abs_error": 0.009892010895645231
+  },
+  {
+    "name": "random_extremes_050",
+    "rmse": 0.016300808506052897,
+    "max_abs_error": 0.03731716174609301
+  },
+  {
+    "name": "random_bits_051",
+    "rmse": 0.0004530394788989937,
+    "max_abs_error": 0.0017211555786946636
+  },
+  {
+    "name": "random_uniform_052",
+    "rmse": 0.003002131143204812,
+    "max_abs_error": 0.009392484488410235
+  },
+  {
+    "name": "random_extremes_053",
+    "rmse": 0.014928789673770227,
+    "max_abs_error": 0.05401895646828314
+  },
+  {
+    "name": "random_bits_054",
+    "rmse": 0.000284629734279376,
+    "max_abs_error": 0.0012010779373149288
+  },
+  {
+    "name": "random_uniform_055",
+    "rmse": 0.003225209062652853,
+    "max_abs_error": 0.012432987558521097
+  },
+  {
+    "name": "random_extremes_056",
+    "rmse": 0.017176945497169825,
+    "max_abs_error": 0.04487703203999671
+  },
+  {
+    "name": "random_bits_057",
+    "rmse": 0.00036175026622195305,
+    "max_abs_error": 0.0012972051311911093
+  },
+  {
+    "name": "random_uniform_058",
+    "rmse": 0.002557954713405504,
+    "max_abs_error": 0.008513913228114678
+  },
+  {
+    "name": "random_extremes_059",
+    "rmse": 0.01836941334001799,
+    "max_abs_error": 0.04989992817443922
+  },
+  {
+    "name": "random_bits_060",
+    "rmse": 0.00037371085737929107,
+    "max_abs_error": 0.0016937412572941846
+  },
+  {
+    "name": "random_uniform_061",
+    "rmse": 0.0028238881723122835,
+    "max_abs_error": 0.007505601196860237
+  },
+  {
+    "name": "random_extremes_062",
+    "rmse": 0.012802717959123112,
+    "max_abs_error": 0.03151707875955134
+  },
+  {
+    "name": "random_bits_063",
+    "rmse": 0.0004919536841434095,
+    "max_abs_error": 0.002210187855127027
+  },
+  {
+    "name": "random_uniform_064",
+    "rmse": 0.002916622375195554,
+    "max_abs_error": 0.011479289588391783
+  },
+  {
+    "name": "random_extremes_065",
+    "rmse": 0.01542682652665417,
+    "max_abs_error": 0.04624257429979339
+  },
+  {
+    "name": "random_bits_066",
+    "rmse": 0.00041501197969207975,
+    "max_abs_error": 0.0015837946956313298
+  },
+  {
+    "name": "random_uniform_067",
+    "rmse": 0.0027732104924026034,
+    "max_abs_error": 0.009238940308262888
+  },
+  {
+    "name": "random_extremes_068",
+    "rmse": 0.015380981552745478,
+    "max_abs_error": 0.04634657053976321
+  },
+  {
+    "name": "random_bits_069",
+    "rmse": 0.00029481894913546523,
+    "max_abs_error": 0.0009543485138641394
+  },
+  {
+    "name": "random_uniform_070",
+    "rmse": 0.003480486773697812,
+    "max_abs_error": 0.012170828743524265
+  },
+  {
+    "name": "random_extremes_071",
+    "rmse": 0.020139490647187095,
+    "max_abs_error": 0.052396175808749446
+  },
+  {
+    "name": "random_bits_072",
+    "rmse": 0.0003540675799852022,
+    "max_abs_error": 0.0013719772433904709
+  },
+  {
+    "name": "random_uniform_073",
+    "rmse": 0.0033969038768439782,
+    "max_abs_error": 0.011155747477557598
+  },
+  {
+    "name": "random_extremes_074",
+    "rmse": 0.015645857576543593,
+    "max_abs_error": 0.03957079743220571
+  },
+  {
+    "name": "random_bits_075",
+    "rmse": 0.0005081144124578078,
+    "max_abs_error": 0.0019504613213470745
+  },
+  {
+    "name": "random_uniform_076",
+    "rmse": 0.003200752156142959,
+    "max_abs_error": 0.013526919839672746
+  },
+  {
+    "name": "random_extremes_077",
+    "rmse": 0.016450271493918964,
+    "max_abs_error": 0.04893941579088845
+  },
+  {
+    "name": "random_bits_078",
+    "rmse": 0.0004322729700403013,
+    "max_abs_error": 0.0017430572147552753
+  },
+  {
+    "name": "random_uniform_079",
+    "rmse": 0.0031581215327098023,
+    "max_abs_error": 0.011979386435938766
+  },
+  {
+    "name": "random_extremes_080",
+    "rmse": 0.018119314246291436,
+    "max_abs_error": 0.05666216032975413
+  },
+  {
+    "name": "random_bits_081",
+    "rmse": 0.00036785370610001664,
+    "max_abs_error": 0.0012610411986012093
+  },
+  {
+    "name": "random_uniform_082",
+    "rmse": 0.0027639018303223946,
+    "max_abs_error": 0.008535797249951349
+  },
+  {
+    "name": "random_extremes_083",
+    "rmse": 0.015303377399145994,
+    "max_abs_error": 0.04305870652355215
+  },
+  {
+    "name": "random_bits_084",
+    "rmse": 0.0004634610073872513,
+    "max_abs_error": 0.0016025697582376652
+  },
+  {
+    "name": "random_uniform_085",
+    "rmse": 0.003353026974711462,
+    "max_abs_error": 0.012521664747679795
+  },
+  {
+    "name": "random_extremes_086",
+    "rmse": 0.016063069822600817,
+    "max_abs_error": 0.060860396863205324
+  },
+  {
+    "name": "random_bits_087",
+    "rmse": 0.00041738408915393735,
+    "max_abs_error": 0.0014810823894544287
+  },
+  {
+    "name": "random_uniform_088",
+    "rmse": 0.0027310317436240713,
+    "max_abs_error": 0.008723426594082095
+  },
+  {
+    "name": "random_extremes_089",
+    "rmse": 0.013977781278714949,
+    "max_abs_error": 0.034405759577497586
+  },
+  {
+    "name": "random_bits_090",
+    "rmse": 0.00045800773207455286,
+    "max_abs_error": 0.0017603743729148746
+  },
+  {
+    "name": "random_uniform_091",
+    "rmse": 0.003171808959125679,
+    "max_abs_error": 0.008748327248098764
+  },
+  {
+    "name": "random_extremes_092",
+    "rmse": 0.011828166811626442,
+    "max_abs_error": 0.038688369427238634
+  },
+  {
+    "name": "random_bits_093",
+    "rmse": 0.00032098530968593665,
+    "max_abs_error": 0.001834126536370561
+  },
+  {
+    "name": "random_uniform_094",
+    "rmse": 0.0035116441256818087,
+    "max_abs_error": 0.013910684932971859
+  },
+  {
+    "name": "random_extremes_095",
+    "rmse": 0.01918090804376946,
+    "max_abs_error": 0.07031943591906376
+  }
+]

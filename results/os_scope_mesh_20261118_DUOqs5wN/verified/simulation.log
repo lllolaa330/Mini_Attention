@@ -1,0 +1,3 @@
+COMMAND ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/os_scope_mesh_20261118_DUOqs5wN/verified/test.vvp']
+PASS all physical OS accumulators and 16 strip outputs through edge 621
+/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/os_scope_mesh_20261118_DUOqs5wN/tb_mesh.sv:31: $finish called at 6842000 (1ps)

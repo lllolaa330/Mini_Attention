@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "iverilog": "results/scope_compare_final_20261118",
+  "verilator": "results/scope_final_verilator_20261118",
+  "matched": [
+    "All captured RTL and model source hashes, testbench, runner, and case list",
+    "All accepted Y words and their sequence",
+    "All frame timestamps and independent float64 errors",
+    "All bit-model P and Y goldens; each simulator checked every P and Y in RTL"
+  ],
+  "identical_sha256": {
+    "input.hex": "d536bb76ee8081a7bb8d928893c221cc4879ad495ba1ce7b3b85bd42293f9ab5",
+    "scope/actual.txt": "15128ee3fbd64e2292700594c80d8d47154a139e663d52d8e4d4c304d268c9e2",
+    "scope/frames.csv": "cd5f4637d3c08183fa5163efec8466db19991803c43dac027abc959d80078ef6",
+    "scope/metrics.json": "6eeae974d4aa914d0b58db4eaa66ec9a4dfa23b78255101c9a72dc7ff49d1270",
+    "scope/expected_p.hex": "71cd0bb9332ed4b5d1fdf55c4e79c1fa97541262cb87fc4d39372ae4ed55536e",
+    "scope/expected.hex": "3ce747f0f6a0bdf60cd87ab2ebca81bbc4647cbed0b816ebbef4e80481333831"
+  },
+  "scope_coverage": {
+    "Y": 8960,
+    "P": 8960,
+    "bubbles": 174,
+    "stalls": 293,
+    "resets": 4
+  },
+  "frames": 35
+}

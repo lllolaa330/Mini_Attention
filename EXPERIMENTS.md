@@ -1,5 +1,48 @@
 # 验证记录
 
+## 2026-11-18 四版比较及 OS-SCOPE 顶层 RTL 自检
+
+四版通过各自原生端口接收相同的 Q/K/V。计时批次以相同的 6 帧连续运行两轮，在第二轮取相邻帧的末输出握手间隔；首帧延迟从第一拍 Q 输入握手计至首/末个 Y 握手，含首尾拍。按测试时钟 10 ns 换算。复现命令为 `make scope-compare`；`make os-scope SIM=verilator` 可独立复验第四版。[四版简报](docs/SCOPE_Attention_实验简报.pdf) · [四版数值](results/os_scope_verified_20261118/summary.json) · [仿真器与来源核对](results/os_scope_verified_20261118/verification.json)
+
+| 设计 | 首次输出 / 整帧（拍） | 稳态间隔（拍/帧） | 吞吐（M帧/s） | 相对最初版吞吐 |
+|---|---:|---:|---:|---:|
+| 最初 OS | 4857 / 5112 | 5117.83 | 0.01954 | 1.00× |
+| Stream OS | 85 / 115 | 52 | 1.92308 | 98.42× |
+| SCOPE WS | 141 / 171 | 139 | 0.71942 | 36.82× |
+| OS-SCOPE | 169 / 199 | 52 | 1.92308 | 98.42× |
+
+OS-SCOPE 的阵列展开为 128 个 Left、128 个 Right、共 256 个 FP16 FMA。无停顿运行时，每帧 QK、指数、PV 分别占 4,096 次物理 FMA。12 个连续帧中测到 330 个时钟周期三者同时在不同 PE 上执行，11 个相邻 QK 启动间隔全部为 52 拍。每行概率写回的逻辑年龄为 69+i，首个 PV 乘加年龄为 120。相对 WS SCOPE 吞吐提高 2.67 倍；与 Stream 同吞吐，冷启动首末结果均晚 84 拍。[展开与逐 PE 检查](results/os_scope_mesh_20261118_DUOqs5wN/verified/manifest.json) · [顶层活动计数](results/os_scope_verilator_20261118/os-scope/mesh_checks.json)
+
+OS-SCOPE 在 seed 20261118 的匹配测试中完成 35 帧（12 帧全速、23 帧压力），每次比较 8,960 个 P 和 8,960 个 Y，独立 float64 最大逐帧 RMSE 0.018414，最大元素绝对误差 0.063074。覆盖 4 次复位、输入缺拍及 624 拍有效输出受阻，最长连续阻塞 321 拍。另用 seed 20261119、72 个随机输入复测，共 101 帧、25,856 个 P 与 25,856 个 Y，最大 RMSE 0.019636，最大元素误差 0.070293，均满足 0.06 / 0.20 门限。对 P 或 Y 的期望值各翻转一个低位，检查器在对应帧、坐标报错。[扩展回归](results/os_scope_extended_20261118/summary.json) · [检查器反例](results/os_scope_checker_negative_298jddkr/manifest.json)
+
+慢源定向测试包含 9 帧，首帧 V 末列延后 271 拍，PV 入阵因 V 未齐累计等待 289 个时钟沿，期间推进信号为 0。整批出现 620 拍输出阻塞，包含管线排空后不经复位重启。2,304 个 P 和 2,304 个 Y 均逐位通过。RTL 顶层通过 Verilator 严格 lint；未执行综合、STA 或功耗测试。[独立慢源自检与重放](results/os_scope_sparse_protocol_20261118/final/manifest.json) · [lint](results/os_scope_rtl_lint_20261118/manifest.json) · [四版计时原始命令](results/os_scope_report_20261118_a/manifest.json)
+
+从最终 Icarus VCD 的上升沿前采样读取 `dut.accum` 和 `dut.exp_out`，35 个完整帧的 8,960 个原始 QK 结果与 8,960 个 SCNA 指数结果均与 SoftFloat 模型逐位相等。共享的归约模块增加了暂停使能，既有 WS 双条带在四版比较中复验，单条带另外复验 35 帧并保持 155 拍/帧。[中间级波形核验](results/os_scope_verified_wave_20261118/os-scope/wave_intermediates.json) · [单条带 WS 复验](results/os_scope_shared_acc_ws1_20261118/summary.json)
+
+三帧 QK 均已发车并占满三个 V 槽后，在已有输出阻塞 40 拍、输入阻塞 32 拍的状态下拉低复位。复位后空等 210 拍未见旧的 P、Y 或 done；重新输入的 5 帧中 1,280 个 P 和 1,280 个 Y 全部匹配。[满流水复位与恢复](results/os_scope_full_reset_20261118_39bfsBzN/verified/manifest.json)
+
+## 2026-11-18 OS 阵列内 SCNA 的候选排程
+
+运行 `python3 docs/os_scna_pe/check_schedule.py`。按 16×16、SCNA-8 双条带、每个指数仅计算一次、连续 8 帧无停顿检查，默认 II=52、PV 起点 t=120 的排程共 98,304 个物理 FMA 使用均无冲突，同时检查 OS 输入边界和整行 P 的依赖。属于设计级排程，未将其计入已有三版 RTL 吞吐或能效比较。[假设与拍数](docs/os_scna_pe/schedule.md) · [对应 PE 图](docs/os_scna_pe/os_scope_pe.svg)
+
+## 2026-11-18 SCOPE 与最初基线、Stream 的端到端比较
+
+16×16 单头 FP16。最初基线取 Git `34559ae`，Stream 取 `7ea651a`，SCOPE 取本次工作区的双条带 WS 顶层。三者输入相同；计时从公开输入口的首个 Q 握手开始，到首个或末个 Y 握手结束，包含首尾拍。无停顿计时连续发送 6 个不同的非零帧两轮，以第二轮的 6 个相邻末输出间隔取平均。100 MHz 为 testbench 的 10 ns 周期，未做综合、STA 或功耗测量。[当时的三版简报](results/os_scope_verified_20261118/previous_three_designs.pdf) · [原始命令、版本及 seed](results/scope_report_final_20261118/manifest.json) · [逐版结果](results/scope_report_final_20261118/summary.json)
+
+| 设计 | 首帧首 / 末输出（拍） | 稳态帧间隔（拍） | 吞吐（M帧/s，100 MHz） | 相对基线吞吐 |
+|---|---:|---:|---:|---:|
+| 最初 OS + 串行 Softmax | 4857 / 5112 | 5117.83 | 0.01954 | 1.00× |
+| Stream Attention，OS | 85 / 115 | 52 | 1.92308 | 98.42× |
+| SCOPE Attention，WS 双条带 | 141 / 171 | 139 | 0.71942 | 36.82× |
+
+最初基线每帧 768 次输入、256 次输出握手，另外两版均为 48 次输入、31 次带掩码输出。SCOPE 的 ACC 在 QK 出数时求最大值，SCNA-8 计算指数时横向预装 V。它在阵列中顺序排入 QK、指数和 PV，完成前帧后再装下一帧 K；Stream 已有相邻帧 QK 与 PV 交叠。这里的 139 拍描述本项目单 tile 控制器，论文的多 tile 调度另有供数与填充条件。
+
+使用 `make scope-compare`、`make scope SIM=verilator` 和 `make scope STRIPS=1`。每版 12 帧全速加 23 帧压力自检（17 个定向与 6 个随机输入），含输入气泡、输出随机停顿、在首/中/末输出各连续拒收至少 64 拍，以及部分输入、运算中、输出阻塞时的复位恢复。每版 8,960 个 Y 均与对应软件模型逐位一致；Stream 与 SCOPE 另各检查 8,960 个 P。SCOPE 对独立 float64 的最大逐帧 RMSE 为 0.018414，最大元素误差为 0.063074。单条带模式实例化全部三种 PE，满速时首/末输出 157/187 拍、帧间隔 155 拍。[压力与逐帧计数](results/scope_report_final_20261118/scope/frames.csv) · [Verilator 复验](results/scope_final_verilator_20261118/summary.json) · [单条带回归](results/scope_final_single_20261118/summary.json)
+
+两种配置的阵列单测各逐位检查 256 个 QK、256 个 Exp 和 256 个 PV，均展开为 256 个 FP16 FMA。初版顶层的最大值组合树遇到 Icarus 12 的数组别名错误，改为在 QK 输出阶段随行累积最大值后重跑。[初版失败日志](results/scope_attention_public_20261118/scope/simulation.log) · [PE 展开计数](results/scope_array_20261118_205633_41m3snoj/elaborated_counts.json) · [阵列单测](results/scope_array_20261118_205633_41m3snoj/manifest.json) · [双条带 lint](results/scope_final_lint_dual_20261118/manifest.json) · [单条带 lint](results/scope_final_lint_single_20261118/manifest.json)
+
+SCNA-8 的 exp(0) 小于 1。考虑到原 Stream 除法器的说明假定分母至少为 1，另取从 SCNA 最小可能分母到 1 的三个 binary16 编码，对每个分母穷举从 0 到 `0x3bfe` 的所有非负分子，46,077 次 RTL 除法均与 SoftFloat 一致。[除法边界测试](results/scope_exp8_model_final_h08w7itz/divider.json) · [SCNA 数值测试](results/scope_exp8_model_final_h08w7itz/summary.json)
+
 ## 2026-11-18 跨帧重叠接入 Attention 顶层
 
 上下两版均使用 16×16 个 OS PE、同一组在线 Softmax 和 48 拍输入协议。新版的 QK 和 PV 各自持有帧槽选择和逻辑步计数。每个 PE 在点积首项从 +0 开始累加，旧帧 PV 的第 30 步真正推进时归还 Q/K/V 输入槽，Skid 缓冲未能接走的输出受全局推进条件保护。调度和握手的改动保留原软件位模型。[顶层实现](rtl/attention_fp16.sv) · [数据流与停顿契约](PROJECT.md)

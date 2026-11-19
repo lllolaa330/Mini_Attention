@@ -1,0 +1,1 @@
+COMMAND: ['iverilog', '-g2012', '-s', 'tb_scope_array', '-Ptb_scope_array.STRIPS=2', '-o', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/scope_array_20261118_205633_41m3snoj/array_2.vvp', '-f', 'rtl/files.f', 'rtl/scope_standard_pe.sv', 'rtl/scope_left_pe.sv', 'rtl/scope_right_pe.sv', 'rtl/scope_array.sv', 'tb/tb_scope_array.sv']

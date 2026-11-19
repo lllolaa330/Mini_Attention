@@ -1,0 +1,4 @@
+COMMAND ['vvp', '/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/os_scope_full_reset_20261118_39bfsBzN/verified/tb.vvp']
+PRE_RESET launches=3 accepted_input_beats=176 v_full=111 q_full=10 held_outputs=40 input_blocked=32
+PASS empty_after_reset=210 recovered_frames=5 P=1280 Y=1280 stalled_output_cycles=62 trailing_idle=200
+/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/os_scope_full_reset_20261118_39bfsBzN/tb_reset_queued.sv:116: $finish called at 10945000 (1ps)

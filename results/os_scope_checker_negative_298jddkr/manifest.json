@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "source_run": "results/os_scope_verilator_20261118/os-scope",
+  "executable_hash": "26e8cc3911871a83438fb93c20c60387a48ba3440051245979a1bab2befc544f",
+  "checks": [
+    {
+      "signal": "P",
+      "case": 22,
+      "index": 15,
+      "initial": "1d4f",
+      "corrupted": "1d4e",
+      "exit": 1,
+      "log": "P/rejection.log"
+    },
+    {
+      "signal": "Y",
+      "case": 22,
+      "index": 15,
+      "initial": "ac74",
+      "corrupted": "ac75",
+      "exit": 1,
+      "log": "Y/rejection.log"
+    }
+  ]
+}

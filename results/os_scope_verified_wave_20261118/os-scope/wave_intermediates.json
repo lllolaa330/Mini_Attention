@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "frames": 35,
+  "raw_qk_words": 8960,
+  "scna_e_words": 8960,
+  "source": "pre-rising-edge snapshots of dut.accum and dut.exp_out in final Icarus VCD",
+  "vcd_sha256": "379a34734d1465db44852881e5e15290eb0eb0d9c41dc124805a01086ec6e4e8",
+  "command": "python3 results/os_scope_verified_wave_20261118/check_wave_intermediates.py"
+}

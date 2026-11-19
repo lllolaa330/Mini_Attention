@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "args": {
+    "designs": [
+      "scope"
+    ],
+    "outdir": "/Users/jiaojiayi/Documents/ChatGPT/Mini_Attention/results/os_scope_shared_acc_ws1_20261118",
+    "seed": 20261118,
+    "timeout": 600,
+    "random": 6,
+    "waves": false,
+    "sim": "verilator",
+    "strips": 1
+  },
+  "seed": 20261118,
+  "period_ns": 10,
+  "simulator": "Verilator 5.044 2026-01-01 rev vUNKNOWN-built20260101",
+  "clock_note": "10 ns testbench period. Frames/s and us are simulated at that clock; hardware Fmax and power unmeasured.",
+  "interval": "Mean of six retire-to-retire intervals in second traversal of same six clean nonzero frames",
+  "command": [
+    "scripts/run_scope.py",
+    "--sim",
+    "verilator",
+    "--strips",
+    "1",
+    "--outdir",
+    "results/os_scope_shared_acc_ws1_20261118"
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "status": "PASS",
+  "period_ns": 10,
+  "common_inputs": {
+    "input.hex": "d536bb76ee8081a7bb8d928893c221cc4879ad495ba1ce7b3b85bd42293f9ab5",
+    "cases.json": "5cea83ce175aa693158ad81605f799e88b76ce3fff57f687d3c15edb775f9f2e"
+  },
+  "dual_simulator_payloads_and_timing": {
+    "actual.txt": "15128ee3fbd64e2292700594c80d8d47154a139e663d52d8e4d4c304d268c9e2",
+    "expected.hex": "3ce747f0f6a0bdf60cd87ab2ebca81bbc4647cbed0b816ebbef4e80481333831",
+    "expected_p.hex": "71cd0bb9332ed4b5d1fdf55c4e79c1fa97541262cb87fc4d39372ae4ed55536e",
+    "frames.csv": "d5420980a553fbd42e80bd9d1022c19a82c5cff45c6e0256fb5a570d6f6e8222",
+    "mesh_checks.json": "8f36f8428983eccf0e7de2c293528ee97983df1e86ee7ed5c2d9340a24e6590a",
+    "metrics.json": "11406ae46b1bd09c5d9120b794e4af6e638caca6a1787aa6b90e18ebdd4dc4cc"
+  },
+  "ws_vs_os_scope_payloads": {
+    "actual.txt": "15128ee3fbd64e2292700594c80d8d47154a139e663d52d8e4d4c304d268c9e2",
+    "expected.hex": "3ce747f0f6a0bdf60cd87ab2ebca81bbc4647cbed0b816ebbef4e80481333831",
+    "expected_p.hex": "71cd0bb9332ed4b5d1fdf55c4e79c1fa97541262cb87fc4d39372ae4ed55536e"
+  },
+  "wave_intermediates": {
+    "status": "PASS",
+    "frames": 35,
+    "raw_qk_words": 8960,
+    "scna_e_words": 8960,
+    "source": "pre-rising-edge snapshots of dut.accum and dut.exp_out in final Icarus VCD",
+    "vcd_sha256": "379a34734d1465db44852881e5e15290eb0eb0d9c41dc124805a01086ec6e4e8",
+    "command": "python3 results/os_scope_verified_wave_20261118/check_wave_intermediates.py"
+  },
+  "four_design_run": "results/os_scope_report_20261118_a",
+  "frozen_os_icarus": "results/os_scope_verified_wave_20261118",
+  "frozen_os_verilator": "results/os_scope_verilator_20261118",
+  "mesh": {
+    "os_scope_left_pe": 128,
+    "os_scope_right_pe": 128,
+    "fp16_fma": 256,
+    "mulAddRecFN": 256
+  },
+  "extended": {
+    "frames": 101,
+    "y_words": 25856,
+    "max_rmse": 0.019636460470576947,
+    "max_abs": 0.0702930739236114,
+    "steady_ii_samples": [
+      52,
+      52,
+      52,
+      52,
+      52,
+      52
+    ],
+    "steady_ii_cycles": 52,
+    "frames_per_cycle": 0.019230769230769232,
+    "simulated_frames_per_s": 1923076.923076923,
+    "first_result_cycles": 169,
+    "first_frame_cycles": 199,
+    "first_frame_us": 1.99,
+    "batch_cycles": 771,
+    "design": "os-scope",
+    "coverage": {
+      "Y": 25856,
+      "P": 25856,
+      "bubbles": 920,
+      "stalls": 920,
+      "resets": 4
+    },
+    "status": "PASS"
+  },
+  "long_input_and_backpressure": "results/os_scope_sparse_protocol_20261118/final",
+  "in_flight_reset": {
+    "before_reset": {
+      "launches": 3,
+      "accepted_input_beats": 176,
+      "v_full": 7,
+      "q_full": 2,
+      "held_outputs": 40,
+      "input_blocked": 32
+    },
+    "after_reset": {
+      "empty_after_reset": 210,
+      "recovered_frames": 5,
+      "P": 1280,
+      "Y": 1280,
+      "stalled_output_cycles": 62,
+      "trailing_idle": 200
+    }
+  },
+  "strict_lint": "results/os_scope_rtl_lint_20261118",
+  "scoreboard_fault_injection": "results/os_scope_checker_negative_298jddkr",
+  "audit_command": "python3 results/os_scope_verified_20261118/verify.py"
+}

@@ -1,0 +1,30 @@
+{
+  "frames": 35,
+  "y_words": 8960,
+  "max_rmse": 0.0019378305472616197,
+  "max_abs": 0.007249945827956017,
+  "steady_ii_samples": [
+    5112,
+    5117,
+    5107,
+    5141,
+    5120,
+    5110
+  ],
+  "steady_ii_cycles": 5117.833333333333,
+  "frames_per_cycle": 0.00019539518676523268,
+  "simulated_frames_per_s": 19539.51867652327,
+  "first_result_cycles": 4857,
+  "first_frame_cycles": 5112,
+  "first_frame_us": 51.12,
+  "batch_cycles": 61414,
+  "design": "baseline",
+  "coverage": {
+    "Y": 8960,
+    "P": 0,
+    "bubbles": 2486,
+    "stalls": 1046,
+    "resets": 4
+  },
+  "status": "PASS"
+}

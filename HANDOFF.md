@@ -2,6 +2,14 @@
 
 更新于 2026-11-18，Asia/Shanghai。
 
+## Stream OS 阵列内指数的 PE 设计图
+
+按 SCOPE 图 9 的格式建立 [OS 三种 PE 电路图](docs/os_scna_pe/os_scope_pe.svg)，现已实现为 [16×16 OS-SCOPE](rtl/os_scope_attention_fp16.sv)。每个 score 的指数只算一次。顶层实测 PV 在 t=120 启动，稳态 II=52，冷启动首/末输出为 169/199 拍。复现用 `make os-scope`、`make os-scope SIM=verilator`、`make os-scope-lint`、`make scope-compare`。波形展开 `dut`，看 `step`、`launch`、`qk_diag_valid`、`exp_diag_valid`、`pv_diag_valid`、`norm_valid` 以及输出握手；某一对角线 d 的实际乘加在 `step && mask[d]` 时推进。SCOPE 与 OS-SCOPE 工作保存在 `SCOPE` 分支，频率及能效待测。[四版简报](docs/SCOPE_Attention_实验简报.pdf) · [原始结果及验证范围](EXPERIMENTS.md) · [排程与缓存](docs/os_scna_pe/schedule.md)
+
+## SCOPE Attention
+
+新增独立的 `scope_attention_fp16` 顶层与三个 PE 文件，原 Stream 顶层可继续用 `make quick` 重放。新顶层运行 `make scope`，用 `STRIPS=1` 切到三种 PE 共存的单条带；`make scope-compare` 目前同时覆盖 OS-SCOPE。当前匹配输入的无停顿测量为基线 5117.83、Stream 52、SCOPE 双条带 139 拍/帧。能效及上板频率待测。本轮代码及数值结果收录在 `SCOPE` 分支。[一页报告](docs/SCOPE_Attention_实验简报.pdf) · [数值及数据流](PROJECT.md#scope-attention) · [实测记录](EXPERIMENTS.md) · [源码摘要与复现参数](results/scope_report_final_20261118/scope/manifest.json)
+
 ## 当前的全 OS、整行归一化实现
 
 顶层 `attention_fp16` 用一块 16×16 OS 阵列计算 QKᵀ 和 PV。两个帧槽共用 256 位输入口，每次握手写入一整行 Q、一整行 K 或一整列 V。每帧依序接收 16 行 Q、16 行 K 和 16 列 V，共 48 拍。接收 K 最后一行后，该帧具备启动 QKᵀ 的条件。在线 Softmax 的 16 路 exp/div 每拍可接一行，P 按 k 从左侧送回阵列。输出按对角线分 31 组握手。[数据与握手契约](PROJECT.md)

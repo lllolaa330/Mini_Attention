@@ -1,0 +1,14 @@
+{
+  "1": {
+    "scope_standard_pe": 128,
+    "scope_left_pe": 64,
+    "scope_right_pe": 64,
+    "fp16_fma": 256
+  },
+  "2": {
+    "scope_standard_pe": 0,
+    "scope_left_pe": 128,
+    "scope_right_pe": 128,
+    "fp16_fma": 256
+  }
+}

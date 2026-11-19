@@ -1,0 +1,30 @@
+{
+  "frames": 35,
+  "y_words": 8960,
+  "max_rmse": 0.0184141311583765,
+  "max_abs": 0.06307408229199152,
+  "steady_ii_samples": [
+    139,
+    139,
+    139,
+    139,
+    139,
+    139
+  ],
+  "steady_ii_cycles": 139,
+  "frames_per_cycle": 0.007194244604316547,
+  "simulated_frames_per_s": 719424.4604316547,
+  "first_result_cycles": 141,
+  "first_frame_cycles": 171,
+  "first_frame_us": 1.71,
+  "batch_cycles": 1700,
+  "design": "scope",
+  "coverage": {
+    "Y": 8960,
+    "P": 8960,
+    "bubbles": 174,
+    "stalls": 293,
+    "resets": 4
+  },
+  "status": "PASS"
+}

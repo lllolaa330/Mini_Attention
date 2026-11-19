@@ -1,0 +1,2 @@
+COMMAND ['python3', 'scripts/gen_scope_exp.py', '--check', '--checkpoint', 'build/scope/best_mlp1_scalar_expo_8.pth']
+SCOPE Exp8 coefficient check passed
